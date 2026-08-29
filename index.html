@@ -300,7 +300,7 @@ button:disabled {
 
 <body>
 
-<!-- AUTH SCREEN -->
+<!-- AUTH -->
 
 <div id="auth">
 
@@ -356,7 +356,7 @@ button:disabled {
 </div>
 
 
-<!-- MAIN APP -->
+<!-- APP -->
 
 <div id="app">
 
@@ -505,7 +505,7 @@ button:disabled {
 </div>
 
 
-<!-- TEST AD SCREEN -->
+<!-- AD SCREEN -->
 
 <div
   class="ad-screen"
@@ -540,6 +540,7 @@ let today = 0;
 let history = [];
 let bonusDate = "";
 let currentUser = null;
+
 let authMode = "login";
 let adRunning = false;
 
@@ -690,7 +691,6 @@ async function handleAuth() {
 
         authMessage.textContent =
           "Account created. Check your email to confirm your account.";
-
       }
 
     } else {
@@ -706,7 +706,6 @@ async function handleAuth() {
 
 
       await setupUser(data.user);
-
     }
 
   } catch (error) {
@@ -780,6 +779,59 @@ async function loadProfile() {
 }
 
 
+/* LOAD TODAY'S REAL TRANSACTIONS */
+
+async function loadTodayStats() {
+
+  if (!currentUser) return false;
+
+
+  const start =
+    new Date();
+
+  start.setHours(
+    0, 0, 0, 0
+  );
+
+
+  const { data, error } =
+    await supabaseClient
+      .from("transactions")
+      .select("amount, type")
+      .eq("user_id", currentUser.id)
+      .gte(
+        "created_at",
+        start.toISOString()
+      );
+
+
+  if (error) {
+
+    console.error(
+      "Today's stats error:",
+      error
+    );
+
+    return false;
+  }
+
+
+  ads = data.filter(
+    item => item.type === "watch_ad"
+  ).length;
+
+
+  today = data.reduce(
+    (total, item) =>
+      total + Number(item.amount || 0),
+    0
+  );
+
+
+  return true;
+}
+
+
 /* SETUP USER */
 
 async function setupUser(user) {
@@ -803,7 +855,8 @@ async function setupUser(user) {
   }
 
 
-  loadLocalData();
+  await loadTodayStats();
+
 
   showApp();
 
@@ -815,104 +868,7 @@ async function setupUser(user) {
 }
 
 
-/* LOAD LOCAL DATA */
-
-function loadLocalData() {
-
-  const prefix =
-    currentUser ? currentUser.id + "_" : "";
-
-
-  ads =
-    Number(
-      localStorage.getItem(prefix + "ads")
-    ) || 0;
-
-
-  today =
-    Number(
-      localStorage.getItem(prefix + "today")
-    ) || 0;
-
-
-  history =
-    JSON.parse(
-      localStorage.getItem(prefix + "history")
-    ) || [];
-
-
-  bonusDate =
-    localStorage.getItem(
-      prefix + "bonusDate"
-    ) || "";
-}
-
-
-/* SAVE LOCAL DATA */
-
-function saveLocalData() {
-
-  const prefix =
-    currentUser ? currentUser.id + "_" : "";
-
-
-  localStorage.setItem(
-    prefix + "ads",
-    ads
-  );
-
-
-  localStorage.setItem(
-    prefix + "today",
-    today
-  );
-
-
-  localStorage.setItem(
-    prefix + "history",
-    JSON.stringify(history)
-  );
-
-
-  localStorage.setItem(
-    prefix + "bonusDate",
-    bonusDate
-  );
-}
-
-
-/* SAVE COINS */
-
-async function saveCoins() {
-
-  if (!currentUser) return false;
-
-
-  const { error } =
-    await supabaseClient
-      .from("Profile")
-      .update({
-        coin: coins
-      })
-      .eq("user_id", currentUser.id);
-
-
-  if (error) {
-
-    console.error(
-      "Coin update failed:",
-      error
-    );
-
-    return false;
-  }
-
-
-  return true;
-}
-
-
-/* REFRESH REAL BALANCE */
+/* REFRESH BALANCE */
 
 async function refreshBalance() {
 
@@ -942,9 +898,19 @@ async function refreshBalance() {
     Number(data.coin) || 0;
 
 
-  update();
-
   return true;
+}
+
+
+/* REFRESH EVERYTHING */
+
+async function refreshDashboard() {
+
+  await refreshBalance();
+
+  await loadTodayStats();
+
+  update();
 }
 
 
@@ -969,6 +935,37 @@ async function addTransaction(amount, type) {
 
     console.error(
       "Transaction error:",
+      error
+    );
+
+    return false;
+  }
+
+
+  return true;
+}
+
+
+/* SAVE COINS */
+
+async function saveCoins() {
+
+  if (!currentUser) return false;
+
+
+  const { error } =
+    await supabaseClient
+      .from("Profile")
+      .update({
+        coin: coins
+      })
+      .eq("user_id", currentUser.id);
+
+
+  if (error) {
+
+    console.error(
+      "Coin update failed:",
       error
     );
 
@@ -1081,6 +1078,9 @@ function watchAd() {
   button.style.display =
     "none";
 
+  button.disabled =
+    false;
+
 
   let seconds = 10;
 
@@ -1151,14 +1151,7 @@ async function finishAd() {
   }
 
 
-  ads++;
-  today++;
-
-
-  saveLocalData();
-
-
-  await refreshBalance();
+  await refreshDashboard();
 
 
   document.getElementById(
@@ -1198,11 +1191,6 @@ async function dailyBonus() {
 
 
   coins++;
-  today++;
-
-
-  bonusDate =
-    currentDate;
 
 
   const saved =
@@ -1212,8 +1200,6 @@ async function dailyBonus() {
   if (!saved) {
 
     coins--;
-    today--;
-    bonusDate = "";
 
     update();
 
@@ -1225,14 +1211,62 @@ async function dailyBonus() {
   }
 
 
+  bonusDate =
+    currentDate;
+
+
   saveLocalData();
 
-  update();
+  await refreshDashboard();
 
 
   showMessage(
     "🎁 Daily bonus: +1 coin!"
   );
+}
+
+
+/* LOCAL STORAGE ONLY FOR BONUS/HISTORY */
+
+function saveLocalData() {
+
+  if (!currentUser) return;
+
+  const prefix =
+    currentUser.id + "_";
+
+  localStorage.setItem(
+    prefix + "bonusDate",
+    bonusDate
+  );
+
+  localStorage.setItem(
+    prefix + "history",
+    JSON.stringify(history)
+  );
+}
+
+
+/* LOAD LOCAL BONUS/HISTORY */
+
+function loadLocalData() {
+
+  if (!currentUser) return;
+
+  const prefix =
+    currentUser.id + "_";
+
+  bonusDate =
+    localStorage.getItem(
+      prefix + "bonusDate"
+    ) || "";
+
+  history =
+    JSON.parse(
+      localStorage.getItem(
+        prefix + "history"
+      )
+    ) || [];
 }
 
 
@@ -1273,13 +1307,11 @@ async function withdraw() {
   }
 
 
+  const oldCoins =
+    coins;
+
+
   coins -= amount;
-
-
-  history.unshift({
-    coins: amount,
-    status: "Test / Pending"
-  });
 
 
   const saved =
@@ -1288,9 +1320,8 @@ async function withdraw() {
 
   if (!saved) {
 
-    coins += amount;
-
-    history.shift();
+    coins =
+      oldCoins;
 
     update();
 
@@ -1300,6 +1331,12 @@ async function withdraw() {
 
     return;
   }
+
+
+  history.unshift({
+    coins: amount,
+    status: "Test / Pending"
+  });
 
 
   saveLocalData();
@@ -1319,11 +1356,10 @@ async function logout() {
 
   await supabaseClient.auth.signOut();
 
-  currentUser =
-    null;
-
-  coins =
-    0;
+  currentUser = null;
+  coins = 0;
+  ads = 0;
+  today = 0;
 
   showAuth();
 }
@@ -1379,11 +1415,10 @@ supabaseClient.auth.onAuthStateChange(
 
     if (event === "SIGNED_OUT") {
 
-      currentUser =
-        null;
-
-      coins =
-        0;
+      currentUser = null;
+      coins = 0;
+      ads = 0;
+      today = 0;
 
       showAuth();
     }
@@ -1392,6 +1427,8 @@ supabaseClient.auth.onAuthStateChange(
 
 
 /* START */
+
+loadLocalData();
 
 checkSession();
 
