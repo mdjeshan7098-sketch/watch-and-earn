@@ -1,11 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Watchly - Rewards</title>
+<title>Watchly - Rewards</title><!-- Supabase --><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
+const SUPABASE_URL = "https://woyvafgecfuriavuxnje.supabase.co";
+const SUPABASE_KEY = "sb_publishable_lxrfM4MgeRSm8-CiiUGQZg_EdayI2Po";
 
-<style>
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+</script><style>
 * {
   box-sizing: border-box;
   margin: 0;
@@ -210,141 +215,86 @@ button:disabled {
   font-size: 14px;
   line-height: 1.8;
 }
-</style>
-</head>
-
-<body>
-
-<div class="header">
+</style></head><body><div class="header">
   <div class="logo">Watch<span>ly</span></div>
+</div><div class="container">  <div class="balance">
+    <div class="balance-title">YOUR BALANCE</div><div class="coin">
+  🪙 <span id="coins">0</span>
 </div>
 
-<div class="container">
+<div class="balance-sub">
+  Keep earning rewards
+</div>
 
-  <div class="balance">
-    <div class="balance-title">YOUR BALANCE</div>
-
-    <div class="coin">
-      🪙 <span id="coins">0</span>
-    </div>
-
-    <div class="balance-sub">
-      Keep earning rewards
-    </div>
-  </div>
-
-  <div class="stats">
+  </div>  <div class="stats">
     <div class="stat">
       <small>Ads Watched</small>
       <strong id="ads">0</strong>
-    </div>
-
-    <div class="stat">
-      <small>Today's Coins</small>
-      <strong id="today">0</strong>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>🎬 Watch & Earn</h2>
-
-    <p>
-      Watch a test advertisement and receive
-      1 virtual coin.
-    </p>
-
-    <button class="watch" onclick="watchAd()">
-      ▶ WATCH AD
-    </button>
-  </div>
-
-  <div class="card">
-    <h2>🎁 Daily Bonus</h2>
-
-    <p>
-      Claim your daily bonus once per day.
-    </p>
-
-    <button
-      class="bonus"
-      id="bonusButton"
-      onclick="dailyBonus()">
-      CLAIM BONUS
-    </button>
-  </div>
-
-  <div class="card">
-    <h2>💸 Withdraw</h2>
-
-    <p>
-      Prototype minimum: 50 coins.
-    </p>
-
-    <button
-      class="withdraw"
-      onclick="withdraw()">
-      WITHDRAW
-    </button>
-  </div>
-
-  <div class="card">
-    <h2>📋 Withdrawal History</h2>
-
-    <div id="history" class="history">
-      No withdrawal requests.
-    </div>
-  </div>
-
-  <div id="message" class="message"></div>
-
+    </div><div class="stat">
+  <small>Today's Coins</small>
+  <strong id="today">0</strong>
 </div>
 
-<div class="bottom">
+  </div>  <div class="card">
+    <h2>🎬 Watch & Earn</h2><p>
+  Watch a test advertisement and receive
+  1 virtual coin.
+</p>
 
-  <div class="nav active">
+<button class="watch" onclick="watchAd()">
+  ▶ WATCH AD
+</button>
+
+  </div>  <div class="card">
+    <h2>🎁 Daily Bonus</h2><p>
+  Claim your daily bonus once per day.
+</p>
+
+<button
+  class="bonus"
+  id="bonusButton"
+  onclick="dailyBonus()">
+  CLAIM BONUS
+</button>
+
+  </div>  <div class="card">
+    <h2>💸 Withdraw</h2><p>
+  Prototype minimum: 50 coins.
+</p>
+
+<button
+  class="withdraw"
+  onclick="withdraw()">
+  WITHDRAW
+</button>
+
+  </div>  <div class="card">
+    <h2>📋 Withdrawal History</h2><div id="history" class="history">
+  No withdrawal requests.
+</div>
+
+  </div>  <div id="message" class="message"></div></div><div class="bottom">  <div class="nav active">
     <div>🏠</div>
     Home
-  </div>
-
-  <div class="nav">
+  </div>  <div class="nav">
     <div>🎁</div>
     Rewards
-  </div>
-
-  <div class="nav">
+  </div>  <div class="nav">
     <div>💸</div>
     Withdraw
-  </div>
-
-  <div class="nav">
+  </div>  <div class="nav">
     <div>👤</div>
     Profile
-  </div>
-
-</div>
-
-<!-- TEST AD SCREEN -->
-
-<div class="ad-screen" id="adScreen">
-
-  <h2>Advertisement</h2>
-
-  <p>Test advertisement</p>
-
-  <div class="timer" id="timer">
+  </div></div><!-- TEST AD SCREEN --><div class="ad-screen" id="adScreen">  <h2>Advertisement</h2>  <p>Test advertisement</p>  <div class="timer" id="timer">
     10
-  </div>
+  </div><button
+class="ad-button"
+id="adButton"
+onclick="finishAd()">
+CLAIM 1 COIN
+</button>
 
-  <button
-    class="ad-button"
-    id="adButton"
-    onclick="finishAd()">
-    CLAIM 1 COIN
-  </button>
-
-</div>
-
-<script>
+</div><script>
 
 let coins =
   Number(localStorage.getItem("coins")) || 0;
@@ -585,7 +535,5 @@ function withdraw() {
 
 update();
 
-</script>
-
-</body>
+</script></body>
 </html>
