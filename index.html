@@ -420,6 +420,7 @@ button:disabled {
 
       <button
         class="watch"
+        id="watchButton"
         onclick="watchAd()">
         ▶ WATCH AD
       </button>
@@ -532,17 +533,15 @@ button:disabled {
 
 <script>
 
-let authMode = "login";
-
 let coins = 0;
 let ads = 0;
 let today = 0;
 
 let history = [];
-
 let bonusDate = "";
-
 let currentUser = null;
+let authMode = "login";
+let adRunning = false;
 
 
 const coinsElement =
@@ -563,6 +562,11 @@ const bonusButton =
 const message =
   document.getElementById("message");
 
+const watchButton =
+  document.getElementById("watchButton");
+
+
+/* AUTH SCREEN */
 
 function showAuth() {
 
@@ -574,6 +578,8 @@ function showAuth() {
 }
 
 
+/* APP SCREEN */
+
 function showApp() {
 
   document.getElementById("auth").style.display =
@@ -583,6 +589,8 @@ function showApp() {
     "block";
 }
 
+
+/* AUTH MODE */
 
 function toggleAuthMode() {
 
@@ -624,6 +632,8 @@ function toggleAuthMode() {
 }
 
 
+/* AUTH */
+
 async function handleAuth() {
 
   const email =
@@ -664,20 +674,17 @@ async function handleAuth() {
 
       const { data, error } =
         await supabaseClient.auth.signUp({
-          email: email,
-          password: password
+          email,
+          password
         });
 
 
       if (error) throw error;
 
 
-      if (data.session) {
+      if (data.session && data.user) {
 
         await setupUser(data.user);
-
-        authMessage.textContent =
-          "Account created!";
 
       } else {
 
@@ -690,8 +697,8 @@ async function handleAuth() {
 
       const { data, error } =
         await supabaseClient.auth.signInWithPassword({
-          email: email,
-          password: password
+          email,
+          password
         });
 
 
@@ -704,73 +711,95 @@ async function handleAuth() {
 
   } catch (error) {
 
+    console.error(error);
+
     authMessage.textContent =
       error.message || "Authentication failed.";
-
   }
 }
 
 
-/* USER PROFILE */
+/* LOAD PROFILE */
+
+async function loadProfile() {
+
+  if (!currentUser) return false;
+
+
+  const { data, error } =
+    await supabaseClient
+      .from("Profile")
+      .select("id, user_id, coin")
+      .eq("user_id", currentUser.id)
+      .maybeSingle();
+
+
+  if (error) {
+
+    console.error(
+      "Profile loading error:",
+      error
+    );
+
+    return false;
+  }
+
+
+  if (!data) {
+
+    const { error: insertError } =
+      await supabaseClient
+        .from("Profile")
+        .insert({
+          user_id: currentUser.id,
+          coin: 0
+        });
+
+
+    if (insertError) {
+
+      console.error(
+        "Profile creation error:",
+        insertError
+      );
+
+      return false;
+    }
+
+
+    coins = 0;
+
+  } else {
+
+    coins =
+      Number(data.coin) || 0;
+  }
+
+
+  return true;
+}
+
+
+/* SETUP USER */
 
 async function setupUser(user) {
+
+  if (!user) return;
 
   currentUser = user;
 
 
-  try {
-
-    const { data, error } =
-      await supabaseClient
-        .from("profiles")
-        .select("*")
-        .eq("id", user.id)
-        .maybeSingle();
+  const profileLoaded =
+    await loadProfile();
 
 
-    if (error) {
+  if (!profileLoaded) {
 
-      console.error(
-        "Profile loading error:",
-        error
-      );
+    showMessage(
+      "Could not load your profile."
+    );
 
-    }
-
-
-    if (!data) {
-
-      const { error: insertError } =
-        await supabaseClient
-          .from("profiles")
-          .insert({
-            id: user.id,
-            coins: 0
-          });
-
-
-      if (insertError) {
-
-        console.error(
-          "Profile creation error:",
-          insertError
-        );
-
-      }
-
-      coins = 0;
-
-    } else {
-
-      coins =
-        Number(data.coins) || 0;
-
-    }
-
-  } catch (error) {
-
-    console.error(error);
-
+    return;
   }
 
 
@@ -852,7 +881,7 @@ function saveLocalData() {
 }
 
 
-/* SAVE COINS TO SUPABASE */
+/* SAVE COINS */
 
 async function saveCoins() {
 
@@ -861,11 +890,11 @@ async function saveCoins() {
 
   const { error } =
     await supabaseClient
-      .from("profiles")
+      .from("Profile")
       .update({
-        coins: coins
+        coin: coins
       })
-      .eq("id", currentUser.id);
+      .eq("user_id", currentUser.id);
 
 
   if (error) {
@@ -873,10 +902,6 @@ async function saveCoins() {
     console.error(
       "Coin update failed:",
       error
-    );
-
-    showMessage(
-      "Could not save coins."
     );
 
     return false;
@@ -887,7 +912,43 @@ async function saveCoins() {
 }
 
 
-/* SAVE TRANSACTION */
+/* REFRESH REAL BALANCE */
+
+async function refreshBalance() {
+
+  if (!currentUser) return false;
+
+
+  const { data, error } =
+    await supabaseClient
+      .from("Profile")
+      .select("coin")
+      .eq("user_id", currentUser.id)
+      .single();
+
+
+  if (error) {
+
+    console.error(
+      "Balance refresh failed:",
+      error
+    );
+
+    return false;
+  }
+
+
+  coins =
+    Number(data.coin) || 0;
+
+
+  update();
+
+  return true;
+}
+
+
+/* TRANSACTION */
 
 async function addTransaction(amount, type) {
 
@@ -899,8 +960,8 @@ async function addTransaction(amount, type) {
       .from("transactions")
       .insert({
         user_id: currentUser.id,
-        amount: amount,
-        type: type
+        amount,
+        type
       });
 
 
@@ -994,6 +1055,15 @@ function showMessage(text) {
 
 function watchAd() {
 
+  if (adRunning) return;
+
+
+  adRunning = true;
+
+  watchButton.disabled =
+    true;
+
+
   const screen =
     document.getElementById("adScreen");
 
@@ -1047,50 +1117,65 @@ function watchAd() {
 
 async function finishAd() {
 
-  document.getElementById(
-    "adScreen"
-  ).style.display =
-    "none";
+  const button =
+    document.getElementById("adButton");
+
+  button.disabled =
+    true;
 
 
-  coins++;
+  const transactionSaved =
+    await addTransaction(
+      1,
+      "watch_ad"
+    );
+
+
+  if (!transactionSaved) {
+
+    document.getElementById(
+      "adScreen"
+    ).style.display =
+      "none";
+
+    watchButton.disabled =
+      false;
+
+    adRunning = false;
+
+    showMessage(
+      "Reward failed. Please try again."
+    );
+
+    return;
+  }
+
+
   ads++;
   today++;
 
 
   saveLocalData();
 
-  update();
+
+  await refreshBalance();
 
 
-  const saved =
-    await saveCoins();
+  document.getElementById(
+    "adScreen"
+  ).style.display =
+    "none";
 
 
-  if (saved) {
+  watchButton.disabled =
+    false;
 
-    const transactionSaved =
-      await addTransaction(
-        1,
-        "watch_ad"
-      );
+  adRunning = false;
 
 
-    if (transactionSaved) {
-
-      showMessage(
-        "🎉 1 coin earned and recorded!"
-      );
-
-    } else {
-
-      showMessage(
-        "🎉 1 coin earned!"
-      );
-
-    }
-
-  }
+  showMessage(
+    "🎉 1 coin earned!"
+  );
 }
 
 
@@ -1120,22 +1205,34 @@ async function dailyBonus() {
     currentDate;
 
 
+  const saved =
+    await saveCoins();
+
+
+  if (!saved) {
+
+    coins--;
+    today--;
+    bonusDate = "";
+
+    update();
+
+    showMessage(
+      "Could not save bonus."
+    );
+
+    return;
+  }
+
+
   saveLocalData();
 
   update();
 
 
-  const saved =
-    await saveCoins();
-
-
-  if (saved) {
-
-    showMessage(
-      "🎁 Daily bonus: +1 coin!"
-    );
-
-  }
+  showMessage(
+    "🎁 Daily bonus: +1 coin!"
+  );
 }
 
 
@@ -1185,22 +1282,34 @@ async function withdraw() {
   });
 
 
+  const saved =
+    await saveCoins();
+
+
+  if (!saved) {
+
+    coins += amount;
+
+    history.shift();
+
+    update();
+
+    showMessage(
+      "Could not create withdrawal."
+    );
+
+    return;
+  }
+
+
   saveLocalData();
 
   update();
 
 
-  const saved =
-    await saveCoins();
-
-
-  if (saved) {
-
-    showMessage(
-      "✅ Test withdrawal created."
-    );
-
-  }
+  showMessage(
+    "✅ Test withdrawal created."
+  );
 }
 
 
@@ -1212,6 +1321,9 @@ async function logout() {
 
   currentUser =
     null;
+
+  coins =
+    0;
 
   showAuth();
 }
@@ -1241,7 +1353,6 @@ async function checkSession() {
   } else {
 
     showAuth();
-
   }
 }
 
@@ -1262,9 +1373,7 @@ supabaseClient.auth.onAuthStateChange(
         await setupUser(
           session.user
         );
-
       }
-
     }
 
 
@@ -1273,10 +1382,11 @@ supabaseClient.auth.onAuthStateChange(
       currentUser =
         null;
 
+      coins =
+        0;
+
       showAuth();
-
     }
-
   }
 );
 
@@ -1288,4 +1398,4 @@ checkSession();
 </script>
 
 </body>
-</html>
+  </html>
