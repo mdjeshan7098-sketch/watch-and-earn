@@ -3,148 +3,212 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Watch & Earn</title>
+<title>Watchly - Rewards</title>
 
 <style>
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f4f6fb;
-    color: #161616;
+  font-family: Arial, sans-serif;
+  background: #07111f;
+  color: white;
+  padding-bottom: 80px;
 }
 
 .header {
-    background: #111827;
-    color: white;
-    padding: 22px;
-    text-align: center;
+  padding: 25px 20px 15px;
+  background: #0a1628;
 }
 
-.header h1 {
-    margin: 0;
-    font-size: 25px;
+.logo {
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.logo span {
+  color: #3b82f6;
 }
 
 .container {
-    max-width: 500px;
-    margin: auto;
-    padding: 18px;
+  max-width: 500px;
+  margin: auto;
+  padding: 18px;
 }
 
 .balance {
-    background: white;
-    border-radius: 18px;
-    padding: 25px;
-    text-align: center;
-    margin-bottom: 18px;
-    box-shadow: 0 5px 20px rgba(0,0,0,.07);
+  background: linear-gradient(135deg, #1261d6, #153b88);
+  border-radius: 22px;
+  padding: 25px;
+  margin-bottom: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
 }
 
-.balance small {
-    color: #777;
+.balance-title {
+  opacity: .8;
+  font-size: 14px;
 }
 
-.coins {
-    font-size: 42px;
-    font-weight: bold;
-    margin-top: 8px;
+.coin {
+  font-size: 42px;
+  font-weight: bold;
+  margin: 8px 0;
+}
+
+.balance-sub {
+  opacity: .75;
+  font-size: 13px;
 }
 
 .card {
-    background: white;
-    padding: 20px;
-    border-radius: 18px;
-    margin-bottom: 15px;
-    box-shadow: 0 5px 20px rgba(0,0,0,.07);
+  background: #101d30;
+  border: 1px solid #1c2c43;
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 15px;
 }
 
 .card h2 {
-    margin-top: 0;
+  font-size: 19px;
+  margin-bottom: 8px;
+}
+
+.card p {
+  color: #9eacc0;
+  font-size: 14px;
+  margin-bottom: 15px;
 }
 
 button {
-    width: 100%;
-    border: 0;
-    padding: 15px;
-    border-radius: 12px;
-    font-size: 17px;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 10px;
+  width: 100%;
+  border: none;
+  border-radius: 13px;
+  padding: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 .watch {
-    background: #2563eb;
-    color: white;
+  background: #3b82f6;
+  color: white;
 }
 
 .bonus {
-    background: #f59e0b;
-    color: white;
+  background: #17263b;
+  color: #60a5fa;
+  border: 1px solid #284363;
 }
 
 .withdraw {
-    background: #16a34a;
-    color: white;
+  background: #16a34a;
+  color: white;
 }
 
 button:disabled {
-    background: #aaa;
+  opacity: .5;
 }
 
-.notice {
-    text-align: center;
-    color: #777;
-    font-size: 13px;
-    margin-top: 20px;
+.stats {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 15px;
 }
 
-#message {
-    text-align: center;
-    font-weight: bold;
-    margin: 15px 0;
+.stat {
+  flex: 1;
+  background: #101d30;
+  border: 1px solid #1c2c43;
+  border-radius: 16px;
+  padding: 15px;
+}
+
+.stat small {
+  color: #8796aa;
+}
+
+.stat strong {
+  display: block;
+  font-size: 22px;
+  margin-top: 5px;
+}
+
+.message {
+  text-align: center;
+  color: #60a5fa;
+  margin: 15px 0;
+  min-height: 20px;
 }
 
 .ad-screen {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: #111827;
-    color: white;
-    z-index: 10;
-    text-align: center;
-    padding-top: 35vh;
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: #050b14;
+  z-index: 100;
+  text-align: center;
+  padding-top: 30vh;
 }
 
 .ad-screen h2 {
-    font-size: 28px;
+  font-size: 26px;
+  margin-bottom: 8px;
 }
 
 .ad-screen p {
-    color: #bbb;
+  color: #8291a5;
 }
 
-.ad-timer {
-    font-size: 45px;
-    font-weight: bold;
+.timer {
+  font-size: 55px;
+  font-weight: bold;
+  margin: 20px;
 }
 
-.close-ad {
-    display: none;
-    background: #16a34a;
-    color: white;
-    width: 80%;
-    margin: 20px auto;
+.ad-button {
+  display: none;
+  width: 80%;
+  margin: auto;
+  background: #16a34a;
+  color: white;
+}
+
+.bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 65px;
+  background: #0a1628;
+  border-top: 1px solid #1b2b42;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 50;
+}
+
+.nav {
+  text-align: center;
+  color: #75859b;
+  font-size: 12px;
+}
+
+.nav.active {
+  color: #60a5fa;
+}
+
+.nav div {
+  font-size: 22px;
+  margin-bottom: 3px;
 }
 
 .history {
-    font-size: 14px;
-    line-height: 1.8;
+  color: #9eacc0;
+  font-size: 14px;
+  line-height: 1.8;
 }
 </style>
 </head>
@@ -152,298 +216,376 @@ button:disabled {
 <body>
 
 <div class="header">
-    <h1>💰 Watch & Earn</h1>
+  <div class="logo">Watch<span>ly</span></div>
 </div>
 
 <div class="container">
 
-    <div class="balance">
-        <small>Your Balance</small>
-        <div class="coins">
-            🪙 <span id="coins">0</span>
-        </div>
+  <div class="balance">
+    <div class="balance-title">YOUR BALANCE</div>
+
+    <div class="coin">
+      🪙 <span id="coins">0</span>
     </div>
 
-    <div class="card">
-        <h2>🎬 Watch & Earn</h2>
+    <div class="balance-sub">
+      Keep earning rewards
+    </div>
+  </div>
 
-        <p>
-            Watch a test advertisement and receive
-            <b>1 coin</b>.
-        </p>
-
-        <button class="watch" onclick="watchAd()">
-            ▶ Watch Ad
-        </button>
+  <div class="stats">
+    <div class="stat">
+      <small>Ads Watched</small>
+      <strong id="ads">0</strong>
     </div>
 
-    <div class="card">
-        <h2>🎁 Daily Bonus</h2>
-
-        <p>
-            Claim your daily bonus.
-        </p>
-
-        <button class="bonus" id="bonusButton" onclick="dailyBonus()">
-            Claim Bonus
-        </button>
+    <div class="stat">
+      <small>Today's Coins</small>
+      <strong id="today">0</strong>
     </div>
+  </div>
 
-    <div class="card">
-        <h2>💸 Withdraw</h2>
+  <div class="card">
+    <h2>🎬 Watch & Earn</h2>
 
-        <p>
-            Minimum withdrawal:
-            <b>50 coins</b>
-        </p>
+    <p>
+      Watch a test advertisement and receive
+      1 virtual coin.
+    </p>
 
-        <button class="withdraw" onclick="withdraw()">
-            Request Withdrawal
-        </button>
+    <button class="watch" onclick="watchAd()">
+      ▶ WATCH AD
+    </button>
+  </div>
+
+  <div class="card">
+    <h2>🎁 Daily Bonus</h2>
+
+    <p>
+      Claim your daily bonus once per day.
+    </p>
+
+    <button
+      class="bonus"
+      id="bonusButton"
+      onclick="dailyBonus()">
+      CLAIM BONUS
+    </button>
+  </div>
+
+  <div class="card">
+    <h2>💸 Withdraw</h2>
+
+    <p>
+      Prototype minimum: 50 coins.
+    </p>
+
+    <button
+      class="withdraw"
+      onclick="withdraw()">
+      WITHDRAW
+    </button>
+  </div>
+
+  <div class="card">
+    <h2>📋 Withdrawal History</h2>
+
+    <div id="history" class="history">
+      No withdrawal requests.
     </div>
+  </div>
 
-    <div class="card">
-        <h2>📋 Withdrawal History</h2>
-
-        <div id="history" class="history">
-            No withdrawals yet.
-        </div>
-    </div>
-
-    <div id="message"></div>
-
-    <div class="notice">
-        Prototype only — advertisements and withdrawals are simulated.
-    </div>
+  <div id="message" class="message"></div>
 
 </div>
 
+<div class="bottom">
+
+  <div class="nav active">
+    <div>🏠</div>
+    Home
+  </div>
+
+  <div class="nav">
+    <div>🎁</div>
+    Rewards
+  </div>
+
+  <div class="nav">
+    <div>💸</div>
+    Withdraw
+  </div>
+
+  <div class="nav">
+    <div>👤</div>
+    Profile
+  </div>
+
+</div>
+
+<!-- TEST AD SCREEN -->
+
 <div class="ad-screen" id="adScreen">
 
-    <h2>Advertisement</h2>
+  <h2>Advertisement</h2>
 
-    <p>Test advertisement</p>
+  <p>Test advertisement</p>
 
-    <div class="ad-timer" id="timer">
-        10
-    </div>
+  <div class="timer" id="timer">
+    10
+  </div>
 
-    <button
-        class="close-ad"
-        id="closeAd"
-        onclick="finishAd()">
-        Claim Reward
-    </button>
+  <button
+    class="ad-button"
+    id="adButton"
+    onclick="finishAd()">
+    CLAIM 1 COIN
+  </button>
 
 </div>
 
 <script>
 
 let coins =
-    Number(localStorage.getItem("coins")) || 0;
+  Number(localStorage.getItem("coins")) || 0;
+
+let ads =
+  Number(localStorage.getItem("ads")) || 0;
+
+let today =
+  Number(localStorage.getItem("today")) || 0;
 
 let history =
-    JSON.parse(localStorage.getItem("history")) || [];
+  JSON.parse(localStorage.getItem("history")) || [];
 
-let bonusClaimed =
-    localStorage.getItem("bonusClaimed") === "true";
+let bonusDate =
+  localStorage.getItem("bonusDate") || "";
 
 const coinsElement =
-    document.getElementById("coins");
+  document.getElementById("coins");
 
-const message =
-    document.getElementById("message");
+const adsElement =
+  document.getElementById("ads");
+
+const todayElement =
+  document.getElementById("today");
 
 const historyElement =
-    document.getElementById("history");
+  document.getElementById("history");
 
 const bonusButton =
-    document.getElementById("bonusButton");
+  document.getElementById("bonusButton");
 
-function updateScreen() {
+const message =
+  document.getElementById("message");
 
-    coinsElement.textContent = coins;
+function save() {
 
-    if (bonusClaimed) {
-        bonusButton.disabled = true;
-        bonusButton.textContent = "Already Claimed";
-    }
+  localStorage.setItem(
+    "coins",
+    coins
+  );
 
-    if (history.length === 0) {
+  localStorage.setItem(
+    "ads",
+    ads
+  );
 
-        historyElement.textContent =
-            "No withdrawals yet.";
+  localStorage.setItem(
+    "today",
+    today
+  );
 
-    } else {
-
-        historyElement.innerHTML =
-            history.map(item =>
-                "🪙 " + item.coins +
-                " coins — " +
-                item.status
-            ).join("<br>");
-    }
+  localStorage.setItem(
+    "history",
+    JSON.stringify(history)
+  );
 }
 
-function saveData() {
+function update() {
 
-    localStorage.setItem(
-        "coins",
-        coins
-    );
+  coinsElement.textContent = coins;
+  adsElement.textContent = ads;
+  todayElement.textContent = today;
 
-    localStorage.setItem(
-        "history",
-        JSON.stringify(history)
-    );
+  if (history.length === 0) {
+
+    historyElement.textContent =
+      "No withdrawal requests.";
+
+  } else {
+
+    historyElement.innerHTML =
+      history.map(item =>
+        "🪙 " +
+        item.coins +
+        " coins — " +
+        item.status
+      ).join("<br>");
+  }
+
+  const currentDate =
+    new Date().toDateString();
+
+  if (bonusDate === currentDate) {
+
+    bonusButton.disabled = true;
+    bonusButton.textContent =
+      "CLAIMED TODAY";
+
+  } else {
+
+    bonusButton.disabled = false;
+    bonusButton.textContent =
+      "CLAIM BONUS";
+  }
 }
 
 function showMessage(text) {
 
-    message.textContent = text;
+  message.textContent = text;
 
-    setTimeout(() => {
-        message.textContent = "";
-    }, 3000);
+  setTimeout(() => {
+    message.textContent = "";
+  }, 3000);
 }
 
 function watchAd() {
 
-    document.getElementById(
-        "adScreen"
-    ).style.display = "block";
+  const screen =
+    document.getElementById("adScreen");
 
-    let seconds = 10;
+  const timer =
+    document.getElementById("timer");
 
-    document.getElementById(
-        "timer"
-    ).textContent = seconds;
+  const button =
+    document.getElementById("adButton");
 
-    document.getElementById(
-        "closeAd"
-    ).style.display = "none";
+  screen.style.display = "block";
 
-    const countdown = setInterval(() => {
+  button.style.display = "none";
 
-        seconds--;
+  let seconds = 10;
 
-        document.getElementById(
-            "timer"
-        ).textContent = seconds;
+  timer.textContent = seconds;
 
-        if (seconds <= 0) {
+  const countdown =
+    setInterval(() => {
 
-            clearInterval(countdown);
+      seconds--;
 
-            document.getElementById(
-                "timer"
-            ).textContent = "✓";
+      timer.textContent = seconds;
 
-            document.getElementById(
-                "closeAd"
-            ).style.display = "block";
-        }
+      if (seconds <= 0) {
+
+        clearInterval(countdown);
+
+        timer.textContent = "✓";
+
+        button.style.display = "block";
+      }
 
     }, 1000);
 }
 
 function finishAd() {
 
-    document.getElementById(
-        "adScreen"
-    ).style.display = "none";
+  document.getElementById(
+    "adScreen"
+  ).style.display = "none";
 
-    coins++;
+  coins++;
+  ads++;
+  today++;
 
-    saveData();
+  save();
+  update();
 
-    updateScreen();
-
-    showMessage(
-        "🎉 +1 coin added!"
-    );
+  showMessage(
+    "🎉 1 virtual coin earned!"
+  );
 }
 
 function dailyBonus() {
 
-    if (bonusClaimed) {
+  const currentDate =
+    new Date().toDateString();
 
-        showMessage(
-            "You already claimed today's bonus."
-        );
-
-        return;
-    }
-
-    coins += 1;
-
-    bonusClaimed = true;
-
-    localStorage.setItem(
-        "bonusClaimed",
-        "true"
-    );
-
-    saveData();
-
-    updateScreen();
+  if (bonusDate === currentDate) {
 
     showMessage(
-        "🎁 Daily bonus +1 coin!"
+      "You already claimed today's bonus."
     );
+
+    return;
+  }
+
+  coins++;
+  today++;
+
+  bonusDate = currentDate;
+
+  localStorage.setItem(
+    "bonusDate",
+    bonusDate
+  );
+
+  save();
+  update();
+
+  showMessage(
+    "🎁 Daily bonus: +1 coin!"
+  );
 }
 
 function withdraw() {
 
-    if (coins < 50) {
-
-        showMessage(
-            "You need at least 50 coins."
-        );
-
-        return;
-    }
-
-    const amount = prompt(
-        "Enter coins to withdraw:",
-        "50"
-    );
-
-    const requested =
-        Number(amount);
-
-    if (
-        !requested ||
-        requested < 50 ||
-        requested > coins
-    ) {
-
-        showMessage(
-            "Invalid withdrawal amount."
-        );
-
-        return;
-    }
-
-    coins -= requested;
-
-    history.unshift({
-        coins: requested,
-        status: "Pending"
-    });
-
-    saveData();
-
-    updateScreen();
+  if (coins < 50) {
 
     showMessage(
-        "✅ Withdrawal request created!"
+      "You need at least 50 coins."
     );
+
+    return;
+  }
+
+  const amount =
+    Number(prompt(
+      "Enter coins to withdraw:",
+      "50"
+    ));
+
+  if (
+    !amount ||
+    amount < 50 ||
+    amount > coins
+  ) {
+
+    showMessage(
+      "Invalid withdrawal amount."
+    );
+
+    return;
+  }
+
+  coins -= amount;
+
+  history.unshift({
+    coins: amount,
+    status: "Test / Pending"
+  });
+
+  save();
+  update();
+
+  showMessage(
+    "✅ Test withdrawal created."
+  );
 }
 
-updateScreen();
+update();
 
 </script>
 
 </body>
-  </html>
+</html>
