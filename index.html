@@ -856,7 +856,7 @@ function saveLocalData() {
 
 async function saveCoins() {
 
-  if (!currentUser) return;
+  if (!currentUser) return false;
 
 
   const { error } =
@@ -877,6 +877,38 @@ async function saveCoins() {
 
     showMessage(
       "Could not save coins."
+    );
+
+    return false;
+  }
+
+
+  return true;
+}
+
+
+/* SAVE TRANSACTION */
+
+async function addTransaction(amount, type) {
+
+  if (!currentUser) return false;
+
+
+  const { error } =
+    await supabaseClient
+      .from("transactions")
+      .insert({
+        user_id: currentUser.id,
+        amount: amount,
+        type: type
+      });
+
+
+  if (error) {
+
+    console.error(
+      "Transaction error:",
+      error
     );
 
     return false;
@@ -1037,9 +1069,26 @@ async function finishAd() {
 
   if (saved) {
 
-    showMessage(
-      "🎉 1 coin earned and saved!"
-    );
+    const transactionSaved =
+      await addTransaction(
+        1,
+        "watch_ad"
+      );
+
+
+    if (transactionSaved) {
+
+      showMessage(
+        "🎉 1 coin earned and recorded!"
+      );
+
+    } else {
+
+      showMessage(
+        "🎉 1 coin earned!"
+      );
+
+    }
 
   }
 }
