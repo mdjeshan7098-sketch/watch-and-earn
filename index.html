@@ -1450,3 +1450,265 @@ async function finishAd(){
     );
 
   }
+
+}
+
+
+/* =========================
+DAILY BONUS
+========================= */
+
+async function dailyBonus(){
+
+  if(!currentUser){
+
+    showMessage(
+      "Please login first."
+    );
+
+    return;
+
+  }
+
+  const date =
+    new Date().toDateString();
+
+  if(bonusDate === date){
+
+    showMessage(
+      "You already claimed today's bonus."
+    );
+
+    return;
+
+  }
+
+  const newCoins =
+    Number(coins) + 1;
+
+  const result =
+    await supabaseClient
+      .from("profile")
+      .update({
+        coin:newCoins
+      })
+      .eq(
+        "user_id",
+        currentUser.id
+      )
+      .select("coin")
+      .single();
+
+  if(result.error){
+
+    showMessage(
+      "❌ Bonus failed: " +
+      result.error.message
+    );
+
+    return;
+
+  }
+
+  coins =
+    Number(result.data.coin);
+
+  bonusDate =
+    date;
+
+  saveLocalData();
+
+  update();
+
+  showMessage(
+    "🎁 Daily bonus: +1 coin!"
+  );
+
+}
+
+
+/* =========================
+WITHDRAW
+========================= */
+
+async function withdraw(){
+
+  if(!currentUser){
+
+    showMessage(
+      "Please login first."
+    );
+
+    return;
+
+  }
+
+  if(coins < 50){
+
+    showMessage(
+      "You need at least 50 coins."
+    );
+
+    return;
+
+  }
+
+  const input =
+    prompt(
+      "Enter coins to withdraw:",
+      "50"
+    );
+
+  if(input === null){
+    return;
+  }
+
+  const amount =
+    Number(input);
+
+  if(
+    !Number.isInteger(amount) ||
+    amount < 50 ||
+    amount > coins
+  ){
+
+    showMessage(
+      "Invalid withdrawal amount."
+    );
+
+    return;
+
+  }
+
+  const newCoins =
+    coins - amount;
+
+  const result =
+    await supabaseClient
+      .from("profile")
+      .update({
+        coin:newCoins
+      })
+      .eq(
+        "user_id",
+        currentUser.id
+      )
+      .select("coin")
+      .single();
+
+  if(result.error){
+
+    showMessage(
+      "❌ Withdrawal failed: " +
+      result.error.message
+    );
+
+    return;
+
+  }
+
+  coins =
+    Number(result.data.coin);
+
+  history.unshift({
+    coins:amount,
+    status:"Test / Pending"
+  });
+
+  saveLocalData();
+
+  update();
+
+  showMessage(
+    "✅ Test withdrawal created."
+  );
+
+}
+
+
+/* =========================
+LOGOUT
+========================= */
+
+async function logout(){
+
+  await supabaseClient.auth.signOut();
+
+  currentUser =
+    null;
+
+  coins = 0;
+  ads = 0;
+  today = 0;
+
+  showAuth();
+
+}
+
+
+/* =========================
+CHECK SESSION
+========================= */
+
+async function checkSession(){
+
+  try{
+
+    const result =
+      await supabaseClient.auth.getSession();
+
+    if(
+      result.data &&
+      result.data.session &&
+      result.data.session.user
+    ){
+
+      await setupUser(
+        result.data.session.user
+      );
+
+    }else{
+
+      showAuth();
+
+    }
+
+  }catch(error){
+
+    console.error(error);
+
+    showAuth();
+
+  }
+
+}
+
+
+/* =========================
+AUTH LISTENER
+========================= */
+
+supabaseClient.auth.onAuthStateChange(
+  function(event,session){
+
+    if(event === "SIGNED_OUT"){
+
+      currentUser =
+        null;
+
+      showAuth();
+
+    }
+
+  }
+);
+
+
+/* =========================
+START APP
+========================= */
+
+checkSession();
+
+</script></body>
+</html>
