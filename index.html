@@ -434,7 +434,39 @@ button:disabled{
 
 <!-- REWARDS -->
 
-<div id="rewardsPage" class="page">
+<div class="card">
+
+  <h2>🎁 Rewards Center</h2>
+
+  <p>
+    Watch ads and collect coins. Your progress is saved to your account.
+  </p>
+
+  <br>
+
+  <p>
+    🪙 Current Balance
+  </p>
+
+  <div class="coin">
+    🪙 <span id="rewardCoins">0</span>
+  </div>
+
+  <p>
+    🎬 Ads Watched Today:
+    <strong id="rewardAds">0</strong>
+  </p>
+
+  <br>
+
+  <button
+    class="watch"
+    onclick="showPage('home',document.querySelector('.nav'))"
+  >
+    ▶ WATCH MORE ADS
+  </button>
+
+</div>
 
   <div class="card">
 
