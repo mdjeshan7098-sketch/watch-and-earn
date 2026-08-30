@@ -239,7 +239,7 @@ button:disabled{
   bottom:0;
   left:0;
   right:0;
-  height:65px;
+  height:68px;
   background:#0a1628;
   border-top:1px solid #1b2b42;
   display:flex;
@@ -249,9 +249,16 @@ button:disabled{
 }
 
 .nav{
-  text-align:center;
+  flex:1;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
   color:#75859b;
   font-size:12px;
+  cursor:pointer;
+  user-select:none;
 }
 
 .nav.active{
@@ -263,17 +270,61 @@ button:disabled{
   margin-bottom:3px;
 }
 
+.section{
+  display:none;
+}
+
+.section.active{
+  display:block;
+}
+
 .history{
   color:#9eacc0;
   font-size:14px;
   line-height:1.8;
 }
 
+.profile-icon{
+  font-size:55px;
+  text-align:center;
+  margin-bottom:15px;
+}
+
+.profile-email{
+  text-align:center;
+  color:#9eacc0;
+  word-break:break-word;
+  margin-bottom:20px;
+}
+
+.info-row{
+  background:#17263b;
+  border:1px solid #284363;
+  border-radius:12px;
+  padding:15px;
+  margin-bottom:10px;
+}
+
+.info-row small{
+  color:#8796aa;
+}
+
+.info-row strong{
+  display:block;
+  margin-top:5px;
+}
+
+.danger{
+  background:#dc2626;
+  color:white;
+  margin-top:10px;
+}
+
 #auth,
 #app{
   display:none;
 }
-</style></head><body><!-- AUTH --><div id="auth">  <div class="header">
+</style></head><body><!-- ================= AUTH ================= --><div id="auth">  <div class="header">
     <div class="logo">
       Watch<span>ly</span>
     </div>
@@ -317,7 +368,7 @@ button:disabled{
 
 </div>
 
-  </div></div><!-- APP --><div id="app">  <div class="header"><div class="logo">
+  </div></div><!-- ================= APP ================= --><div id="app">  <div class="header"><div class="logo">
   Watch<span>ly</span>
 </div>
 
@@ -327,121 +378,253 @@ button:disabled{
   LOGOUT
 </button>
 
-  </div>  <div class="container"><div class="balance">
+  </div>  <div class="container"><!-- ================= HOME ================= -->
 
-  <div class="balance-title">
-    YOUR BALANCE
+<div
+  id="homeSection"
+  class="section active">
+
+  <div class="balance">
+
+    <div class="balance-title">
+      YOUR BALANCE
+    </div>
+
+    <div class="coin">
+      🪙 <span id="coins">0</span>
+    </div>
+
+    <div class="balance-sub">
+      Keep earning rewards
+    </div>
+
   </div>
 
-  <div class="coin">
-    🪙 <span id="coins">0</span>
+
+  <div class="stats">
+
+    <div class="stat">
+
+      <small>
+        Ads Watched
+      </small>
+
+      <strong id="ads">
+        0
+      </strong>
+
+    </div>
+
+
+    <div class="stat">
+
+      <small>
+        Today's Coins
+      </small>
+
+      <strong id="today">
+        0
+      </strong>
+
+    </div>
+
   </div>
 
-  <div class="balance-sub">
-    Keep earning rewards
+
+  <div class="card">
+
+    <h2>
+      🎬 Watch & Earn
+    </h2>
+
+    <p>
+      Watch a 10-second test advertisement and receive 1 coin.
+    </p>
+
+    <button
+      class="watch"
+      id="watchButton"
+      onclick="watchAd()">
+      ▶ WATCH AD
+    </button>
+
   </div>
 
 </div>
 
 
-<div class="stats">
+<!-- ================= REWARDS ================= -->
 
-  <div class="stat">
+<div
+  id="rewardsSection"
+  class="section">
 
-    <small>
-      Ads Watched
-    </small>
+  <div class="card">
 
-    <strong id="ads">
-      0
-    </strong>
+    <h2>
+      🎁 Daily Bonus
+    </h2>
+
+    <p>
+      Claim your daily bonus once per day.
+    </p>
+
+    <button
+      class="bonus"
+      id="bonusButton"
+      onclick="dailyBonus()">
+      CLAIM BONUS
+    </button>
 
   </div>
 
-  <div class="stat">
 
-    <small>
-      Today's Coins
-    </small>
+  <div class="card">
 
-    <strong id="today">
-      0
-    </strong>
+    <h2>
+      🏆 Your Rewards
+    </h2>
+
+    <p>
+      Total coins earned today
+    </p>
+
+    <div class="coin">
+      🪙 <span id="rewardCoins">0</span>
+    </div>
 
   </div>
 
 </div>
 
 
-<div class="card">
+<!-- ================= WITHDRAW ================= -->
 
-  <h2>
-    🎬 Watch & Earn
-  </h2>
+<div
+  id="withdrawSection"
+  class="section">
 
-  <p>
-    Watch a 10-second test advertisement and receive 1 coin.
-  </p>
+  <div class="balance">
 
-  <button
-    class="watch"
-    id="watchButton"
-    onclick="watchAd()">
-    ▶ WATCH AD
-  </button>
+    <div class="balance-title">
+      AVAILABLE BALANCE
+    </div>
+
+    <div class="coin">
+      🪙 <span id="withdrawCoins">0</span>
+    </div>
+
+    <div class="balance-sub">
+      Minimum withdrawal: 50 coins
+    </div>
+
+  </div>
+
+
+  <div class="card">
+
+    <h2>
+      💸 Withdraw Coins
+    </h2>
+
+    <p>
+      Prototype minimum: 50 coins.
+    </p>
+
+    <button
+      class="withdraw"
+      onclick="withdraw()">
+      WITHDRAW
+    </button>
+
+  </div>
+
+
+  <div class="card">
+
+    <h2>
+      📋 Withdrawal History
+    </h2>
+
+    <div
+      id="history"
+      class="history">
+      No withdrawal requests.
+    </div>
+
+  </div>
 
 </div>
 
 
-<div class="card">
+<!-- ================= PROFILE ================= -->
 
-  <h2>
-    🎁 Daily Bonus
-  </h2>
+<div
+  id="profileSection"
+  class="section">
 
-  <p>
-    Claim your daily bonus once per day.
-  </p>
+  <div class="card">
 
-  <button
-    class="bonus"
-    id="bonusButton"
-    onclick="dailyBonus()">
-    CLAIM BONUS
-  </button>
+    <div class="profile-icon">
+      👤
+    </div>
 
-</div>
+    <h2 style="text-align:center;">
+      My Profile
+    </h2>
 
-
-<div class="card">
-
-  <h2>
-    💸 Withdraw
-  </h2>
-
-  <p>
-    Prototype minimum: 50 coins.
-  </p>
-
-  <button
-    class="withdraw"
-    onclick="withdraw()">
-    WITHDRAW
-  </button>
-
-</div>
+    <div
+      id="profileEmail"
+      class="profile-email">
+      Loading...
+    </div>
 
 
-<div class="card">
+    <div class="info-row">
 
-  <h2>
-    📋 Withdrawal History
-  </h2>
+      <small>
+        User ID
+      </small>
 
-  <div
-    id="history"
-    class="history">
-    No withdrawal requests.
+      <strong id="profileUserId">
+        -
+      </strong>
+
+    </div>
+
+
+    <div class="info-row">
+
+      <small>
+        Current Coins
+      </small>
+
+      <strong>
+        🪙 <span id="profileCoins">0</span>
+      </strong>
+
+    </div>
+
+
+    <div class="info-row">
+
+      <small>
+        Ads Watched
+      </small>
+
+      <strong id="profileAds">
+        0
+      </strong>
+
+    </div>
+
+
+    <button
+      class="danger"
+      onclick="logout()">
+      LOG OUT
+    </button>
+
   </div>
 
 </div>
@@ -452,27 +635,50 @@ button:disabled{
   class="message">
 </div>
 
-  </div>  <div class="bottom"><div class="nav active">
+  </div>  <!-- ================= BOTTOM NAV ================= -->  <div class="bottom"><div
+  class="nav active"
+  data-section="homeSection"
+  onclick="navigate('homeSection',this)">
+
   <div>🏠</div>
   Home
+
 </div>
 
-<div class="nav">
+
+<div
+  class="nav"
+  data-section="rewardsSection"
+  onclick="navigate('rewardsSection',this)">
+
   <div>🎁</div>
   Rewards
+
 </div>
 
-<div class="nav">
+
+<div
+  class="nav"
+  data-section="withdrawSection"
+  onclick="navigate('withdrawSection',this)">
+
   <div>💸</div>
   Withdraw
+
 </div>
 
-<div class="nav">
+
+<div
+  class="nav"
+  data-section="profileSection"
+  onclick="navigate('profileSection',this)">
+
   <div>👤</div>
   Profile
+
 </div>
 
-  </div></div><!-- AD --><div
+  </div></div><!-- ================= AD SCREEN ================= --><div
   class="ad-screen"
   id="adScreen">  <h2>
     Advertisement
@@ -553,6 +759,50 @@ document.getElementById("history");
 
 
 /* =========================
+   NAVIGATION
+========================= */
+
+function navigate(sectionId, navElement){
+
+  document.querySelectorAll(".section").forEach(
+    function(section){
+
+      section.classList.remove("active");
+
+    }
+  );
+
+
+  const selected =
+    document.getElementById(sectionId);
+
+
+  if(selected){
+
+    selected.classList.add("active");
+
+  }
+
+
+  document.querySelectorAll(".nav").forEach(
+    function(nav){
+
+      nav.classList.remove("active");
+
+    }
+  );
+
+
+  if(navElement){
+
+    navElement.classList.add("active");
+
+  }
+
+}
+
+
+/* =========================
    SCREEN
 ========================= */
 
@@ -573,6 +823,7 @@ function showApp(){
 
   document.getElementById("app").style.display =
     "block";
+
 }
 
 
@@ -595,6 +846,7 @@ function showMessage(text){
     }
 
   },5000);
+
 }
 
 
@@ -663,6 +915,7 @@ async function handleAuth(){
       "Enter email and password.";
 
     return;
+
   }
 
 
@@ -672,6 +925,7 @@ async function handleAuth(){
       "Password must be at least 6 characters.";
 
     return;
+
   }
 
 
@@ -747,7 +1001,6 @@ async function handleAuth(){
 
 /* =========================
    PROFILE
-   TABLE: profile
 ========================= */
 
 async function loadProfile(){
@@ -961,6 +1214,11 @@ async function setupUser(user){
 
     update();
 
+    navigate(
+      "homeSection",
+      document.querySelector(".nav")
+    );
+
     showMessage(
       "Welcome to Watchly!"
     );
@@ -994,6 +1252,30 @@ function update(){
 
   todayElement.textContent =
     today;
+
+
+  document.getElementById("rewardCoins").textContent =
+    coins;
+
+  document.getElementById("withdrawCoins").textContent =
+    coins;
+
+  document.getElementById("profileCoins").textContent =
+    coins;
+
+  document.getElementById("profileAds").textContent =
+    ads;
+
+
+  if(currentUser){
+
+    document.getElementById("profileEmail").textContent =
+      currentUser.email || "No email";
+
+    document.getElementById("profileUserId").textContent =
+      currentUser.id;
+
+  }
 
 
   if(history.length === 0){
@@ -1122,6 +1404,7 @@ function watchAd(){
     );
 
     return;
+
   }
 
 
@@ -1191,373 +1474,3 @@ function watchAd(){
     },1000);
 
 }
-
-
-/* =========================
-   FINISH AD
-========================= */
-
-async function finishAd(){
-
-  if(!currentUser){
-
-    return;
-  }
-
-
-  const button =
-    document.getElementById("adButton");
-
-  const screen =
-    document.getElementById("adScreen");
-
-
-  button.disabled =
-    true;
-
-  button.textContent =
-    "ADDING REWARD...";
-
-
-  try{
-
-    await addTransaction();
-
-    await addCoin();
-
-    await loadTodayStats();
-
-    update();
-
-
-    screen.style.display =
-      "none";
-
-    watchButton.disabled =
-      false;
-
-    adRunning =
-      false;
-
-    button.disabled =
-      false;
-
-    button.textContent =
-      "CLAIM 1 COIN";
-
-
-    showMessage(
-      "🎉 1 coin earned successfully!"
-    );
-
-  }catch(error){
-
-    console.error(error);
-
-    screen.style.display =
-      "none";
-
-    watchButton.disabled =
-      false;
-
-    adRunning =
-      false;
-
-    button.disabled =
-      false;
-
-    button.textContent =
-      "CLAIM 1 COIN";
-
-
-    showMessage(
-      "❌ " +
-      error.message
-    );
-
-  }
-
-}
-
-
-/* =========================
-   DAILY BONUS
-========================= */
-
-async function dailyBonus(){
-
-  if(!currentUser){
-
-    showMessage(
-      "Please login first."
-    );
-
-    return;
-  }
-
-
-  const date =
-    new Date().toDateString();
-
-
-  if(bonusDate === date){
-
-    showMessage(
-      "You already claimed today's bonus."
-    );
-
-    return;
-  }
-
-
-  const newCoins =
-    Number(coins) + 1;
-
-
-  const result =
-    await supabaseClient
-    .from("profile")
-    .update({
-      coin:newCoins
-    })
-    .eq(
-      "user_id",
-      currentUser.id
-    )
-    .select("coin")
-    .single();
-
-
-  if(result.error){
-
-    showMessage(
-      "❌ Bonus failed: " +
-      result.error.message
-    );
-
-    return;
-  }
-
-
-  coins =
-    Number(result.data.coin);
-
-
-  bonusDate =
-    date;
-
-
-  saveLocalData();
-
-  update();
-
-
-  showMessage(
-    "🎁 Daily bonus: +1 coin!"
-  );
-
-}
-
-
-/* =========================
-   WITHDRAW
-========================= */
-
-async function withdraw(){
-
-  if(!currentUser){
-
-    showMessage(
-      "Please login first."
-    );
-
-    return;
-  }
-
-
-  if(coins < 50){
-
-    showMessage(
-      "You need at least 50 coins."
-    );
-
-    return;
-  }
-
-
-  const input =
-    prompt(
-      "Enter coins to withdraw:",
-      "50"
-    );
-
-
-  if(input === null){
-
-    return;
-  }
-
-
-  const amount =
-    Number(input);
-
-
-  if(
-    !Number.isInteger(amount) ||
-    amount < 50 ||
-    amount > coins
-  ){
-
-    showMessage(
-      "Invalid withdrawal amount."
-    );
-
-    return;
-  }
-
-
-  const newCoins =
-    coins - amount;
-
-
-  const result =
-    await supabaseClient
-    .from("profile")
-    .update({
-      coin:newCoins
-    })
-    .eq(
-      "user_id",
-      currentUser.id
-    )
-    .select("coin")
-    .single();
-
-
-  if(result.error){
-
-    showMessage(
-      "❌ Withdrawal failed: " +
-      result.error.message
-    );
-
-    return;
-  }
-
-
-  coins =
-    Number(result.data.coin);
-
-
-  history.unshift({
-    coins:amount,
-    status:"Test / Pending"
-  });
-
-
-  saveLocalData();
-
-  update();
-
-
-  showMessage(
-    "✅ Test withdrawal created."
-  );
-
-}
-
-
-/* =========================
-   LOGOUT
-========================= */
-
-async function logout(){
-
-  await supabaseClient.auth.signOut();
-
-  currentUser =
-    null;
-
-  coins =
-    0;
-
-  ads =
-    0;
-
-  today =
-    0;
-
-  showAuth();
-
-}
-
-
-/* =========================
-   START
-========================= */
-
-async function checkSession(){
-
-  try{
-
-    const result =
-      await supabaseClient.auth.getSession();
-
-
-    if(
-      result.data &&
-      result.data.session &&
-      result.data.session.user
-    ){
-
-      await setupUser(
-        result.data.session.user
-      );
-
-    }else{
-
-      showAuth();
-
-    }
-
-  }catch(error){
-
-    console.error(error);
-
-    showAuth();
-
-  }
-
-}
-
-
-/* =========================
-   AUTH LISTENER
-========================= */
-
-supabaseClient.auth.onAuthStateChange(
-  function(event,session){
-
-    if(
-      event === "SIGNED_OUT"
-    ){
-
-      currentUser =
-        null;
-
-      showAuth();
-
-    }
-
-  }
-);
-
-
-/* =========================
-   START APP
-========================= */
-
-checkSession();
-
-</script></body>
-</ht
