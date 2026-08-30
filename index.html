@@ -814,7 +814,55 @@ function showPage(page, clickedNav){
 
 }
 
+/* =========================
+SECTION NAVIGATION
+========================= */
 
+function showSection(section){
+
+  document.querySelectorAll(".nav").forEach(function(nav){
+    nav.classList.remove("active");
+  });
+
+  const pages = document.querySelectorAll(".page");
+
+  pages.forEach(function(page){
+    page.classList.remove("active");
+  });
+
+  if(section === "home"){
+    document.querySelector(".nav:nth-child(1)").classList.add("active");
+    document.getElementById("homePage").classList.add("active");
+  }
+
+  if(section === "rewards"){
+    document.querySelector(".nav:nth-child(2)").classList.add("active");
+    document.getElementById("rewardsPage").classList.add("active");
+    document.getElementById("rewardCoins").textContent = coins;
+  }
+
+  if(section === "withdraw"){
+    document.querySelector(".nav:nth-child(3)").classList.add("active");
+    document.getElementById("withdrawPage").classList.add("active");
+    update();
+  }
+
+  if(section === "profile"){
+    document.querySelector(".nav:nth-child(4)").classList.add("active");
+    document.getElementById("profilePage").classList.add("active");
+
+    if(currentUser){
+      document.getElementById("profileEmail").textContent =
+        currentUser.email || "-";
+
+      document.getElementById("profileId").textContent =
+        currentUser.id || "-";
+
+      document.getElementById("profileCoins").textContent =
+        coins;
+    }
+  }
+}
 /* =========================
 AUTH MODE
 ========================= */
