@@ -747,13 +747,14 @@ async function handleAuth(){
 
 /* =========================
    PROFILE
+   TABLE: profile
 ========================= */
 
 async function loadProfile(){
 
   const result =
     await supabaseClient
-    .from("profiles")
+    .from("profile")
     .select("id,user_id,coin")
     .eq(
       "user_id",
@@ -776,7 +777,7 @@ async function loadProfile(){
 
     const created =
       await supabaseClient
-      .from("profiles")
+      .from("profile")
       .insert({
         user_id:currentUser.id,
         coin:0
@@ -980,7 +981,7 @@ async function setupUser(user){
 
 
 /* =========================
-   UPDATE
+   UPDATE UI
 ========================= */
 
 function update(){
@@ -1080,7 +1081,7 @@ async function addCoin(){
 
   const result =
     await supabaseClient
-    .from("profiles")
+    .from("profile")
     .update({
       coin:newCoins
     })
@@ -1315,7 +1316,7 @@ async function dailyBonus(){
 
   const result =
     await supabaseClient
-    .from("profiles")
+    .from("profile")
     .update({
       coin:newCoins
     })
@@ -1421,7 +1422,7 @@ async function withdraw(){
 
   const result =
     await supabaseClient
-    .from("profiles")
+    .from("profile")
     .update({
       coin:newCoins
     })
@@ -1559,4 +1560,4 @@ supabaseClient.auth.onAuthStateChange(
 checkSession();
 
 </script></body>
-  </html>
+</ht
