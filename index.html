@@ -1760,6 +1760,58 @@ async function withdraw(){
 
 }
 
+/* =========================
+SECTION NAVIGATION
+========================= */
+
+function showSection(section){
+
+  document.querySelectorAll(".nav").forEach(function(nav){
+    nav.classList.remove("active");
+  });
+
+  document.querySelectorAll(".page").forEach(function(page){
+    page.classList.remove("active");
+  });
+
+  if(section === "home"){
+    document.getElementById("homePage").classList.add("active");
+    document.querySelectorAll(".nav")[0].classList.add("active");
+  }
+
+  if(section === "rewards"){
+    document.getElementById("rewardsPage").classList.add("active");
+    document.querySelectorAll(".nav")[1].classList.add("active");
+
+    document.getElementById("rewardCoins").textContent = coins;
+  }
+
+  if(section === "withdraw"){
+    document.getElementById("withdrawPage").classList.add("active");
+    document.querySelectorAll(".nav")[2].classList.add("active");
+
+    update();
+  }
+
+  if(section === "profile"){
+    document.getElementById("profilePage").classList.add("active");
+    document.querySelectorAll(".nav")[3].classList.add("active");
+
+    if(currentUser){
+
+      document.getElementById("profileEmail").textContent =
+        currentUser.email || "-";
+
+      document.getElementById("profileId").textContent =
+        currentUser.id || "-";
+
+      document.getElementById("profileCoins").textContent =
+        coins;
+    }
+  }
+
+}
+
 
 /* =========================
 LOGOUT
