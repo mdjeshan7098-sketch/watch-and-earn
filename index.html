@@ -1078,59 +1078,84 @@ TODAY STATS
 
 async function loadTodayStats(){
 
-  const start = new Date();
+  if(!currentUser){
+    ads = 0;
+    today = 0;
+    return;
+  }
 
-  start.setHours(
-    0,
-    0,
-    0,
-    0
-  );
+  try{
 
-  const result =
-    await supabaseClient
-      .from("transactions")
-      .select(
-        "amount,type,created_at"
-      )
-      .eq(
-        "user_id",
-        currentUser.id
-      )
-      .eq(
-        "type",
-        "watch_ad"
-      )
-      .gte(
-        "created_at",
-        start.toISOString()
+    const result =
+      await supabaseClient
+        .from("transactions")
+        .select("amount,type,created_at")
+        .eq(
+          "user_id",
+          currentUser.id
+        )
+        .eq(
+          "type",
+          "watch_ad"
+        )
+        .order(
+          "created_at",
+          { ascending:false }
+        );
+
+    if(result.error){
+
+      throw new Error(
+        result.error.message
       );
 
-  if(result.error){
+    }
 
-    throw new Error(
-      "Transaction error: " +
-      result.error.message
+    const rows =
+      result.data || [];
+
+    /* Total ads watched */
+    ads =
+      rows.length;
+
+    /* Today's coins */
+    const now =
+      new Date();
+
+    const todayStart =
+      new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate()
+      );
+
+    today =
+      rows
+        .filter(function(row){
+
+          return new Date(row.created_at) >= todayStart;
+
+        })
+        .reduce(function(sum,row){
+
+          return sum +
+            Number(row.amount || 0);
+
+        },0);
+
+  }catch(error){
+
+    console.error(
+      "Stats error:",
+      error
     );
+
+    ads = 0;
+    today = 0;
 
   }
 
-  const rows =
-    result.data || [];
-
-  ads =
-    rows.length;
-
-  today =
-    rows.reduce(
-      function(sum,row){
-
-        return sum +
-          Number(row.amount || 0);
-
-      },
-      0
-    );
+  update();
 
 }
 
