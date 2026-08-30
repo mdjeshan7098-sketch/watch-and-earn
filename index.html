@@ -1708,7 +1708,40 @@ supabaseClient.auth.onAuthStateChange(
   }
 );
 
+async function refreshProfile(){
 
+  if(!currentUser){
+    showMessage("Please login first.");
+    return;
+  }
+
+  try{
+
+    await loadProfile();
+    update();
+
+    document.getElementById("profileEmail").textContent =
+      currentUser.email || "-";
+
+    document.getElementById("profileId").textContent =
+      currentUser.id || "-";
+
+    document.getElementById("profileCoins").textContent =
+      coins;
+
+    showMessage("✅ Profile refreshed!");
+
+  }catch(error){
+
+    console.error(error);
+
+    showMessage(
+      "❌ " + error.message
+    );
+
+  }
+
+}
 /* =========================
 START APP
 ========================= */
