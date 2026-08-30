@@ -1210,11 +1210,20 @@ async function setupUser(user){
 
     await loadProfile();
 
-    await loadTodayStats();
+await loadTodayStats();
 
-    showApp();
+showApp();
 
-    update();
+update();
+
+document.getElementById("profileEmail").textContent =
+  currentUser.email || "-";
+
+document.getElementById("profileId").textContent =
+  currentUser.id || "-";
+
+document.getElementById("profileCoins").textContent =
+  coins;
 
   }catch(error){
 
