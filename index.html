@@ -1417,5 +1417,46 @@ START APP
 
 checkSession();
 
+/* =========================
+BOTTOM NAVIGATION
+========================= */
+
+function showPage(page, clickedNav){
+
+/* Remove active from all navigation buttons */
+document.querySelectorAll(".nav").forEach(function(nav){
+nav.classList.remove("active");
+});
+
+/* Make clicked button active */
+if(clickedNav){
+clickedNav.classList.add("active");
+}
+
+/* HOME */
+if(page === "home"){
+showMessage("🏠 Home");
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+}
+
+/* REWARDS */
+if(page === "rewards"){
+showMessage("🎁 Rewards");
+}
+
+/* WITHDRAW */
+if(page === "withdraw"){
+showMessage("💸 Withdraw");
+}
+
+/* PROFILE */
+if(page === "profile"){
+showMessage("👤 Profile");
+}
+
+}
 </script></body>
 </ht
