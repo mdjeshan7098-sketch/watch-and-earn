@@ -1,7 +1,8 @@
 <!DOCTYPE html><html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Watchly - Rewards</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Watchly - Rewards</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><style>
 *{
   box-sizing:border-box;
   margin:0;
@@ -316,7 +317,8 @@ button:disabled{
 
 </div>
 
-  </div></div><!-- APP --><div id="app">  <div class="header"><div class="logo">
+  </div>
+</div><!-- APP --><div id="app">  <div class="header"><div class="logo">
   Watch<span>ly</span>
 </div>
 
@@ -498,7 +500,7 @@ const SUPABASE_URL =
 "https://woyvafgecfuriavuxnje.supabase.co";
 
 const SUPABASE_KEY =
-"sb_publishable_lxrfM4MgeRSm8-CiiUGQZg_EdayI2Po";
+"sb_publishable_lxrfM4MgeRSm8-CiiUGQz_EdayI2Po";
 
 const supabaseClient =
 window.supabase.createClient(
@@ -752,7 +754,7 @@ async function loadProfile(){
 
   const result =
     await supabaseClient
-    .from("Profile")
+    .from("profiles")
     .select("id,user_id,coin")
     .eq(
       "user_id",
@@ -775,7 +777,7 @@ async function loadProfile(){
 
     const created =
       await supabaseClient
-      .from("Profile")
+      .from("profiles")
       .insert({
         user_id:currentUser.id,
         coin:0
@@ -1079,7 +1081,7 @@ async function addCoin(){
 
   const result =
     await supabaseClient
-    .from("Profile")
+    .from("profiles")
     .update({
       coin:newCoins
     })
@@ -1314,7 +1316,7 @@ async function dailyBonus(){
 
   const result =
     await supabaseClient
-    .from("Profile")
+    .from("profiles")
     .update({
       coin:newCoins
     })
@@ -1420,7 +1422,7 @@ async function withdraw(){
 
   const result =
     await supabaseClient
-    .from("Profile")
+    .from("profiles")
     .update({
       coin:newCoins
     })
@@ -1558,4 +1560,4 @@ supabaseClient.auth.onAuthStateChange(
 checkSession();
 
 </script></body>
-  </html>
+    </html>
