@@ -198,12 +198,37 @@ button:disabled{
   word-break:break-word;
 }
 
-.page{
+.ad-screen{
   display:none;
+  position:fixed;
+  inset:0;
+  background:#050b14;
+  z-index:100;
+  text-align:center;
+  padding:25vh 20px;
 }
 
-.page.active{
-  display:block;
+.ad-screen h2{
+  font-size:26px;
+}
+
+.ad-screen p{
+  color:#8291a5;
+  margin-top:8px;
+}
+
+.timer{
+  font-size:55px;
+  font-weight:bold;
+  margin:20px;
+}
+
+.ad-button{
+  display:none;
+  width:80%;
+  margin:auto;
+  background:#16a34a;
+  color:white;
 }
 
 .bottom{
@@ -244,56 +269,12 @@ button:disabled{
   line-height:1.8;
 }
 
-.profile-row{
-  background:#17263b;
-  border:1px solid #284363;
-  border-radius:12px;
-  padding:13px;
-  margin-top:10px;
-}
-
-.profile-label{
-  color:#8796aa;
-  font-size:12px;
-  margin-bottom:5px;
-}
-
-.profile-value{
-  font-size:14px;
-  word-break:break-all;
-}
-
-.ad-screen{
+.page{
   display:none;
-  position:fixed;
-  inset:0;
-  background:#050b14;
-  z-index:100;
-  text-align:center;
-  padding:25vh 20px;
 }
 
-.ad-screen h2{
-  font-size:26px;
-}
-
-.ad-screen p{
-  color:#8291a5;
-  margin-top:8px;
-}
-
-.timer{
-  font-size:55px;
-  font-weight:bold;
-  margin:20px;
-}
-
-.ad-button{
-  display:none;
-  width:80%;
-  margin:auto;
-  background:#16a34a;
-  color:white;
+.page.active{
+  display:block;
 }
 
 #auth,
@@ -354,7 +335,7 @@ button:disabled{
   LOGOUT
 </button>
 
-  </div>  <div class="container"><!-- ================= HOME ================= -->
+  </div>  <div class="container"><!-- HOME -->
 
 <div id="homePage" class="page active">
 
@@ -388,7 +369,6 @@ button:disabled{
       </strong>
 
     </div>
-
 
     <div class="stat">
 
@@ -452,78 +432,31 @@ button:disabled{
 </div>
 
 
-<!-- ================= REWARDS ================= -->
+<!-- REWARDS -->
 
 <div id="rewardsPage" class="page">
 
   <div class="card">
 
-    <h2>
-      🎁 Rewards
-    </h2>
+    <h2>🎁 Rewards</h2>
 
     <p>
-      Watch advertisements and collect coins.
+      Keep watching advertisements to collect more coins.
     </p>
 
-    <div class="profile-row">
-
-      <div class="profile-label">
-        CURRENT BALANCE
-      </div>
-
-      <div class="profile-value">
-        🪙 <strong id="rewardCoins">0</strong> coins
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <div class="card">
-
-    <h2>
-      🎬 Watch & Earn
-    </h2>
+    <br>
 
     <p>
-      Complete a 10-second test advertisement to earn 1 coin.
+      🪙 Current balance:
+      <strong id="rewardCoins">0</strong> coins
     </p>
-
-    <button
-      class="watch"
-      onclick="goHomeAndWatch()"
-    >
-      ▶ WATCH AD
-    </button>
-
-  </div>
-
-
-  <div class="card">
-
-    <h2>
-      🎁 Daily Bonus
-    </h2>
-
-    <p>
-      Claim your bonus once every day.
-    </p>
-
-    <button
-      class="bonus"
-      onclick="goHomeAndBonus()"
-    >
-      CLAIM BONUS
-    </button>
 
   </div>
 
 </div>
 
 
-<!-- ================= WITHDRAW ================= -->
+<!-- WITHDRAW -->
 
 <div id="withdrawPage" class="page">
 
@@ -536,18 +469,6 @@ button:disabled{
     <p>
       Prototype minimum: 50 coins.
     </p>
-
-    <div class="profile-row">
-
-      <div class="profile-label">
-        AVAILABLE BALANCE
-      </div>
-
-      <div class="profile-value">
-        🪙 <strong id="withdrawCoins">0</strong> coins
-      </div>
-
-    </div>
 
     <br>
 
@@ -576,7 +497,7 @@ button:disabled{
 </div>
 
 
-<!-- ================= PROFILE ================= -->
+<!-- PROFILE -->
 
 <div id="profilePage" class="page">
 
@@ -587,62 +508,38 @@ button:disabled{
     </h2>
 
     <p>
-      Your Watchly account information.
+      Account information
     </p>
 
+    <br>
 
-    <div class="profile-row">
+    <p>
+      <strong>Email:</strong>
+      <span id="profileEmail">-</span>
+    </p>
 
-      <div class="profile-label">
-        EMAIL
-      </div>
+    <br>
 
-      <div
-        class="profile-value"
-        id="profileEmail"
-      >
-        -
-      </div>
+    <p>
+      <strong>User ID:</strong>
+    </p>
 
-    </div>
+    <p id="profileId" style="font-size:12px;word-break:break-all;">
+      -
+    </p>
 
+    <br>
 
-    <div class="profile-row">
-
-      <div class="profile-label">
-        USER ID
-      </div>
-
-      <div
-        class="profile-value"
-        id="profileId"
-      >
-        -
-      </div>
-
-    </div>
-
-
-    <div class="profile-row">
-
-      <div class="profile-label">
-        COINS
-      </div>
-
-      <div
-        class="profile-value"
-        id="profileCoins"
-      >
-        0
-      </div>
-
-    </div>
+    <p>
+      <strong>Coins:</strong>
+      <span id="profileCoins">0</span>
+    </p>
 
   </div>
 
 </div>
 
-  </div>  <!-- ================= BOTTOM NAVIGATION ================= -->  <div class="bottom"><div
+  </div>  <!-- BOTTOM NAVIGATION -->  <div class="bottom"><div
   class="nav active"
   onclick="showPage('home',this)"
 >
@@ -729,7 +626,6 @@ let today = 0;
 
 let authMode = "login";
 let adRunning = false;
-let adTimer = null;
 
 let bonusDate = "";
 let history = [];
@@ -768,10 +664,10 @@ SCREEN
 function showAuth(){
 
   document.getElementById("auth").style.display =
-    "block";
+  "block";
 
   document.getElementById("app").style.display =
-    "none";
+  "none";
 
 }
 
@@ -779,10 +675,10 @@ function showAuth(){
 function showApp(){
 
   document.getElementById("auth").style.display =
-    "none";
+  "none";
 
   document.getElementById("app").style.display =
-    "block";
+  "block";
 
 }
 
@@ -816,28 +712,19 @@ function showPage(page, clickedNav){
 
   document.querySelectorAll(".nav").forEach(
     function(nav){
-
       nav.classList.remove("active");
-
     }
   );
 
-
   if(clickedNav){
-
     clickedNav.classList.add("active");
-
   }
-
 
   document.querySelectorAll(".page").forEach(
     function(section){
-
       section.classList.remove("active");
-
     }
   );
-
 
   if(page === "home"){
 
@@ -845,7 +732,6 @@ function showPage(page, clickedNav){
       .classList.add("active");
 
   }
-
 
   if(page === "rewards"){
 
@@ -857,70 +743,37 @@ function showPage(page, clickedNav){
 
   }
 
-
   if(page === "withdraw"){
 
     document.getElementById("withdrawPage")
       .classList.add("active");
 
-    document.getElementById("withdrawCoins")
-      .textContent = coins;
-
-    updateHistory();
+    update();
 
   }
-
 
   if(page === "profile"){
 
     document.getElementById("profilePage")
       .classList.add("active");
 
-    updateProfile();
+    if(currentUser){
+
+      document.getElementById("profileEmail")
+        .textContent =
+        currentUser.email || "-";
+
+      document.getElementById("profileId")
+        .textContent =
+        currentUser.id || "-";
+
+      document.getElementById("profileCoins")
+        .textContent =
+        coins;
+
+    }
 
   }
-
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
-
-}
-
-
-/* =========================
-REWARDS SHORTCUTS
-========================= */
-
-function goHomeAndWatch(){
-
-  const homeNav =
-    document.querySelectorAll(".nav")[0];
-
-  showPage("home",homeNav);
-
-  setTimeout(function(){
-
-    watchAd();
-
-  },100);
-
-}
-
-
-function goHomeAndBonus(){
-
-  const homeNav =
-    document.querySelectorAll(".nav")[0];
-
-  showPage("home",homeNav);
-
-  setTimeout(function(){
-
-    dailyBonus();
-
-  },100);
 
 }
 
@@ -993,7 +846,6 @@ async function handleAuth(){
   const authMessage =
     document.getElementById("authMessage");
 
-
   if(!email || !password){
 
     authMessage.textContent =
@@ -1002,7 +854,6 @@ async function handleAuth(){
     return;
 
   }
-
 
   if(password.length < 6){
 
@@ -1013,10 +864,8 @@ async function handleAuth(){
 
   }
 
-
   authMessage.textContent =
     "Please wait...";
-
 
   try{
 
@@ -1024,19 +873,13 @@ async function handleAuth(){
 
       const result =
         await supabaseClient.auth.signUp({
-
           email:email,
           password:password
-
         });
 
-
       if(result.error){
-
         throw result.error;
-
       }
-
 
       if(
         result.data.user &&
@@ -1058,19 +901,13 @@ async function handleAuth(){
 
       const result =
         await supabaseClient.auth.signInWithPassword({
-
           email:email,
           password:password
-
         });
 
-
       if(result.error){
-
         throw result.error;
-
       }
-
 
       await setupUser(
         result.data.user
@@ -1084,10 +921,8 @@ async function handleAuth(){
 
     authMessage.textContent =
       "❌ " +
-      (
-        error.message ||
-        "Authentication failed."
-      );
+      (error.message ||
+      "Authentication failed.");
 
   }
 
@@ -1110,7 +945,6 @@ async function loadProfile(){
       )
       .maybeSingle();
 
-
   if(result.error){
 
     throw new Error(
@@ -1120,21 +954,17 @@ async function loadProfile(){
 
   }
 
-
   if(!result.data){
 
     const created =
       await supabaseClient
         .from("profile")
         .insert({
-
           user_id:currentUser.id,
           coin:0
-
         })
         .select("id,user_id,coin")
         .single();
-
 
     if(created.error){
 
@@ -1144,7 +974,6 @@ async function loadProfile(){
       );
 
     }
-
 
     coins = 0;
 
@@ -1164,8 +993,7 @@ TODAY STATS
 
 async function loadTodayStats(){
 
-  const start =
-    new Date();
+  const start = new Date();
 
   start.setHours(
     0,
@@ -1173,7 +1001,6 @@ async function loadTodayStats(){
     0,
     0
   );
-
 
   const result =
     await supabaseClient
@@ -1194,7 +1021,6 @@ async function loadTodayStats(){
         start.toISOString()
       );
 
-
   if(result.error){
 
     throw new Error(
@@ -1204,14 +1030,11 @@ async function loadTodayStats(){
 
   }
 
-
   const rows =
     result.data || [];
 
-
   ads =
     rows.length;
-
 
   today =
     rows.reduce(
@@ -1235,18 +1058,15 @@ function loadLocalData(){
 
   if(!currentUser) return;
 
-
   const prefix =
     "watchly_" +
     currentUser.id +
     "_";
 
-
   bonusDate =
     localStorage.getItem(
       prefix + "bonus"
     ) || "";
-
 
   try{
 
@@ -1270,18 +1090,15 @@ function saveLocalData(){
 
   if(!currentUser) return;
 
-
   const prefix =
     "watchly_" +
     currentUser.id +
     "_";
 
-
   localStorage.setItem(
     prefix + "bonus",
     bonusDate
   );
-
 
   localStorage.setItem(
     prefix + "history",
@@ -1299,10 +1116,8 @@ async function setupUser(user){
 
   if(!user) return;
 
-
   currentUser =
     user;
-
 
   try{
 
@@ -1348,18 +1163,10 @@ function update(){
   todayElement.textContent =
     today;
 
-
   document.getElementById(
     "rewardCoins"
   ).textContent =
     coins;
-
-
-  document.getElementById(
-    "withdrawCoins"
-  ).textContent =
-    coins;
-
 
   document.getElementById(
     "profileCoins"
@@ -1367,14 +1174,30 @@ function update(){
     coins;
 
 
-  updateHistory();
+  if(history.length === 0){
 
-  updateProfile();
+    historyElement.textContent =
+      "No withdrawal requests.";
+
+  }else{
+
+    historyElement.innerHTML =
+      history.map(
+        function(item){
+
+          return "🪙 " +
+            item.coins +
+            " coins — " +
+            item.status;
+
+        }
+      ).join("<br>");
+
+  }
 
 
   const date =
     new Date().toDateString();
-
 
   if(bonusDate === date){
 
@@ -1398,66 +1221,6 @@ function update(){
 
 
 /* =========================
-HISTORY
-========================= */
-
-function updateHistory(){
-
-  if(history.length === 0){
-
-    historyElement.textContent =
-      "No withdrawal requests.";
-
-    return;
-
-  }
-
-
-  historyElement.innerHTML =
-    history.map(
-      function(item){
-
-        return "🪙 " +
-          item.coins +
-          " coins — " +
-          item.status;
-
-      }
-    ).join("<br>");
-
-}
-
-
-/* =========================
-PROFILE UI
-========================= */
-
-function updateProfile(){
-
-  if(!currentUser) return;
-
-
-  document.getElementById(
-    "profileEmail"
-  ).textContent =
-    currentUser.email || "-";
-
-
-  document.getElementById(
-    "profileId"
-  ).textContent =
-    currentUser.id || "-";
-
-
-  document.getElementById(
-    "profileCoins"
-  ).textContent =
-    coins;
-
-}
-
-
-/* =========================
 ADD TRANSACTION
 ========================= */
 
@@ -1467,13 +1230,10 @@ async function addTransaction(){
     await supabaseClient
       .from("transactions")
       .insert({
-
         user_id:currentUser.id,
         amount:1,
         type:"watch_ad"
-
       });
-
 
   if(result.error){
 
@@ -1489,4 +1249,204 @@ async function addTransaction(){
 
 /* =========================
 ADD COIN
-===
+========================= */
+
+async function addCoin(){
+
+  const newCoins =
+    Number(coins) + 1;
+
+  const result =
+    await supabaseClient
+      .from("profile")
+      .update({
+        coin:newCoins
+      })
+      .eq(
+        "user_id",
+        currentUser.id
+      )
+      .select("coin")
+      .single();
+
+  if(result.error){
+
+    throw new Error(
+      "Coin update failed: " +
+      result.error.message
+    );
+
+  }
+
+  coins =
+    Number(result.data.coin);
+
+}
+
+
+/* =========================
+WATCH AD
+========================= */
+
+function watchAd(){
+
+  if(!currentUser){
+
+    showMessage(
+      "Please login first."
+    );
+
+    return;
+
+  }
+
+  if(adRunning) return;
+
+  adRunning =
+    true;
+
+  watchButton.disabled =
+    true;
+
+  const screen =
+    document.getElementById(
+      "adScreen"
+    );
+
+  const timer =
+    document.getElementById(
+      "timer"
+    );
+
+  const button =
+    document.getElementById(
+      "adButton"
+    );
+
+  screen.style.display =
+    "block";
+
+  button.style.display =
+    "none";
+
+  button.disabled =
+    false;
+
+  button.textContent =
+    "CLAIM 1 COIN";
+
+  timer.textContent =
+    "10";
+
+  let seconds = 10;
+
+  const countdown =
+    setInterval(
+      function(){
+
+        seconds--;
+
+        timer.textContent =
+          seconds;
+
+        if(seconds <= 0){
+
+          clearInterval(
+            countdown
+          );
+
+          timer.textContent =
+            "✓";
+
+          button.style.display =
+            "block";
+
+        }
+
+      },
+      1000
+    );
+
+}
+
+
+/* =========================
+FINISH AD
+========================= */
+
+async function finishAd(){
+
+  if(!currentUser){
+    return;
+  }
+
+  const button =
+    document.getElementById(
+      "adButton"
+    );
+
+  const screen =
+    document.getElementById(
+      "adScreen"
+    );
+
+  button.disabled =
+    true;
+
+  button.textContent =
+    "ADDING REWARD...";
+
+  try{
+
+    await addTransaction();
+
+    await addCoin();
+
+    await loadTodayStats();
+
+    update();
+
+    screen.style.display =
+      "none";
+
+    watchButton.disabled =
+      false;
+
+    adRunning =
+      false;
+
+    button.disabled =
+      false;
+
+    button.textContent =
+      "CLAIM 1 COIN";
+
+    showMessage(
+      "🎉 1 coin earned successfully!"
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    screen.style.display =
+      "none";
+
+    watchButton.disabled =
+      false;
+
+    adRunning =
+      false;
+
+    button.disabled =
+      false;
+
+    button.textContent =
+      "CLAIM 1 COIN";
+
+    showMessage(
+      "❌ " +
+      error.message
+    );
+
+  }
