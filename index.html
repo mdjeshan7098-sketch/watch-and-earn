@@ -1677,11 +1677,44 @@ async function withdraw(){
   const newCoins =
     coins - amount;
 
+
+  /* =========================
+     CREATE WITHDRAWAL
+  ========================= */
+
+  const withdrawal =
+    await supabaseClient
+      .from("withdrawals")
+      .insert({
+        user_id: currentUser.id,
+        coins: amount,
+        status: "Pending"
+      })
+      .select()
+      .single();
+
+
+  if(withdrawal.error){
+
+    showMessage(
+      "❌ Withdrawal request failed: " +
+      withdrawal.error.message
+    );
+
+    return;
+
+  }
+
+
+  /* =========================
+     REMOVE COINS
+  ========================= */
+
   const result =
     await supabaseClient
       .from("profile")
       .update({
-        coin:newCoins
+        coin: newCoins
       })
       .eq(
         "user_id",
@@ -1690,10 +1723,11 @@ async function withdraw(){
       .select("coin")
       .single();
 
+
   if(result.error){
 
     showMessage(
-      "❌ Withdrawal failed: " +
+      "❌ Coin deduction failed: " +
       result.error.message
     );
 
@@ -1701,20 +1735,27 @@ async function withdraw(){
 
   }
 
+
   coins =
     Number(result.data.coin);
 
+
+  /* =========================
+     UPDATE LOCAL DISPLAY
+  ========================= */
+
   history.unshift({
-    coins:amount,
-    status:"Test / Pending"
+    coins: amount,
+    status: "Pending"
   });
 
   saveLocalData();
 
   update();
 
+
   showMessage(
-    "✅ Test withdrawal created."
+    "✅ Withdrawal request created!"
   );
 
 }
