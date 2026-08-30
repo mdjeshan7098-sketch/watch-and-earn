@@ -1,8 +1,13 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Watchly - Rewards</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><style>
+<title>Watchly - Rewards</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
 *{
   box-sizing:border-box;
   margin:0;
@@ -12,17 +17,27 @@
 body{
   font-family:Arial,sans-serif;
   background:#07111f;
-  color:white;
+  color:#fff;
   min-height:100vh;
-  padding-bottom:85px;
+  padding-bottom:80px;
+}
+
+button,input{
+  font-family:inherit;
+}
+
+button{
+  border:0;
+  cursor:pointer;
 }
 
 .header{
-  padding:20px;
+  padding:18px 20px;
   background:#0a1628;
   display:flex;
   justify-content:space-between;
   align-items:center;
+  border-bottom:1px solid #182940;
 }
 
 .logo{
@@ -37,13 +52,14 @@ body{
 .logout{
   width:auto;
   padding:9px 14px;
+  border-radius:10px;
   background:#17263b;
   color:#60a5fa;
   border:1px solid #284363;
 }
 
 .container{
-  max-width:500px;
+  max-width:520px;
   margin:auto;
   padding:18px;
 }
@@ -56,8 +72,7 @@ body{
 
 .auth-card,
 .card,
-.stat,
-.profile-card{
+.stat{
   background:#101d30;
   border:1px solid #1c2c43;
   border-radius:18px;
@@ -88,24 +103,26 @@ body{
   border-radius:12px;
   border:1px solid #284363;
   background:#07111f;
-  color:white;
+  color:#fff;
   outline:none;
+}
+
+.input:focus{
+  border-color:#3b82f6;
 }
 
 button{
   width:100%;
-  border:none;
   border-radius:13px;
   padding:15px;
   font-size:16px;
   font-weight:bold;
-  cursor:pointer;
 }
 
 .auth-button,
 .watch{
   background:#3b82f6;
-  color:white;
+  color:#fff;
 }
 
 .switch-button{
@@ -171,6 +188,7 @@ button{
 
 .card p{
   margin-bottom:15px;
+  line-height:1.5;
 }
 
 .bonus{
@@ -181,7 +199,12 @@ button{
 
 .withdraw{
   background:#16a34a;
-  color:white;
+  color:#fff;
+}
+
+.danger{
+  background:#7f1d1d;
+  color:#fff;
 }
 
 button:disabled{
@@ -196,6 +219,58 @@ button:disabled{
   margin:15px 0;
   font-size:14px;
   word-break:break-word;
+}
+
+.error{
+  color:#f87171;
+}
+
+.success{
+  color:#4ade80;
+}
+
+.page{
+  display:none;
+}
+
+.page.active{
+  display:block;
+}
+
+.page-title{
+  font-size:25px;
+  margin-bottom:18px;
+}
+
+.profile-row{
+  padding:15px 0;
+  border-bottom:1px solid #1c2c43;
+}
+
+.profile-row:last-child{
+  border-bottom:0;
+}
+
+.profile-label{
+  color:#7f8fa4;
+  font-size:12px;
+  margin-bottom:5px;
+}
+
+.profile-value{
+  font-size:15px;
+  word-break:break-all;
+}
+
+.history{
+  color:#9eacc0;
+  font-size:14px;
+  line-height:1.8;
+}
+
+.empty{
+  color:#75859b;
+  padding:10px 0;
 }
 
 .ad-screen{
@@ -228,7 +303,7 @@ button:disabled{
   width:80%;
   margin:auto;
   background:#16a34a;
-  color:white;
+  color:#fff;
 }
 
 .bottom{
@@ -236,7 +311,7 @@ button:disabled{
   bottom:0;
   left:0;
   right:0;
-  height:68px;
+  height:70px;
   background:#0a1628;
   border-top:1px solid #1b2b42;
   display:flex;
@@ -246,7 +321,7 @@ button:disabled{
 }
 
 .nav{
-  flex:1;
+  width:25%;
   text-align:center;
   color:#75859b;
   font-size:11px;
@@ -263,307 +338,476 @@ button:disabled{
   margin-bottom:3px;
 }
 
-.profile-card{
-  padding:22px;
-  margin-bottom:15px;
-}
-
-.profile-avatar{
-  width:75px;
-  height:75px;
-  border-radius:50%;
-  background:#3b82f6;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-size:34px;
-  margin:0 auto 15px;
-}
-
-.profile-name{
-  text-align:center;
-  font-size:22px;
-  font-weight:bold;
-  margin-bottom:20px;
-}
-
-.profile-row{
-  background:#07111f;
-  border:1px solid #1c2c43;
-  border-radius:12px;
-  padding:14px;
-  margin-top:10px;
-}
-
-.profile-label{
-  color:#7f8da1;
-  font-size:12px;
-  margin-bottom:5px;
-}
-
-.profile-value{
-  font-size:14px;
-  word-break:break-all;
-}
-
-.section{
-  display:none;
-}
-
-.section.active{
-  display:block;
-}
-
 #auth,
 #app{
   display:none;
 }
-</style></head><body><!-- AUTH --><div id="auth">  <div class="header">
+
+.loading{
+  text-align:center;
+  padding:50px 20px;
+  color:#9eacc0;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= AUTH ================= -->
+
+<div id="auth">
+
+  <div class="header">
     <div class="logo">
       Watch<span>ly</span>
     </div>
-  </div>  <div class="auth-screen"><div class="auth-card">
-
-  <h1 id="authTitle">Welcome Back</h1>
-
-  <p id="authDescription">
-    Login to continue earning rewards.
-  </p>
-
-  <input
-    class="input"
-    id="email"
-    type="email"
-    placeholder="Email address"
-    autocomplete="email">
-
-  <input
-    class="input"
-    id="password"
-    type="password"
-    placeholder="Password"
-    autocomplete="current-password">
-
-  <button
-    class="auth-button"
-    id="authButton"
-    onclick="handleAuth()">
-    LOGIN
-  </button>
-
-  <button
-    class="switch-button"
-    id="switchButton"
-    onclick="toggleAuthMode()">
-    Don't have an account? Sign up
-  </button>
-
-  <div id="authMessage" class="message"></div>
-
-</div>
-
-  </div></div><!-- APP --><div id="app">  <div class="header"><div class="logo">
-  Watch<span>ly</span>
-</div>
-
-<button
-  class="logout"
-  onclick="logout()">
-  LOGOUT
-</button>
-
-  </div>  <div class="container"><!-- HOME -->
-<div id="homeSection" class="section active">
-
-  <div class="balance">
-
-    <div class="balance-title">
-      YOUR BALANCE
-    </div>
-
-    <div class="coin">
-      🪙 <span id="coins">0</span>
-    </div>
-
-    <div class="balance-sub">
-      Keep earning rewards
-    </div>
-
   </div>
 
+  <div class="auth-screen">
+    <div class="auth-card">
 
-  <div class="stats">
+      <h1 id="authTitle">Welcome Back</h1>
 
-    <div class="stat">
+      <p id="authDescription">
+        Login to continue earning rewards.
+      </p>
 
-      <small>
-        Ads Watched
-      </small>
+      <input
+        class="input"
+        id="email"
+        type="email"
+        placeholder="Email address"
+        autocomplete="email"
+      >
 
-      <strong id="ads">
-        0
-      </strong>
+      <input
+        class="input"
+        id="password"
+        type="password"
+        placeholder="Password"
+        autocomplete="current-password"
+      >
+
+      <button
+        class="auth-button"
+        id="authButton"
+        onclick="handleAuth()"
+      >
+        LOGIN
+      </button>
+
+      <button
+        class="switch-button"
+        id="switchButton"
+        onclick="toggleAuthMode()"
+      >
+        Don't have an account? Sign up
+      </button>
+
+      <div id="authMessage" class="message"></div>
 
     </div>
-
-    <div class="stat">
-
-      <small>
-        Today's Coins
-      </small>
-
-      <strong id="today">
-        0
-      </strong>
-
-    </div>
-
-  </div>
-
-
-  <div class="card">
-
-    <h2>
-      🎬 Watch & Earn
-    </h2>
-
-    <p>
-      Watch a 10-second test advertisement and receive 1 coin.
-    </p>
-
-    <button
-      class="watch"
-      id="watchButton"
-      onclick="watchAd()">
-      ▶ WATCH AD
-    </button>
-
-  </div>
-
-
-  <div class="card">
-
-    <h2>
-      🎁 Daily Bonus
-    </h2>
-
-    <p>
-      Claim your daily bonus once per day.
-    </p>
-
-    <button
-      class="bonus"
-      id="bonusButton"
-      onclick="dailyBonus()">
-      CLAIM BONUS
-    </button>
-
   </div>
 
 </div>
 
 
-<!-- REWARDS -->
-<div id="rewardsSection" class="section">
+<!-- ================= APP ================= -->
 
-  <div class="card">
+<div id="app">
 
-    <h2>
-      🎁 Rewards
-    </h2>
+  <div class="header">
 
-    <p>
-      Complete activities and collect coins.
-    </p>
-
-  </div>
-
-
-  <div class="card">
-
-    <h2>
-      🎬 Watch & Earn
-    </h2>
-
-    <p>
-      Watch a 10-second test advertisement and receive 1 coin.
-    </p>
-
-    <button
-      class="watch"
-      onclick="watchAd()">
-      ▶ WATCH AD
-    </button>
-
-  </div>
-
-
-  <div class="card">
-
-    <h2>
-      🎁 Daily Bonus
-    </h2>
-
-    <p>
-      Claim your daily bonus once every day.
-    </p>
-
-    <button
-      class="bonus"
-      onclick="dailyBonus()">
-      CLAIM BONUS
-    </button>
-
-  </div>
-
-</div>
-
-
-<!-- WITHDRAW -->
-<div id="withdrawSection" class="section">
-
-  <div class="balance">
-
-    <div class="balance-title">
-      AVAILABLE BALANCE
+    <div class="logo">
+      Watch<span>ly</span>
     </div>
 
-    <div class="coin">
-      🪙 <span id="withdrawCoins">0</span>
-    </div>
-
-  </div>
-
-
-  <div class="card">
-
-    <h2>
-      💸 Withdraw Coins
-    </h2>
-
-    <p>
-      Minimum withdrawal is 50 coins.
-    </p>
-
     <button
-      class="withdraw"
-      onclick="withdraw()">
-      WITHDRAW
+      class="logout"
+      onclick="logout()"
+    >
+      LOGOUT
     </button>
 
   </div>
 
 
-  <div class="card">
+  <div class="container">
 
-    <h2>
-      📋 Withdrawal History
-    </h2>
+
+    <!-- HOME -->
+
+    <section
+      id="page-home"
+      class="page active"
+    >
+
+      <div class="balance">
+
+        <div class="balance-title">
+          YOUR BALANCE
+        </div>
+
+        <div class="coin">
+          🪙 <span id="coins">0</span>
+        </div>
+
+        <div class="balance-sub">
+          Keep earning rewards
+        </div>
+
+      </div>
+
+
+      <div class="stats">
+
+        <div class="stat">
+
+          <small>
+            Ads Watched
+          </small>
+
+          <strong id="ads">
+            0
+          </strong>
+
+        </div>
+
+
+        <div class="stat">
+
+          <small>
+            Today's Coins
+          </small>
+
+          <strong id="today">
+            0
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>
+          🎬 Watch & Earn
+        </h2>
+
+        <p>
+          Watch a 10-second test advertisement and receive 1 coin.
+        </p>
+
+        <button
+          class="watch"
+          id="watchButton"
+          onclick="watchAd()"
+        >
+          ▶ WATCH AD
+        </button>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>
+          🎁 Daily Bonus
+        </h2>
+
+        <p>
+          Claim your daily bonus once per day.
+        </p>
+
+        <button
+          class="bonus"
+          id="bonusButton"
+          onclick="dailyBonus()"
+        >
+          CLAIM BONUS
+        </button>
+
+      </div>
+
+
+      <div
+        id="homeMessage"
+        class="message"
+      ></div>
+
+    </section>
+
+
+    <!-- REWARDS -->
+
+    <section
+      id="page-rewards"
+      class="page"
+    >
+
+      <h1 class="page-title">
+        🎁 Rewards
+      </h1>
+
+
+      <div class="card">
+
+        <h2>
+          🪙 Your Coins
+        </h2>
+
+        <p>
+          Your current available balance.
+        </p>
+
+        <div class="coin">
+          🪙 <span id="rewardCoins">0</span>
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>
+          🎬 Watch & Earn
+        </h2>
+
+        <p>
+          Each completed 10-second test advertisement gives you 1 coin.
+        </p>
+
+        <button
+          class="watch"
+          onclick="goHomeAndWatch()"
+        >
+          ▶ WATCH AD
+        </button>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>
+          📊 Today's Activity
+        </h2>
+
+        <p>
+          Ads watched today:
+          <strong id="rewardAds">0</strong>
+        </p>
+
+        <p>
+          Coins earned today:
+          <strong id="rewardToday">0</strong>
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- WITHDRAW -->
+
+    <section
+      id="page-withdraw"
+      class="page"
+    >
+
+      <h1 class="page-title">
+        💸 Withdraw
+      </h1>
+
+
+      <div class="card">
+
+        <h2>
+          Available Balance
+        </h2>
+
+        <div class="coin">
+          🪙 <span id="withdrawCoins">0</span>
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>
+          💸 Request Withdrawal
+        </h2>
+
+        <p>
+          Prototype minimum: 50 coins.
+        </p>
+
+        <button
+          class="withdraw"
+          onclick="withdraw()"
+        >
+          WITHDRAW
+        </button>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>
+          📋 Withdrawal History
+        </h2>
+
+        <div
+          id="history"
+          class="history"
+        >
+          No withdrawal requests.
+        </div>
+
+      </div>
+
+
+      <div
+        id="withdrawMessage"
+        class="message"
+      ></div>
+
+    </section>
+
+
+    <!-- PROFILE -->
+
+    <section
+      id="page-profile"
+      class="page"
+    >
+
+      <h1 class="page-title">
+        👤 Profile
+      </h1>
+
+
+      <div class="card">
+
+        <div class="profile-row">
+
+          <div class="profile-label">
+            EMAIL
+          </div>
+
+          <div
+            class="profile-value"
+            id="profileEmail"
+          >
+            Loading...
+          </div>
+
+        </div>
+
+
+        <div class="profile-row">
+
+          <div class="profile-label">
+            USER ID
+          </div>
+
+          <div
+            class="profile-value"
+            id="profileUserId"
+          >
+            Loading...
+          </div>
+
+        </div>
+
+
+        <div class="profile-row">
+
+          <div class="profile-label">
+            COINS
+          </div>
+
+          <div
+            class="profile-value"
+            id="profileCoins"
+          >
+            0
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>
+          ⚙️ Account
+        </h2>
+
+        <p>
+          Your Watchly account is connected to Supabase authentication.
+        </p>
+
+        <button
+          class="danger"
+          onclick="logout()"
+        >
+          LOGOUT
+        </button>
+
+      </div>
+
+    </section>
+
+
+  </div>
+
+
+  <!-- BOTTOM NAV -->
+
+  <div class="bottom">
 
     <div
-      id="history"
-      class="history">
-      No withdrawal requests.
+      class="nav active"
+      data-page="home"
+      onclick="navigate('home')"
+    >
+      <div>🏠</div>
+      Home
+    </div>
+
+
+    <div
+      class="nav"
+      data-page="rewards"
+      onclick="navigate('rewards')"
+    >
+      <div>🎁</div>
+      Rewards
+    </div>
+
+
+    <div
+      class="nav"
+      data-page="withdraw"
+      onclick="navigate('withdraw')"
+    >
+      <div>💸</div>
+      Withdraw
+    </div>
+
+
+    <div
+      class="nav"
+      data-page="profile"
+      onclick="navigate('profile')"
+    >
+      <div>👤</div>
+      Profile
     </div>
 
   </div>
@@ -571,155 +815,53 @@ button:disabled{
 </div>
 
 
-<!-- PROFILE -->
-<div id="profileSection" class="section">
-
-  <div class="profile-card">
-
-    <div class="profile-avatar">
-      👤
-    </div>
-
-    <div class="profile-name">
-      My Profile
-    </div>
-
-
-    <div class="profile-row">
-
-      <div class="profile-label">
-        EMAIL
-      </div>
-
-      <div
-        class="profile-value"
-        id="profileEmail">
-        -
-      </div>
-
-    </div>
-
-
-    <div class="profile-row">
-
-      <div class="profile-label">
-        USER ID
-      </div>
-
-      <div
-        class="profile-value"
-        id="profileUserId">
-        -
-      </div>
-
-    </div>
-
-
-    <div class="profile-row">
-
-      <div class="profile-label">
-        COINS
-      </div>
-
-      <div
-        class="profile-value">
-        🪙 <span id="profileCoins">0</span>
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <div class="card">
-
-    <h2>
-      📊 Account
-    </h2>
-
-    <p>
-      Your Watchly account information is stored securely with Supabase.
-    </p>
-
-  </div>
-
-</div>
-
+<!-- ================= AD SCREEN ================= -->
 
 <div
-  id="message"
-  class="message">
-</div>
-
-  </div>  <!-- BOTTOM NAV -->  <div class="bottom"><div
-  class="nav active"
-  id="navHome"
-  onclick="showSection('home')">
-
-  <div>🏠</div>
-  Home
-
-</div>
-
-
-<div
-  class="nav"
-  id="navRewards"
-  onclick="showSection('rewards')">
-
-  <div>🎁</div>
-  Rewards
-
-</div>
-
-
-<div
-  class="nav"
-  id="navWithdraw"
-  onclick="showSection('withdraw')">
-
-  <div>💸</div>
-  Withdraw
-
-</div>
-
-
-<div
-  class="nav"
-  id="navProfile"
-  onclick="showSection('profile')">
-
-  <div>👤</div>
-  Profile
-
-</div>
-
-  </div></div><!-- AD SCREEN --><div
   class="ad-screen"
-  id="adScreen">  <h2>
+  id="adScreen"
+>
+
+  <h2>
     Advertisement
-  </h2>  <p>
+  </h2>
+
+  <p>
     Test advertisement
-  </p>  <div
+  </p>
+
+  <div
     class="timer"
-    id="timer">
+    id="timer"
+  >
     10
-  </div><button
-class="ad-button"
-id="adButton"
-onclick="finishAd()">
-CLAIM 1 COIN
-</button>
+  </div>
 
-</div><script>
+  <button
+    class="ad-button"
+    id="adButton"
+    onclick="finishAd()"
+  >
+    CLAIM 1 COIN
+  </button>
 
-/* =========================
+</div>
+
+
+<script>
+
+/* =====================================================
    SUPABASE
-========================= */
+===================================================== */
 
 const SUPABASE_URL =
 "https://woyvafgecfuriavuxnje.supabase.co";
 
+/*
+ IMPORTANT:
+ Keep this key exactly the same as the working
+ key from your current project.
+*/
 const SUPABASE_KEY =
 "sb_publishable_lxrfM4MgeRSm8-CiiUGQz_EdayI2Po";
 
@@ -730,9 +872,9 @@ window.supabase.createClient(
 );
 
 
-/* =========================
+/* =====================================================
    VARIABLES
-========================= */
+===================================================== */
 
 let currentUser = null;
 
@@ -741,16 +883,19 @@ let ads = 0;
 let today = 0;
 
 let authMode = "login";
+
 let adRunning = false;
+
+let adTimer = null;
 
 let bonusDate = "";
 
 let history = [];
 
 
-/* =========================
+/* =====================================================
    ELEMENTS
-========================= */
+===================================================== */
 
 const coinsElement =
 document.getElementById("coins");
@@ -760,9 +905,6 @@ document.getElementById("ads");
 
 const todayElement =
 document.getElementById("today");
-
-const messageElement =
-document.getElementById("message");
 
 const bonusButton =
 document.getElementById("bonusButton");
@@ -774,96 +916,43 @@ const historyElement =
 document.getElementById("history");
 
 
-/* =========================
-   NAVIGATION
-========================= */
+/* =====================================================
+   MESSAGE HELPERS
+===================================================== */
 
-function showSection(section){
+function showHomeMessage(text,type="normal"){
 
-  const sections = [
-    "home",
-    "rewards",
-    "withdraw",
-    "profile"
-  ];
+  const element =
+    document.getElementById("homeMessage");
 
+  element.textContent = text;
 
-  sections.forEach(function(name){
-
-    const element =
-      document.getElementById(
-        name + "Section"
-      );
-
-    const nav =
-      document.getElementById(
-        "nav" +
-        name.charAt(0).toUpperCase() +
-        name.slice(1)
-      );
-
-
-    if(name === section){
-
-      element.classList.add("active");
-
-      nav.classList.add("active");
-
-    }else{
-
-      element.classList.remove("active");
-
-      nav.classList.remove("active");
-
-    }
-
-  });
-
-
-  updateProfile();
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
+  element.className =
+    "message " +
+    (type === "error" ? "error" :
+     type === "success" ? "success" : "");
 
 }
 
 
-/* =========================
-   PROFILE UI
-========================= */
+function showWithdrawMessage(text,type="normal"){
 
-function updateProfile(){
+  const element =
+    document.getElementById("withdrawMessage");
 
-  if(!currentUser) return;
+  element.textContent = text;
 
-
-  document.getElementById("profileEmail")
-    .textContent =
-    currentUser.email || "-";
-
-
-  document.getElementById("profileUserId")
-    .textContent =
-    currentUser.id;
-
-
-  document.getElementById("profileCoins")
-    .textContent =
-    coins;
-
-
-  document.getElementById("withdrawCoins")
-    .textContent =
-    coins;
+  element.className =
+    "message " +
+    (type === "error" ? "error" :
+     type === "success" ? "success" : "");
 
 }
 
 
-/* =========================
+/* =====================================================
    SCREEN
-========================= */
+===================================================== */
 
 function showAuth(){
 
@@ -887,66 +976,145 @@ function showApp(){
 }
 
 
-/* =========================
-   MESSAGE
-========================= */
+/* =====================================================
+   NAVIGATION
+===================================================== */
 
-function showMessage(text){
+function navigate(page){
 
-  messageElement.textContent =
-    text;
+  try{
+
+    const pages =
+      document.querySelectorAll(".page");
+
+    pages.forEach(function(item){
+
+      item.classList.remove("active");
+
+    });
 
 
-  setTimeout(function(){
+    const selected =
+      document.getElementById(
+        "page-" + page
+      );
 
-    if(messageElement.textContent === text){
 
-      messageElement.textContent =
-        "";
+    if(!selected){
+
+      console.error(
+        "Page not found:",
+        page
+      );
+
+      return;
 
     }
 
-  },5000);
+
+    selected.classList.add("active");
+
+
+    const navItems =
+      document.querySelectorAll(".nav");
+
+
+    navItems.forEach(function(nav){
+
+      nav.classList.remove("active");
+
+      if(
+        nav.getAttribute("data-page") === page
+      ){
+
+        nav.classList.add("active");
+
+      }
+
+    });
+
+
+    update();
+
+    window.scrollTo({
+      top:0,
+      behavior:"smooth"
+    });
+
+  }catch(error){
+
+    console.error(
+      "Navigation error:",
+      error
+    );
+
+  }
 
 }
 
 
-/* =========================
+function goHomeAndWatch(){
+
+  navigate("home");
+
+  setTimeout(function(){
+
+    watchAd();
+
+  },150);
+
+}
+
+
+/* =====================================================
    AUTH MODE
-========================= */
+===================================================== */
 
 function toggleAuthMode(){
+
+  const title =
+    document.getElementById("authTitle");
+
+  const description =
+    document.getElementById("authDescription");
+
+  const button =
+    document.getElementById("authButton");
+
+  const switchButton =
+    document.getElementById("switchButton");
+
 
   if(authMode === "login"){
 
     authMode = "signup";
 
-    document.getElementById("authTitle").textContent =
+    title.textContent =
       "Create Account";
 
-    document.getElementById("authDescription").textContent =
+    description.textContent =
       "Create your Watchly account.";
 
-    document.getElementById("authButton").textContent =
+    button.textContent =
       "SIGN UP";
 
-    document.getElementById("switchButton").textContent =
+    switchButton.textContent =
       "Already have an account? Login";
 
   }else{
 
     authMode = "login";
 
-    document.getElementById("authTitle").textContent =
+    title.textContent =
       "Welcome Back";
 
-    document.getElementById("authDescription").textContent =
+    description.textContent =
       "Login to continue earning rewards.";
 
-    document.getElementById("authButton").textContent =
+    button.textContent =
       "LOGIN";
 
-    document.getElementById("switchButton").textContent =
+    switchButton.textContent =
       "Don't have an account? Sign up";
 
   }
@@ -954,17 +1122,20 @@ function toggleAuthMode(){
 }
 
 
-/* =========================
+/* =====================================================
    AUTH
-========================= */
+===================================================== */
 
 async function handleAuth(){
 
   const email =
-    document.getElementById("email").value.trim();
+    document.getElementById("email")
+    .value
+    .trim();
 
   const password =
-    document.getElementById("password").value;
+    document.getElementById("password")
+    .value;
 
   const authMessage =
     document.getElementById("authMessage");
@@ -994,6 +1165,10 @@ async function handleAuth(){
     "Please wait...";
 
 
+  document.getElementById("authButton").disabled =
+    true;
+
+
   try{
 
     if(authMode === "signup"){
@@ -1013,6 +1188,7 @@ async function handleAuth(){
 
 
       if(
+        result.data &&
         result.data.user &&
         result.data.session
       ){
@@ -1027,7 +1203,6 @@ async function handleAuth(){
           "Account created. Check your email to confirm.";
 
       }
-
 
     }else{
 
@@ -1051,33 +1226,50 @@ async function handleAuth(){
 
     }
 
-
   }catch(error){
 
     console.error(error);
 
     authMessage.textContent =
       "❌ " +
-      (
-        error.message ||
-        "Authentication failed."
-      );
+      (error.message ||
+       "Authentication failed.");
+
+  }finally{
+
+    document.getElementById("authButton").disabled =
+      false;
 
   }
 
 }
 
 
-/* =========================
-   LOAD PROFILE
-   TABLE: profile
-========================= */
+/* =====================================================
+   PROFILE
+   TABLE = profiles
+===================================================== */
 
 async function loadProfile(){
 
+  if(!currentUser){
+
+    throw new Error(
+      "No logged-in user."
+    );
+
+  }
+
+
+  /*
+   IMPORTANT:
+   The table name is ALWAYS lowercase:
+   profiles
+  */
+
   const result =
     await supabaseClient
-    .from("profile")
+    .from("profiles")
     .select("id,user_id,coin")
     .eq(
       "user_id",
@@ -1098,9 +1290,14 @@ async function loadProfile(){
 
   if(!result.data){
 
+    /*
+     Profile does not exist.
+     Try to create it.
+    */
+
     const created =
       await supabaseClient
-      .from("profile")
+      .from("profiles")
       .insert({
         user_id:currentUser.id,
         coin:0
@@ -1128,14 +1325,50 @@ async function loadProfile(){
 
   }
 
+
+  updateProfileScreen();
+
 }
 
 
-/* =========================
+/* =====================================================
+   PROFILE SCREEN
+===================================================== */
+
+function updateProfileScreen(){
+
+  if(!currentUser) return;
+
+
+  document.getElementById("profileEmail")
+    .textContent =
+    currentUser.email || "Not available";
+
+
+  document.getElementById("profileUserId")
+    .textContent =
+    currentUser.id;
+
+
+  document.getElementById("profileCoins")
+    .textContent =
+    coins;
+
+}
+
+
+/* =====================================================
    TODAY STATS
-========================= */
+===================================================== */
 
 async function loadTodayStats(){
+
+  if(!currentUser){
+
+    return;
+
+  }
+
 
   const start =
     new Date();
@@ -1191,320 +1424,12 @@ async function loadTodayStats(){
       function(sum,row){
 
         return sum +
-          Number(row.amount || 0);
+          Number(
+            row.amount || 0
+          );
 
       },
       0
     );
 
-}
-
-
-/* =========================
-   LOCAL DATA
-========================= */
-
-function loadLocalData(){
-
-  if(!currentUser) return;
-
-
-  const prefix =
-    "watchly_" +
-    currentUser.id +
-    "_";
-
-
-  bonusDate =
-    localStorage.getItem(
-      prefix + "bonus"
-    ) || "";
-
-
-  try{
-
-    history =
-      JSON.parse(
-        localStorage.getItem(
-          prefix + "history"
-        )
-      ) || [];
-
-  }catch(error){
-
-    history = [];
-
-  }
-
-}
-
-
-function saveLocalData(){
-
-  if(!currentUser) return;
-
-
-  const prefix =
-    "watchly_" +
-    currentUser.id +
-    "_";
-
-
-  localStorage.setItem(
-    prefix + "bonus",
-    bonusDate
-  );
-
-
-  localStorage.setItem(
-    prefix + "history",
-    JSON.stringify(history)
-  );
-
-}
-
-
-/* =========================
-   SETUP USER
-========================= */
-
-async function setupUser(user){
-
-  if(!user) return;
-
-
-  currentUser =
-    user;
-
-
-  try{
-
-    loadLocalData();
-
-    await loadProfile();
-
-    await loadTodayStats();
-
-    showApp();
-
-    showSection("home");
-
-    update();
-
-    updateProfile();
-
-    showMessage(
-      "Welcome to Watchly!"
-    );
-
-
-  }catch(error){
-
-    console.error(error);
-
-    showAuth();
-
-    document.getElementById("authMessage").textContent =
-      "❌ " +
-      error.message;
-
-  }
-
-}
-
-
-/* =========================
-   UPDATE
-========================= */
-
-function update(){
-
-  coinsElement.textContent =
-    coins;
-
-  adsElement.textContent =
-    ads;
-
-  todayElement.textContent =
-    today;
-
-
-  if(history.length === 0){
-
-    historyElement.textContent =
-      "No withdrawal requests.";
-
-  }else{
-
-    historyElement.innerHTML =
-      history.map(function(item){
-
-        return "🪙 " +
-          item.coins +
-          " coins — " +
-          item.status;
-
-      }).join("<br>");
-
-  }
-
-
-  const date =
-    new Date().toDateString();
-
-
-  if(bonusDate === date){
-
-    bonusButton.disabled =
-      true;
-
-    bonusButton.textContent =
-      "CLAIMED TODAY";
-
-  }else{
-
-    bonusButton.disabled =
-      false;
-
-    bonusButton.textContent =
-      "CLAIM BONUS";
-
-  }
-
-
-  updateProfile();
-
-}
-
-
-/* =========================
-   ADD TRANSACTION
-========================= */
-
-async function addTransaction(){
-
-  const result =
-    await supabaseClient
-    .from("transactions")
-    .insert({
-      user_id:currentUser.id,
-      amount:1,
-      type:"watch_ad"
-    });
-
-
-  if(result.error){
-
-    throw new Error(
-      "Transaction failed: " +
-      result.error.message
-    );
-
-  }
-
-}
-
-
-/* =========================
-   ADD COIN
-========================= */
-
-async function addCoin(){
-
-  const newCoins =
-    Number(coins) + 1;
-
-
-  const result =
-    await supabaseClient
-    .from("profile")
-    .update({
-      coin:newCoins
-    })
-    .eq(
-      "user_id",
-      currentUser.id
-    )
-    .select("coin")
-    .single();
-
-
-  if(result.error){
-
-    throw new Error(
-      "Coin update failed: " +
-      result.error.message
-    );
-
-  }
-
-
-  coins =
-    Number(result.data.coin);
-
-}
-
-
-/* =========================
-   WATCH AD
-========================= */
-
-function watchAd(){
-
-  if(!currentUser){
-
-    showMessage(
-      "Please login first."
-    );
-
-    return;
-
-  }
-
-
-  if(adRunning) return;
-
-
-  adRunning =
-    true;
-
-
-  watchButton.disabled =
-    true;
-
-
-  const screen =
-    document.getElementById(
-      "adScreen"
-    );
-
-  const timer =
-    document.getElementById(
-      "timer"
-    );
-
-  const button =
-    document.getElementById(
-      "adButton"
-    );
-
-
-  screen.style.display =
-    "block";
-
-
-  button.style.display =
-    "none";
-
-  button.disabled =
-    false;
-
-  button.textContent =
-    "CLAIM 1 COIN";
-
-
-  timer.textContent =
-    "10";
-
-
-  let 
+      
