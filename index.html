@@ -12,11 +12,12 @@ body{
   font-family:Arial,sans-serif;
   background:#07111f;
   color:white;
+  min-height:100vh;
   padding-bottom:80px;
 }
 
 .header{
-  padding:22px 20px;
+  padding:20px;
   background:#0a1628;
   display:flex;
   justify-content:space-between;
@@ -48,14 +49,19 @@ body{
 
 .auth-screen{
   max-width:500px;
-  margin:50px auto;
+  margin:40px auto;
   padding:18px;
 }
 
-.auth-card{
+.auth-card,
+.card,
+.stat{
   background:#101d30;
   border:1px solid #1c2c43;
-  border-radius:20px;
+  border-radius:18px;
+}
+
+.auth-card{
   padding:25px;
 }
 
@@ -63,9 +69,13 @@ body{
   margin-bottom:8px;
 }
 
-.auth-card p{
+.auth-card p,
+.card p{
   color:#9eacc0;
   font-size:14px;
+}
+
+.auth-card p{
   margin-bottom:20px;
 }
 
@@ -134,9 +144,6 @@ button{
 
 .stat{
   flex:1;
-  background:#101d30;
-  border:1px solid #1c2c43;
-  border-radius:16px;
   padding:15px;
 }
 
@@ -151,9 +158,6 @@ button{
 }
 
 .card{
-  background:#101d30;
-  border:1px solid #1c2c43;
-  border-radius:18px;
   padding:20px;
   margin-bottom:15px;
 }
@@ -164,8 +168,6 @@ button{
 }
 
 .card p{
-  color:#9eacc0;
-  font-size:14px;
   margin-bottom:15px;
 }
 
@@ -190,8 +192,12 @@ button:disabled{
   color:#60a5fa;
   min-height:24px;
   margin:15px 0;
-  font-size:15px;
+  font-size:14px;
   word-break:break-word;
+}
+
+.error{
+  color:#f87171;
 }
 
 .ad-screen{
@@ -201,7 +207,7 @@ button:disabled{
   background:#050b14;
   z-index:100;
   text-align:center;
-  padding-top:28vh;
+  padding:25vh 20px;
 }
 
 .ad-screen h2{
@@ -262,14 +268,14 @@ button:disabled{
   line-height:1.8;
 }
 
-#app,
-#auth{
+#auth,
+#app{
   display:none;
 }
-</style></head><body><!-- =========================
-     AUTH
-========================= --><div id="auth">  <div class="header">
-    <div class="logo">Watch<span>ly</span></div>
+</style></head><body><!-- AUTH --><div id="auth">  <div class="header">
+    <div class="logo">
+      Watch<span>ly</span>
+    </div>
   </div>  <div class="auth-screen"><div class="auth-card">
 
   <h1 id="authTitle">Welcome Back</h1>
@@ -283,16 +289,14 @@ button:disabled{
     id="email"
     type="email"
     placeholder="Email address"
-    autocomplete="email"
-  >
+    autocomplete="email">
 
   <input
     class="input"
     id="password"
     type="password"
     placeholder="Password"
-    autocomplete="current-password"
-  >
+    autocomplete="current-password">
 
   <button
     class="auth-button"
@@ -312,9 +316,7 @@ button:disabled{
 
 </div>
 
-  </div></div><!-- =========================
-     APP
-========================= --><div id="app">  <div class="header"><div class="logo">
+  </div></div><!-- APP --><div id="app">  <div class="header"><div class="logo">
   Watch<span>ly</span>
 </div>
 
@@ -324,9 +326,7 @@ button:disabled{
   LOGOUT
 </button>
 
-  </div>  <div class="container"><!-- BALANCE -->
-
-<div class="balance">
+  </div>  <div class="container"><div class="balance">
 
   <div class="balance-title">
     YOUR BALANCE
@@ -343,8 +343,6 @@ button:disabled{
 </div>
 
 
-<!-- STATS -->
-
 <div class="stats">
 
   <div class="stat">
@@ -358,7 +356,6 @@ button:disabled{
     </strong>
 
   </div>
-
 
   <div class="stat">
 
@@ -375,8 +372,6 @@ button:disabled{
 </div>
 
 
-<!-- WATCH -->
-
 <div class="card">
 
   <h2>
@@ -384,23 +379,18 @@ button:disabled{
   </h2>
 
   <p>
-    Watch a 10-second test advertisement
-    and receive 1 coin.
+    Watch a 10-second test advertisement and receive 1 coin.
   </p>
 
   <button
     class="watch"
     id="watchButton"
     onclick="watchAd()">
-
     ▶ WATCH AD
-
   </button>
 
 </div>
 
-
-<!-- BONUS -->
 
 <div class="card">
 
@@ -416,15 +406,11 @@ button:disabled{
     class="bonus"
     id="bonusButton"
     onclick="dailyBonus()">
-
     CLAIM BONUS
-
   </button>
 
 </div>
 
-
-<!-- WITHDRAW -->
 
 <div class="card">
 
@@ -439,15 +425,11 @@ button:disabled{
   <button
     class="withdraw"
     onclick="withdraw()">
-
     WITHDRAW
-
   </button>
 
 </div>
 
-
-<!-- HISTORY -->
 
 <div class="card">
 
@@ -458,9 +440,7 @@ button:disabled{
   <div
     id="history"
     class="history">
-
     No withdrawal requests.
-
   </div>
 
 </div>
@@ -471,7 +451,7 @@ button:disabled{
   class="message">
 </div>
 
-  </div>  <!-- NAV -->  <div class="bottom"><div class="nav active">
+  </div>  <div class="bottom"><div class="nav active">
   <div>🏠</div>
   Home
 </div>
@@ -491,9 +471,7 @@ button:disabled{
   Profile
 </div>
 
-  </div></div><!-- =========================
-     AD SCREEN
-========================= --><div
+  </div></div><!-- AD --><div
   class="ad-screen"
   id="adScreen">  <h2>
     Advertisement
@@ -507,10 +485,10 @@ button:disabled{
 class="ad-button"
 id="adButton"
 onclick="finishAd()">
-
 CLAIM 1 COIN
+</button>
 
-  </button></div><script>
+</div><script>
 
 /* =========================
    SUPABASE
@@ -539,13 +517,12 @@ let coins = 0;
 let ads = 0;
 let today = 0;
 
-let history = [];
+let authMode = "login";
+let adRunning = false;
 
 let bonusDate = "";
 
-let authMode = "login";
-
-let adRunning = false;
+let history = [];
 
 
 /* =========================
@@ -580,21 +557,21 @@ document.getElementById("history");
 
 function showAuth(){
 
-  document.getElementById("auth")
-    .style.display = "block";
+  document.getElementById("auth").style.display =
+    "block";
 
-  document.getElementById("app")
-    .style.display = "none";
+  document.getElementById("app").style.display =
+    "none";
 }
 
 
 function showApp(){
 
-  document.getElementById("auth")
-    .style.display = "none";
+  document.getElementById("auth").style.display =
+    "none";
 
-  document.getElementById("app")
-    .style.display = "block";
+  document.getElementById("app").style.display =
+    "block";
 }
 
 
@@ -607,13 +584,12 @@ function showMessage(text){
   messageElement.textContent =
     text;
 
-  setTimeout(() => {
+  setTimeout(function(){
 
-    if(
-      messageElement.textContent === text
-    ){
+    if(messageElement.textContent === text){
 
-      messageElement.textContent = "";
+      messageElement.textContent =
+        "";
 
     }
 
@@ -631,48 +607,32 @@ function toggleAuthMode(){
 
     authMode = "signup";
 
-    document.getElementById(
-      "authTitle"
-    ).textContent =
+    document.getElementById("authTitle").textContent =
       "Create Account";
 
-    document.getElementById(
-      "authDescription"
-    ).textContent =
+    document.getElementById("authDescription").textContent =
       "Create your Watchly account.";
 
-    document.getElementById(
-      "authButton"
-    ).textContent =
+    document.getElementById("authButton").textContent =
       "SIGN UP";
 
-    document.getElementById(
-      "switchButton"
-    ).textContent =
+    document.getElementById("switchButton").textContent =
       "Already have an account? Login";
 
   }else{
 
     authMode = "login";
 
-    document.getElementById(
-      "authTitle"
-    ).textContent =
+    document.getElementById("authTitle").textContent =
       "Welcome Back";
 
-    document.getElementById(
-      "authDescription"
-    ).textContent =
+    document.getElementById("authDescription").textContent =
       "Login to continue earning rewards.";
 
-    document.getElementById(
-      "authButton"
-    ).textContent =
+    document.getElementById("authButton").textContent =
       "LOGIN";
 
-    document.getElementById(
-      "switchButton"
-    ).textContent =
+    document.getElementById("switchButton").textContent =
       "Don't have an account? Sign up";
 
   }
@@ -687,19 +647,13 @@ function toggleAuthMode(){
 async function handleAuth(){
 
   const email =
-    document.getElementById(
-      "email"
-    ).value.trim();
+    document.getElementById("email").value.trim();
 
   const password =
-    document.getElementById(
-      "password"
-    ).value;
+    document.getElementById("password").value;
 
   const authMessage =
-    document.getElementById(
-      "authMessage"
-    );
+    document.getElementById("authMessage");
 
 
   if(!email || !password){
@@ -728,22 +682,24 @@ async function handleAuth(){
 
     if(authMode === "signup"){
 
-      const {data,error} =
+      const result =
         await supabaseClient.auth.signUp({
-
           email:email,
           password:password
-
         });
 
 
-      if(error) throw error;
+      if(result.error){
+
+        throw result.error;
+
+      }
 
 
-      if(data.session && data.user){
+      if(result.data.user && result.data.session){
 
         await setupUser(
-          data.user
+          result.data.user
         );
 
       }else{
@@ -755,31 +711,29 @@ async function handleAuth(){
 
     }else{
 
-      const {data,error} =
-        await supabaseClient.auth
-        .signInWithPassword({
-
+      const result =
+        await supabaseClient.auth.signInWithPassword({
           email:email,
           password:password
-
         });
 
 
-      if(error) throw error;
+      if(result.error){
+
+        throw result.error;
+
+      }
 
 
       await setupUser(
-        data.user
+        result.data.user
       );
 
     }
 
   }catch(error){
 
-    console.error(
-      "AUTH ERROR:",
-      error
-    );
+    console.error(error);
 
     authMessage.textContent =
       "❌ " +
@@ -796,21 +750,10 @@ async function handleAuth(){
 
 async function loadProfile(){
 
-  if(!currentUser){
-
-    throw new Error(
-      "User session not found."
-    );
-
-  }
-
-
-  const {data,error} =
+  const result =
     await supabaseClient
     .from("Profile")
-    .select(
-      "id,user_id,coin"
-    )
+    .select("id,user_id,coin")
     .eq(
       "user_id",
       currentUser.id
@@ -818,53 +761,34 @@ async function loadProfile(){
     .maybeSingle();
 
 
-  if(error){
-
-    console.error(
-      "PROFILE ERROR:",
-      error
-    );
+  if(result.error){
 
     throw new Error(
-      "Profile load failed: " +
-      error.message
+      "Profile error: " +
+      result.error.message
     );
 
   }
 
 
-  if(!data){
+  if(!result.data){
 
-    const {
-      data:newProfile,
-      error:insertError
-    } =
+    const created =
       await supabaseClient
       .from("Profile")
       .insert({
-
-        user_id:
-          currentUser.id,
-
+        user_id:currentUser.id,
         coin:0
-
       })
-      .select(
-        "id,user_id,coin"
-      )
+      .select("id,user_id,coin")
       .single();
 
 
-    if(insertError){
-
-      console.error(
-        "PROFILE CREATE ERROR:",
-        insertError
-      );
+    if(created.error){
 
       throw new Error(
         "Profile creation failed: " +
-        insertError.message
+        created.error.message
       );
 
     }
@@ -875,7 +799,7 @@ async function loadProfile(){
   }else{
 
     coins =
-      Number(data.coin) || 0;
+      Number(result.data.coin) || 0;
 
   }
 
@@ -883,19 +807,10 @@ async function loadProfile(){
 
 
 /* =========================
-   TODAY'S AD STATS
+   TODAY STATS
 ========================= */
 
 async function loadTodayStats(){
-
-  if(!currentUser){
-
-    throw new Error(
-      "User session not found."
-    );
-
-  }
-
 
   const start =
     new Date();
@@ -908,12 +823,10 @@ async function loadTodayStats(){
   );
 
 
-  const {data,error} =
+  const result =
     await supabaseClient
     .from("transactions")
-    .select(
-      "amount,type,created_at"
-    )
+    .select("amount,type,created_at")
     .eq(
       "user_id",
       currentUser.id
@@ -928,23 +841,18 @@ async function loadTodayStats(){
     );
 
 
-  if(error){
-
-    console.error(
-      "TODAY STATS ERROR:",
-      error
-    );
+  if(result.error){
 
     throw new Error(
-      "Today's stats failed: " +
-      error.message
+      "Transaction error: " +
+      result.error.message
     );
 
   }
 
 
   const rows =
-    data || [];
+    result.data || [];
 
 
   ads =
@@ -953,9 +861,12 @@ async function loadTodayStats(){
 
   today =
     rows.reduce(
-      (sum,row) =>
-        sum +
-        Number(row.amount || 0),
+      function(sum,row){
+
+        return sum +
+          Number(row.amount || 0);
+
+      },
       0
     );
 
@@ -966,41 +877,19 @@ async function loadTodayStats(){
    LOCAL DATA
 ========================= */
 
-function saveLocalData(){
-
-  if(!currentUser) return;
-
-
-  const prefix =
-    currentUser.id + "_";
-
-
-  localStorage.setItem(
-    prefix + "bonusDate",
-    bonusDate
-  );
-
-
-  localStorage.setItem(
-    prefix + "history",
-    JSON.stringify(history)
-  );
-
-}
-
-
 function loadLocalData(){
 
   if(!currentUser) return;
 
-
   const prefix =
-    currentUser.id + "_";
+    "watchly_" +
+    currentUser.id +
+    "_";
 
 
   bonusDate =
     localStorage.getItem(
-      prefix + "bonusDate"
+      prefix + "bonus"
     ) || "";
 
 
@@ -1013,7 +902,7 @@ function loadLocalData(){
         )
       ) || [];
 
-  }catch{
+  }catch(error){
 
     history = [];
 
@@ -1022,14 +911,37 @@ function loadLocalData(){
 }
 
 
+function saveLocalData(){
+
+  if(!currentUser) return;
+
+  const prefix =
+    "watchly_" +
+    currentUser.id +
+    "_";
+
+
+  localStorage.setItem(
+    prefix + "bonus",
+    bonusDate
+  );
+
+
+  localStorage.setItem(
+    prefix + "history",
+    JSON.stringify(history)
+  );
+
+}
+
+
 /* =========================
-   SETUP USER
+   SETUP
 ========================= */
 
 async function setupUser(user){
 
   if(!user) return;
-
 
   currentUser =
     user;
@@ -1053,16 +965,11 @@ async function setupUser(user){
 
   }catch(error){
 
-    console.error(
-      "SETUP ERROR:",
-      error
-    );
+    console.error(error);
 
     showAuth();
 
-    document.getElementById(
-      "authMessage"
-    ).textContent =
+    document.getElementById("authMessage").textContent =
       "❌ " +
       error.message;
 
@@ -1072,22 +979,7 @@ async function setupUser(user){
 
 
 /* =========================
-   REFRESH
-========================= */
-
-async function refreshDashboard(){
-
-  await loadProfile();
-
-  await loadTodayStats();
-
-  update();
-
-}
-
-
-/* =========================
-   UPDATE UI
+   UPDATE
 ========================= */
 
 function update(){
@@ -1110,13 +1002,14 @@ function update(){
   }else{
 
     historyElement.innerHTML =
-      history.map(
-        item =>
-          "🪙 " +
+      history.map(function(item){
+
+        return "🪙 " +
           item.coins +
           " coins — " +
-          item.status
-      ).join("<br>");
+          item.status;
+
+      }).join("<br>");
 
   }
 
@@ -1152,53 +1045,24 @@ function update(){
 
 async function addTransaction(){
 
-  if(!currentUser){
-
-    throw new Error(
-      "User session not found."
-    );
-
-  }
-
-
-  const {
-    data,
-    error
-  } =
+  const result =
     await supabaseClient
     .from("transactions")
     .insert({
-
-      user_id:
-        currentUser.id,
-
+      user_id:currentUser.id,
       amount:1,
-
       type:"watch_ad"
-
-    })
-    .select(
-      "id,user_id,amount,type,created_at"
-    )
-    .single();
+    });
 
 
-  if(error){
-
-    console.error(
-      "TRANSACTION INSERT ERROR:",
-      error
-    );
+  if(result.error){
 
     throw new Error(
       "Transaction failed: " +
-      error.message
+      result.error.message
     );
 
   }
-
-
-  return data;
 
 }
 
@@ -1209,60 +1073,36 @@ async function addTransaction(){
 
 async function addCoin(){
 
-  if(!currentUser){
-
-    throw new Error(
-      "User session not found."
-    );
-
-  }
-
-
-  const oldCoins =
-    Number(coins) || 0;
-
   const newCoins =
-    oldCoins + 1;
+    Number(coins) + 1;
 
 
-  const {
-    data,
-    error
-  } =
+  const result =
     await supabaseClient
     .from("Profile")
     .update({
-
       coin:newCoins
-
     })
     .eq(
       "user_id",
       currentUser.id
     )
-    .select(
-      "coin"
-    )
+    .select("coin")
     .single();
 
 
-  if(error){
-
-    console.error(
-      "COIN UPDATE ERROR:",
-      error
-    );
+  if(result.error){
 
     throw new Error(
       "Coin update failed: " +
-      error.message
+      result.error.message
     );
 
   }
 
 
   coins =
-    Number(data.coin) || 0;
+    Number(result.data.coin);
 
 }
 
@@ -1280,7 +1120,6 @@ function watchAd(){
     );
 
     return;
-
   }
 
 
@@ -1295,19 +1134,13 @@ function watchAd(){
 
 
   const screen =
-    document.getElementById(
-      "adScreen"
-    );
+    document.getElementById("adScreen");
 
   const timer =
-    document.getElementById(
-      "timer"
-    );
+    document.getElementById("timer");
 
   const button =
-    document.getElementById(
-      "adButton"
-    );
+    document.getElementById("adButton");
 
 
   screen.style.display =
@@ -1331,7 +1164,7 @@ function watchAd(){
 
 
   const countdown =
-    setInterval(() => {
+    setInterval(function(){
 
       seconds--;
 
@@ -1366,24 +1199,15 @@ async function finishAd(){
 
   if(!currentUser){
 
-    showMessage(
-      "Please login again."
-    );
-
     return;
-
   }
 
 
   const button =
-    document.getElementById(
-      "adButton"
-    );
+    document.getElementById("adButton");
 
   const screen =
-    document.getElementById(
-      "adScreen"
-    );
+    document.getElementById("adScreen");
 
 
   button.disabled =
@@ -1395,30 +1219,14 @@ async function finishAd(){
 
   try{
 
-    /*
-      1. Create transaction.
-    */
-
     await addTransaction();
-
-
-    /*
-      2. Add one coin to Profile.
-    */
 
     await addCoin();
 
+    await loadTodayStats();
 
-    /*
-      3. Reload the real values.
-    */
+    update();
 
-    await refreshDashboard();
-
-
-    /*
-      4. Close ad.
-    */
 
     screen.style.display =
       "none";
@@ -1440,14 +1248,9 @@ async function finishAd(){
       "🎉 1 coin earned successfully!"
     );
 
-
   }catch(error){
 
-    console.error(
-      "WATCH AD ERROR:",
-      error
-    );
-
+    console.error(error);
 
     screen.style.display =
       "none";
@@ -1466,7 +1269,7 @@ async function finishAd(){
 
 
     showMessage(
-      "❌ Reward failed: " +
+      "❌ " +
       error.message
     );
 
@@ -1488,7 +1291,6 @@ async function dailyBonus(){
     );
 
     return;
-
   }
 
 
@@ -1503,54 +1305,40 @@ async function dailyBonus(){
     );
 
     return;
-
   }
 
 
   const newCoins =
-    (Number(coins) || 0) + 1;
+    Number(coins) + 1;
 
 
-  const {
-    data,
-    error
-  } =
+  const result =
     await supabaseClient
     .from("Profile")
     .update({
-
       coin:newCoins
-
     })
     .eq(
       "user_id",
       currentUser.id
     )
-    .select(
-      "coin"
-    )
+    .select("coin")
     .single();
 
 
-  if(error){
-
-    console.error(
-      "BONUS ERROR:",
-      error
-    );
+  if(result.error){
 
     showMessage(
       "❌ Bonus failed: " +
-      error.message
+      result.error.message
     );
 
     return;
-
   }
 
 
   coins =
-    Number(data.coin) || 0;
+    Number(result.data.coin);
 
 
   bonusDate =
@@ -1582,11 +1370,192 @@ async function withdraw(){
     );
 
     return;
-
   }
 
 
   if(coins < 50){
 
     showMessage(
-      "You nee
+      "You need at least 50 coins."
+    );
+
+    return;
+  }
+
+
+  const input =
+    prompt(
+      "Enter coins to withdraw:",
+      "50"
+    );
+
+
+  if(input === null){
+
+    return;
+  }
+
+
+  const amount =
+    Number(input);
+
+
+  if(
+    !Number.isInteger(amount) ||
+    amount < 50 ||
+    amount > coins
+  ){
+
+    showMessage(
+      "Invalid withdrawal amount."
+    );
+
+    return;
+  }
+
+
+  const newCoins =
+    coins - amount;
+
+
+  const result =
+    await supabaseClient
+    .from("Profile")
+    .update({
+      coin:newCoins
+    })
+    .eq(
+      "user_id",
+      currentUser.id
+    )
+    .select("coin")
+    .single();
+
+
+  if(result.error){
+
+    showMessage(
+      "❌ Withdrawal failed: " +
+      result.error.message
+    );
+
+    return;
+  }
+
+
+  coins =
+    Number(result.data.coin);
+
+
+  history.unshift({
+    coins:amount,
+    status:"Test / Pending"
+  });
+
+
+  saveLocalData();
+
+  update();
+
+
+  showMessage(
+    "✅ Test withdrawal created."
+  );
+
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+async function logout(){
+
+  await supabaseClient.auth.signOut();
+
+  currentUser =
+    null;
+
+  coins =
+    0;
+
+  ads =
+    0;
+
+  today =
+    0;
+
+  showAuth();
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+async function checkSession(){
+
+  try{
+
+    const result =
+      await supabaseClient.auth.getSession();
+
+
+    if(
+      result.data &&
+      result.data.session &&
+      result.data.session.user
+    ){
+
+      await setupUser(
+        result.data.session.user
+      );
+
+    }else{
+
+      showAuth();
+
+    }
+
+  }catch(error){
+
+    console.error(error);
+
+    showAuth();
+
+  }
+
+}
+
+
+/* =========================
+   AUTH LISTENER
+========================= */
+
+supabaseClient.auth.onAuthStateChange(
+  function(event,session){
+
+    if(
+      event === "SIGNED_OUT"
+    ){
+
+      currentUser =
+        null;
+
+      showAuth();
+
+    }
+
+  }
+);
+
+
+/* =========================
+   START APP
+========================= */
+
+checkSession();
+
+</script></body>
+  </html>
