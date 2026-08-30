@@ -315,10 +315,7 @@ button:disabled{
   color:#8291a5;
 }
 
-#auth{
-  display:none;
-}
-
+#auth,
 #app{
   display:none;
 }
@@ -339,14 +336,16 @@ button:disabled{
     id="email"
     type="email"
     placeholder="Email address"
-    autocomplete="email">
+    autocomplete="email"
+  >
 
   <input
     class="input"
     id="password"
     type="password"
     placeholder="Password"
-    autocomplete="current-password">
+    autocomplete="current-password"
+  >
 
   <button
     class="auth-button"
@@ -612,8 +611,7 @@ button:disabled{
       COINS
     </div>
 
-    <div
-      class="profile-value">
+    <div class="profile-value">
       🪙 <span id="profileCoins">0</span>
     </div>
 
@@ -633,10 +631,7 @@ button:disabled{
 </section>
 
 
-<div
-  id="message"
-  class="message">
-</div>
+<div id="message" class="message"></div>
 
   </div>  <!-- BOTTOM NAV -->  <div class="bottom"><div
   class="nav active"
@@ -701,14 +696,15 @@ CLAIM 1 COIN
 </div><script>
 
 /* =====================================================
-   SUPABASE
+   SUPABASE CONFIG
 ===================================================== */
 
 const SUPABASE_URL =
 "https://woyvafgecfuriavuxnje.supabase.co";
 
 const SUPABASE_KEY =
-"sb_publishable_lxrfM4MgeRSm8-CiiUGQz_EdayI2Po";
+"sb_publishable_lxrfM4MgeRSm8-CiiUGQZg_EdayI2Po";
+
 
 let supabaseClient = null;
 
@@ -727,45 +723,15 @@ let authMode = "login";
 
 let adRunning = false;
 
+let adTimer = null;
+
 let bonusDate = "";
 
 let history = [];
 
 
 /* =====================================================
-   ELEMENTS
-===================================================== */
-
-const coinsElement =
-document.getElementById("coins");
-
-const rewardCoinsElement =
-document.getElementById("rewardCoins");
-
-const profileCoinsElement =
-document.getElementById("profileCoins");
-
-const adsElement =
-document.getElementById("ads");
-
-const todayElement =
-document.getElementById("today");
-
-const messageElement =
-document.getElementById("message");
-
-const bonusButton =
-document.getElementById("bonusButton");
-
-const watchButton =
-document.getElementById("watchButton");
-
-const historyElement =
-document.getElementById("history");
-
-
-/* =====================================================
-   SAFE SUPABASE INITIALIZATION
+   INITIALIZE
 ===================================================== */
 
 function initializeSupabase(){
@@ -793,15 +759,17 @@ function initializeSupabase(){
 
   }catch(error){
 
-    console.error(
-      "Supabase initialization error:",
-      error
-    );
+    console.error(error);
 
-    document.getElementById(
-      "authMessage"
-    ).textContent =
-      "❌ Supabase connection failed.";
+    const authMessage =
+      document.getElementById("authMessage");
+
+    if(authMessage){
+
+      authMessage.textContent =
+        "❌ Supabase connection failed.";
+
+    }
 
     return false;
 
@@ -842,17 +810,17 @@ function showApp(){
 
 function showMessage(text){
 
-  messageElement.textContent =
+  const el =
+    document.getElementById("message");
+
+  el.textContent =
     text;
 
   setTimeout(function(){
 
-    if(
-      messageElement.textContent === text
-    ){
+    if(el.textContent === text){
 
-      messageElement.textContent =
-        "";
+      el.textContent = "";
 
     }
 
@@ -867,52 +835,49 @@ function showMessage(text){
 
 function toggleAuthMode(){
 
+  const title =
+    document.getElementById("authTitle");
+
+  const description =
+    document.getElementById("authDescription");
+
+  const button =
+    document.getElementById("authButton");
+
+  const switchButton =
+    document.getElementById("switchButton");
+
+
   if(authMode === "login"){
 
     authMode = "signup";
 
-    document.getElementById(
-      "authTitle"
-    ).textContent =
+    title.textContent =
       "Create Account";
 
-    document.getElementById(
-      "authDescription"
-    ).textContent =
+    description.textContent =
       "Create your Watchly account.";
 
-    document.getElementById(
-      "authButton"
-    ).textContent =
+    button.textContent =
       "SIGN UP";
 
-    document.getElementById(
-      "switchButton"
-    ).textContent =
+    switchButton.textContent =
       "Already have an account? Login";
 
   }else{
 
     authMode = "login";
 
-    document.getElementById(
-      "authTitle"
-    ).textContent =
+    title.textContent =
       "Welcome Back";
 
-    document.getElementById(
-      "authDescription"
-    ).textContent =
+    description.textContent =
       "Login to continue earning rewards.";
 
-    document.getElementById(
-      "authButton"
-    ).textContent =
+    button.textContent =
       "LOGIN";
 
-    document.getElementById(
-      "switchButton"
-    ).textContent =
+    switchButton.textContent =
       "Don't have an account? Sign up";
 
   }
@@ -928,9 +893,7 @@ async function handleAuth(){
 
   if(!supabaseClient){
 
-    document.getElementById(
-      "authMessage"
-    ).textContent =
+    document.getElementById("authMessage").textContent =
       "❌ Supabase is not connected.";
 
     return;
@@ -939,19 +902,13 @@ async function handleAuth(){
 
 
   const email =
-    document.getElementById(
-      "email"
-    ).value.trim();
+    document.getElementById("email").value.trim();
 
   const password =
-    document.getElementById(
-      "password"
-    ).value;
+    document.getElementById("password").value;
 
   const authMessage =
-    document.getElementById(
-      "authMessage"
-    );
+    document.getElementById("authMessage");
 
 
   if(!email || !password){
@@ -1008,7 +965,7 @@ async function handleAuth(){
       }else{
 
         authMessage.textContent =
-          "Account created. Check your email to confirm.";
+          "✅ Account created. Check your email to confirm.";
 
       }
 
@@ -1051,8 +1008,7 @@ async function handleAuth(){
 
 
 /* =====================================================
-   PROFILE
-   IMPORTANT: TABLE NAME IS profiles
+   LOAD PROFILE
 ===================================================== */
 
 async function loadProfile(){
@@ -1065,11 +1021,6 @@ async function loadProfile(){
 
   }
 
-
-  /*
-    Always use lowercase "profiles".
-    This avoids the old public.Profile problem.
-  */
 
   const result =
     await supabaseClient
@@ -1093,11 +1044,6 @@ async function loadProfile(){
 
 
   if(!result.data){
-
-    /*
-      Profile does not exist.
-      Try to create it.
-    */
 
     const created =
       await supabaseClient
@@ -1143,17 +1089,13 @@ async function loadProfile(){
 
 function updateProfileScreen(){
 
-  document.getElementById(
-    "profileEmail"
-  ).textContent =
+  document.getElementById("profileEmail").textContent =
     currentUser?.email || "-";
 
-  document.getElementById(
-    "profileUserId"
-  ).textContent =
+  document.getElementById("profileUserId").textContent =
     currentUser?.id || "-";
 
-  profileCoinsElement.textContent =
+  document.getElementById("profileCoins").textContent =
     coins;
 
 }
@@ -1319,14 +1261,29 @@ async function setupUser(user){
 
     await loadProfile();
 
-    await loadTodayStats();
+    try{
+
+      await loadTodayStats();
+
+    }catch(statsError){
+
+      console.error(
+        "Stats error:",
+        statsError
+      );
+
+      ads = 0;
+      today = 0;
+
+    }
+
 
     showApp();
 
     update();
 
     showMessage(
-      "Welcome to Watchly!"
+      "Welcome to Watchly! 👋"
     );
 
   }catch(error){
@@ -1336,10 +1293,10 @@ async function setupUser(user){
       error
     );
 
+
     /*
-      IMPORTANT:
-      Do NOT hide the whole app if profile
-      has a problem.
+      Keep the application visible even if
+      a database operation fails.
     */
 
     showApp();
@@ -1362,19 +1319,19 @@ async function setupUser(user){
 
 function update(){
 
-  coinsElement.textContent =
+  document.getElementById("coins").textContent =
     coins;
 
-  rewardCoinsElement.textContent =
+  document.getElementById("rewardCoins").textContent =
     coins;
 
-  profileCoinsElement.textContent =
+  document.getElementById("profileCoins").textContent =
     coins;
 
-  adsElement.textContent =
+  document.getElementById("ads").textContent =
     ads;
 
-  todayElement.textContent =
+  document.getElementById("today").textContent =
     today;
 
 
@@ -1383,12 +1340,12 @@ function update(){
 
   if(history.length === 0){
 
-    historyElement.textContent =
+    document.getElementById("history").textContent =
       "No withdrawal requests.";
 
   }else{
 
-    historyElement.innerHTML =
+    document.getElementById("history").innerHTML =
       history.map(function(item){
 
         return "🪙 " +
@@ -1403,6 +1360,10 @@ function update(){
 
   const date =
     new Date().toDateString();
+
+
+  const bonusButton =
+    document.getElementById("bonusButton");
 
 
   if(bonusDate === date){
@@ -1432,6 +1393,15 @@ function update(){
 
 async function addTransaction(){
 
+  if(!currentUser){
+
+    throw new Error(
+      "You are not logged in."
+    );
+
+  }
+
+
   const result =
     await supabaseClient
     .from("transactions")
@@ -1445,4 +1415,41 @@ async function addTransaction(){
   if(result.error){
 
     throw new Error(
-     
+      "Transaction failed: " +
+      result.error.message
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   ADD COIN TO PROFILE
+===================================================== */
+
+async function addCoin(){
+
+  const newCoins =
+    coins + 1;
+
+
+  const result =
+    await supabaseClient
+    .from("profiles")
+    .update({
+      coin:newCoins
+    })
+    .eq(
+      "user_id",
+      currentUser.id
+    );
+
+
+  if(result.error){
+
+    throw new Error(
+      "Coin update failed: " +
+      result.error.message
+    );
+
