@@ -1688,7 +1688,86 @@ async function checkSession(){
 
 }
 
+async function refreshProfile(){
 
+  if(!currentUser){
+    showMessage("Please login first.");
+    return;
+  }
+
+  try{
+
+    showMessage("🔄 Loading profile...");
+
+    const result =
+      await supabaseClient
+        .from("profile")
+        .select("id,user_id,coin")
+        .eq(
+          "user_id",
+          currentUser.id
+        )
+        .maybeSingle();
+
+    if(result.error){
+      throw new Error(
+        result.error.message
+      );
+    }
+
+    if(!result.data){
+
+      showMessage(
+        "❌ Profile not found."
+      );
+
+      return;
+    }
+
+    coins =
+      Number(result.data.coin) || 0;
+
+    document.getElementById(
+      "profileEmail"
+    ).textContent =
+      currentUser.email || "-";
+
+    document.getElementById(
+      "profileId"
+    ).textContent =
+      currentUser.id || "-";
+
+    document.getElementById(
+      "profileCoins"
+    ).textContent =
+      coins;
+
+    document.getElementById(
+      "rewardCoins"
+    ).textContent =
+      coins;
+
+    document.getElementById(
+      "coins"
+    ).textContent =
+      coins;
+
+    showMessage(
+      "✅ Profile refreshed!"
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    showMessage(
+      "❌ Profile refresh failed: " +
+      error.message
+    );
+
+  }
+
+}
 /* =========================
 AUTH LISTENER
 ========================= */
@@ -1708,38 +1787,7 @@ supabaseClient.auth.onAuthStateChange(
   }
 );
 
-async function refreshProfile(){
 
-  if(!currentUser){
-    showMessage("Please login first.");
-    return;
-  }
-
-  try{
-
-    await loadProfile();
-    update();
-
-    document.getElementById("profileEmail").textContent =
-      currentUser.email || "-";
-
-    document.getElementById("profileId").textContent =
-      currentUser.id || "-";
-
-    document.getElementById("profileCoins").textContent =
-      coins;
-
-    showMessage("✅ Profile refreshed!");
-
-  }catch(error){
-
-    console.error(error);
-
-    showMessage(
-      "❌ " + error.message
-    );
-
-  }
 
 }
 /* =========================
