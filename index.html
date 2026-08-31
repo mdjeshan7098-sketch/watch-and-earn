@@ -787,7 +787,7 @@ const withdrawal=await supabaseClient
 .from("withdrawals")
 .insert({
 user_id:currentUser.id,
-coins:amount,
+amount:amount,
 status:"Pending"
 })
 .select()
