@@ -781,19 +781,43 @@ return;
 
 }
 
-const newCoins=coins-amount;
+const method=prompt(
+"Enter payment method:",
+"bKash"
+);
+
+if(!method) return;
+
+const accountNumber=prompt(
+"Enter your payment account number:"
+);
+
+if(!accountNumber){
+
+showMessage("Account number is required.");
+
+return;
+
+}
 
 const withdrawal=await supabaseClient
 .from("withdrawals")
 .insert({
 user_id:currentUser.id,
 amount:amount,
-status:"Pending"
+method:method,
+account_number:accountNumber,
+status:"pending"
 })
 .select()
 .single();
 
 if(withdrawal.error){
+
+console.error(
+"Withdrawal error:",
+withdrawal.error
+);
 
 showMessage(
 "❌ Withdrawal request failed: "+
@@ -803,6 +827,8 @@ withdrawal.error.message
 return;
 
 }
+
+const newCoins=coins-amount;
 
 const result=await supabaseClient
 .from("profile")
@@ -828,6 +854,8 @@ coins=Number(result.data.coin);
 
 history.unshift({
 coins:amount,
+method:method,
+account_number:accountNumber,
 status:"Pending"
 });
 
