@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-<title>Watchly Admin</title>
+<title>Watchly Admin Dashboard</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -25,6 +25,10 @@ min-height:100vh;
 padding-bottom:30px;
 }
 
+button,input{
+font-family:inherit;
+}
+
 .header{
 padding:18px;
 background:#0a1628;
@@ -32,6 +36,9 @@ border-bottom:1px solid #1c2c43;
 display:flex;
 justify-content:space-between;
 align-items:center;
+position:sticky;
+top:0;
+z-index:20;
 }
 
 .logo{
@@ -44,7 +51,7 @@ color:#3b82f6;
 }
 
 .container{
-max-width:700px;
+max-width:1000px;
 margin:auto;
 padding:18px;
 }
@@ -54,18 +61,28 @@ background:#101d30;
 border:1px solid #1c2c43;
 border-radius:18px;
 padding:20px;
-margin-bottom:15px;
+margin-bottom:16px;
 }
 
 .card h2{
 font-size:20px;
-margin-bottom:8px;
+margin-bottom:7px;
 }
 
 .card p{
 color:#9eacc0;
 font-size:14px;
 line-height:1.5;
+}
+
+.logout{
+width:auto;
+margin:0;
+padding:9px 14px;
+background:#17263b;
+color:#60a5fa;
+border:1px solid #284363;
+border-radius:10px;
 }
 
 .input{
@@ -77,6 +94,10 @@ border:1px solid #284363;
 background:#07111f;
 color:white;
 outline:none;
+}
+
+.input:focus{
+border-color:#3b82f6;
 }
 
 button{
@@ -121,15 +142,6 @@ background:#2563eb;
 color:white;
 }
 
-.logout{
-width:auto;
-margin:0;
-padding:9px 13px;
-background:#17263b;
-color:#60a5fa;
-border:1px solid #284363;
-}
-
 .message{
 text-align:center;
 color:#60a5fa;
@@ -139,38 +151,128 @@ font-size:14px;
 word-break:break-word;
 }
 
+#loginPage,
+#adminApp{
+display:none;
+}
+
+.dashboard-title{
+margin-bottom:15px;
+}
+
+.dashboard-title h1{
+font-size:25px;
+margin-bottom:5px;
+}
+
+.dashboard-title p{
+color:#8291a5;
+font-size:14px;
+}
+
 .stats{
 display:grid;
 grid-template-columns:repeat(4,1fr);
-gap:8px;
-margin-bottom:15px;
+gap:10px;
+margin-bottom:16px;
 }
 
 .stat{
 background:#101d30;
 border:1px solid #1c2c43;
-border-radius:15px;
-padding:14px 8px;
+border-radius:16px;
+padding:16px 10px;
 text-align:center;
 }
 
 .stat small{
 color:#8796aa;
-font-size:11px;
+font-size:12px;
 }
 
 .stat strong{
 display:block;
-font-size:23px;
-margin-top:5px;
+font-size:25px;
+margin-top:6px;
+}
+
+.stat-blue strong{
+color:#60a5fa;
+}
+
+.stat-green strong{
+color:#4ade80;
+}
+
+.stat-yellow strong{
+color:#facc15;
+}
+
+.stat-red strong{
+color:#f87171;
+}
+
+.stat-purple strong{
+color:#c084fc;
+}
+
+.stat-cyan strong{
+color:#22d3ee;
+}
+
+.money-grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px;
+margin-bottom:16px;
+}
+
+.money-card{
+background:#101d30;
+border:1px solid #1c2c43;
+border-radius:16px;
+padding:18px;
+}
+
+.money-card small{
+color:#8796aa;
+}
+
+.money-card strong{
+display:block;
+font-size:25px;
+margin-top:7px;
+}
+
+.search-row{
+display:flex;
+gap:10px;
+}
+
+.search-row .input{
+margin-top:0;
+}
+
+.search-button{
+width:auto;
+margin:0;
+background:#17263b;
+color:#60a5fa;
+border:1px solid #284363;
+padding-left:20px;
+padding-right:20px;
 }
 
 .withdrawal{
 background:#0b1829;
 border:1px solid #263b56;
 border-radius:15px;
-padding:16px;
+padding:17px;
 margin-top:12px;
+}
+
+.withdrawal:hover{
+border-color:#365677;
 }
 
 .row{
@@ -188,7 +290,7 @@ color:#8291a5;
 display:inline-block;
 padding:5px 9px;
 border-radius:8px;
-font-size:12px;
+font-size:11px;
 font-weight:bold;
 text-transform:uppercase;
 background:#6b4f00;
@@ -210,21 +312,84 @@ background:#7f1d1d;
 color:#fca5a5;
 }
 
+.actions{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:8px;
+margin-top:12px;
+}
+
+.actions button{
+margin-top:0;
+}
+
 .empty{
 text-align:center;
 color:#8291a5;
-padding:30px 5px;
+padding:35px 5px;
 }
 
-#loginPage,
-#adminApp{
-display:none;
+.section-head{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+}
+
+.section-head h2{
+margin:0;
+}
+
+.count-badge{
+background:#17263b;
+color:#60a5fa;
+border:1px solid #284363;
+padding:5px 9px;
+border-radius:8px;
+font-size:12px;
+}
+
+@media(max-width:700px){
+
+.stats{
+grid-template-columns:repeat(2,1fr);
+}
+
+.money-grid{
+grid-template-columns:1fr;
+}
+
 }
 
 @media(max-width:450px){
 
-.stats{
-grid-template-columns:repeat(2,1fr);
+.header{
+padding:15px;
+}
+
+.logo{
+font-size:20px;
+}
+
+.container{
+padding:12px;
+}
+
+.card{
+padding:16px;
+}
+
+.search-row{
+display:block;
+}
+
+.search-button{
+width:100%;
+margin-top:8px;
+}
+
+.actions{
+grid-template-columns:1fr;
 }
 
 }
@@ -235,6 +400,10 @@ grid-template-columns:repeat(2,1fr);
 
 <body>
 
+
+<!-- =========================
+     HEADER
+========================= -->
 
 <div class="header">
 
@@ -254,7 +423,7 @@ LOGOUT
 
 
 <!-- =========================
-     LOGIN
+     LOGIN PAGE
 ========================= -->
 
 <div id="loginPage">
@@ -263,10 +432,10 @@ LOGOUT
 
 <div class="card">
 
-<h2>🔐 Watchly Admin</h2>
+<h2>🔐 Admin Login</h2>
 
 <p>
-Login with your authorized admin account.
+Login with your authorized Watchly administrator account.
 </p>
 
 <br>
@@ -313,28 +482,68 @@ class="message">
 <div class="container">
 
 
+<div class="dashboard-title">
+
+<h1>📊 Dashboard</h1>
+
+<p>
+Watchly administration panel
+</p>
+
+</div>
+
+
 <!-- =========================
-     STATISTICS
+     MAIN STATS
 ========================= -->
 
 <div class="stats">
 
-<div class="stat">
+<div class="stat stat-blue">
+<small>Total Users</small>
+<strong id="totalUsers">0</strong>
+</div>
+
+<div class="stat stat-purple">
+<small>Total Coins</small>
+<strong id="totalCoins">0</strong>
+</div>
+
+<div class="stat stat-cyan">
+<small>Total Ads</small>
+<strong id="totalAds">0</strong>
+</div>
+
+<div class="stat stat-green">
+<small>Total Requests</small>
+<strong id="totalRequests">0</strong>
+</div>
+
+</div>
+
+
+<!-- =========================
+     WITHDRAWAL STATS
+========================= -->
+
+<div class="stats">
+
+<div class="stat stat-yellow">
 <small>Pending</small>
 <strong id="pendingCount">0</strong>
 </div>
 
-<div class="stat">
+<div class="stat stat-green">
 <small>Approved</small>
 <strong id="approvedCount">0</strong>
 </div>
 
-<div class="stat">
+<div class="stat stat-blue">
 <small>Paid</small>
 <strong id="paidCount">0</strong>
 </div>
 
-<div class="stat">
+<div class="stat stat-red">
 <small>Rejected</small>
 <strong id="rejectedCount">0</strong>
 </div>
@@ -342,24 +551,101 @@ class="message">
 </div>
 
 
+<!-- =========================
+     MONEY STATS
+========================= -->
+
+<div class="money-grid">
+
+<div class="money-card">
+
+<small>💸 Total Requested</small>
+
+<strong>
+🪙 <span id="totalRequested">0</span>
+</strong>
+
+</div>
+
+<div class="money-card">
+
+<small>💰 Total Paid</small>
+
+<strong>
+🪙 <span id="totalPaid">0</span>
+</strong>
+
+</div>
+
+</div>
+
+
+<!-- =========================
+     REFRESH
+========================= -->
+
 <div class="card">
 
-<h2>💸 Withdrawal Requests</h2>
+<div class="section-head">
+
+<h2>⚙️ Admin Controls</h2>
+
+</div>
 
 <p>
-Manage Watchly user withdrawal requests.
+Refresh the dashboard and withdrawal requests.
 </p>
 
 <button
 class="refresh"
 id="refreshButton"
-onclick="loadWithdrawals()">
-🔄 REFRESH REQUESTS
+onclick="refreshDashboard()">
+🔄 REFRESH EVERYTHING
 </button>
 
 <div
 id="adminMessage"
 class="message">
+</div>
+
+</div>
+
+
+<!-- =========================
+     WITHDRAWALS
+========================= -->
+
+<div class="card">
+
+<div class="section-head">
+
+<h2>💸 Withdrawal Requests</h2>
+
+<span
+class="count-badge"
+id="visibleCount">
+0
+</span>
+
+</div>
+
+<br>
+
+<div class="search-row">
+
+<input
+class="input"
+id="searchInput"
+type="text"
+placeholder="Search user ID, account, method or status"
+oninput="renderWithdrawals()">
+
+<button
+class="search-button"
+onclick="clearSearch()">
+CLEAR
+</button>
+
 </div>
 
 <div id="withdrawalsList">
@@ -402,11 +688,29 @@ SUPABASE_KEY
    ADMIN EMAIL
 ========================= */
 
+/*
+ IMPORTANT:
+ Replace this with the email
+ you use for your admin account.
+
+ Example:
+
+ const ADMIN_EMAIL =
+ "myemail@gmail.com";
+
+*/
+
 const ADMIN_EMAIL =
 "YOUR_ADMIN_EMAIL_HERE";
 
 
+/* =========================
+   VARIABLES
+========================= */
+
 let adminUser=null;
+
+let withdrawals=[];
 
 
 /* =========================
@@ -452,7 +756,7 @@ document.getElementById(
 
 
 /* =========================
-   LOGIN
+   ADMIN LOGIN
 ========================= */
 
 async function adminLogin(){
@@ -472,7 +776,7 @@ document.getElementById(
 "loginMessage"
 );
 
-const loginButton =
+const button =
 document.getElementById(
 "loginButton"
 );
@@ -506,7 +810,7 @@ return;
 message.textContent =
 "⏳ Signing in...";
 
-loginButton.disabled=true;
+button.disabled=true;
 
 
 try{
@@ -549,7 +853,7 @@ throw new Error(
 
 showAdmin();
 
-await loadWithdrawals();
+await refreshDashboard();
 
 
 }catch(error){
@@ -565,9 +869,137 @@ error.message ||
 
 }finally{
 
-loginButton.disabled=false;
+button.disabled=false;
 
 }
+
+}
+
+
+/* =========================
+   LOAD USERS
+========================= */
+
+async function loadUserStats(){
+
+const result =
+await supabaseClient
+.from("profile")
+.select("user_id,coin");
+
+
+if(result.error){
+
+console.error(
+"Profile stats error:",
+result.error
+);
+
+document.getElementById(
+"totalUsers"
+).textContent="?";
+
+document.getElementById(
+"totalCoins"
+).textContent="?";
+
+return;
+
+}
+
+
+const rows =
+result.data || [];
+
+
+const uniqueUsers =
+new Set();
+
+
+let totalCoins=0;
+
+
+rows.forEach(function(row){
+
+if(row.user_id)
+uniqueUsers.add(row.user_id);
+
+totalCoins +=
+Number(row.coin || 0);
+
+});
+
+
+document.getElementById(
+"totalUsers"
+).textContent =
+uniqueUsers.size;
+
+
+document.getElementById(
+"totalCoins"
+).textContent =
+totalCoins;
+
+}
+
+
+/* =========================
+   LOAD TRANSACTIONS
+========================= */
+
+async function loadTransactionStats(){
+
+const result =
+await supabaseClient
+.from("transactions")
+.select("amount,type");
+
+
+if(result.error){
+
+console.error(
+"Transaction stats error:",
+result.error
+);
+
+document.getElementById(
+"totalAds"
+).textContent="?";
+
+return;
+
+}
+
+
+const rows =
+result.data || [];
+
+
+let adsCount=0;
+
+
+rows.forEach(function(row){
+
+if(
+String(row.type || "")
+.trim()
+.toLowerCase()
+===
+"watch_ad"
+){
+
+adsCount++;
+
+}
+
+});
+
+
+document.getElementById(
+"totalAds"
+).textContent =
+adsCount;
 
 }
 
@@ -577,36 +1009,6 @@ loginButton.disabled=false;
 ========================= */
 
 async function loadWithdrawals(){
-
-if(!adminUser)
-return;
-
-
-const list =
-document.getElementById(
-"withdrawalsList"
-);
-
-const message =
-document.getElementById(
-"adminMessage"
-);
-
-const refreshButton =
-document.getElementById(
-"refreshButton"
-);
-
-
-list.innerHTML =
-'<div class="empty">Loading...</div>';
-
-message.textContent="";
-
-refreshButton.disabled=true;
-
-
-try{
 
 const result =
 await supabaseClient
@@ -622,67 +1024,262 @@ ascending:false
 );
 
 
-if(result.error)
+if(result.error){
+
 throw result.error;
 
+}
 
-const rows =
+
+withdrawals =
 result.data || [];
 
+
+updateWithdrawalStats();
+
+renderWithdrawals();
+
+}
+
+
+/* =========================
+   UPDATE WITHDRAWAL STATS
+========================= */
+
+function updateWithdrawalStats(){
 
 let pending=0;
 let approved=0;
 let paid=0;
 let rejected=0;
 
+let requested=0;
+let paidAmount=0;
 
-rows.forEach(function(item){
+
+withdrawals.forEach(function(item){
 
 const status =
 String(
 item.status || ""
-).toLowerCase();
+)
+.toLowerCase();
 
 
-if(status === "pending")
+const amount =
+Number(item.amount || 0);
+
+
+requested += amount;
+
+
+if(status==="pending")
 pending++;
 
 
-if(status === "approved")
+if(status==="approved")
 approved++;
 
 
-if(status === "paid")
+if(status==="paid"){
+
 paid++;
 
+paidAmount += amount;
 
-if(status === "rejected")
+}
+
+
+if(status==="rejected")
 rejected++;
 
 });
 
 
 document.getElementById(
+"totalRequests"
+).textContent =
+withdrawals.length;
+
+
+document.getElementById(
 "pendingCount"
-).textContent=pending;
+).textContent =
+pending;
+
 
 document.getElementById(
 "approvedCount"
-).textContent=approved;
+).textContent =
+approved;
+
 
 document.getElementById(
 "paidCount"
-).textContent=paid;
+).textContent =
+paid;
+
 
 document.getElementById(
 "rejectedCount"
-).textContent=rejected;
+).textContent =
+rejected;
 
 
-if(rows.length===0){
+document.getElementById(
+"totalRequested"
+).textContent =
+requested;
+
+
+document.getElementById(
+"totalPaid"
+).textContent =
+paidAmount;
+
+}
+
+
+/* =========================
+   REFRESH DASHBOARD
+========================= */
+
+async function refreshDashboard(){
+
+if(!adminUser)
+return;
+
+
+const button =
+document.getElementById(
+"refreshButton"
+);
+
+const message =
+document.getElementById(
+"adminMessage"
+);
+
+
+button.disabled=true;
+
+message.textContent =
+"⏳ Refreshing dashboard...";
+
+
+try{
+
+await Promise.all([
+
+loadUserStats(),
+
+loadTransactionStats(),
+
+loadWithdrawals()
+
+]);
+
+
+message.textContent =
+"✅ Dashboard updated.";
+
+setTimeout(function(){
+
+if(
+message.textContent===
+"✅ Dashboard updated."
+){
+
+message.textContent="";
+
+}
+
+},3000);
+
+
+}catch(error){
+
+console.error(error);
+
+message.textContent =
+"❌ "+
+(
+error.message ||
+"Dashboard refresh failed."
+);
+
+}finally{
+
+button.disabled=false;
+
+}
+
+}
+
+
+/* =========================
+   RENDER WITHDRAWALS
+========================= */
+
+function renderWithdrawals(){
+
+const list =
+document.getElementById(
+"withdrawalsList"
+);
+
+const counter =
+document.getElementById(
+"visibleCount"
+);
+
+const search =
+(
+document.getElementById(
+"searchInput"
+).value || ""
+)
+.toLowerCase()
+.trim();
+
+
+const filtered =
+withdrawals.filter(function(item){
+
+const text = [
+
+item.id,
+
+item.user_id,
+
+item.amount,
+
+item.method,
+
+item.account_number,
+
+item.status,
+
+item.created_at
+
+]
+.join(" ")
+.toLowerCase();
+
+
+return text.includes(search);
+
+});
+
+
+counter.textContent =
+filtered.length;
+
+
+if(filtered.length===0){
 
 list.innerHTML =
-'<div class="empty">No withdrawal requests.</div>';
+'<div class="empty">No matching withdrawal requests.</div>';
 
 return;
 
@@ -690,7 +1287,7 @@ return;
 
 
 list.innerHTML =
-rows.map(function(item){
+filtered.map(function(item){
 
 const status =
 String(
@@ -713,15 +1310,16 @@ item.created_at
 "Unknown";
 
 
-let actionButtons="";
+let buttons="";
 
 
 if(
-status.toLowerCase() ===
-"pending"
+status.toLowerCase()==="pending"
 ){
 
-actionButtons = `
+buttons=`
+
+<div class="actions">
 
 <button
 class="approve"
@@ -735,17 +1333,20 @@ onclick="changeStatus('${item.id}','rejected')">
 ❌ REJECT
 </button>
 
+</div>
+
 `;
 
 }
 
 
 if(
-status.toLowerCase() ===
-"approved"
+status.toLowerCase()==="approved"
 ){
 
-actionButtons = `
+buttons=`
+
+<div class="actions">
 
 <button
 class="paid"
@@ -759,6 +1360,8 @@ onclick="changeStatus('${item.id}','rejected')">
 ❌ REJECT
 </button>
 
+</div>
+
 `;
 
 }
@@ -771,7 +1374,7 @@ return `
 <div class="row">
 
 <span class="label">
-Request ID:
+Request ID
 </span>
 
 <br>
@@ -784,7 +1387,7 @@ ${escapeHtml(item.id)}
 <div class="row">
 
 <span class="label">
-User ID:
+User ID
 </span>
 
 <br>
@@ -797,8 +1400,10 @@ ${escapeHtml(item.user_id)}
 <div class="row">
 
 <span class="label">
-Amount:
+Amount
 </span>
+
+<br>
 
 <strong>
 🪙 ${escapeHtml(item.amount)} coins
@@ -810,8 +1415,10 @@ Amount:
 <div class="row">
 
 <span class="label">
-Payment Method:
+Payment Method
 </span>
+
+<br>
 
 ${escapeHtml(
 item.method || "-"
@@ -823,8 +1430,10 @@ item.method || "-"
 <div class="row">
 
 <span class="label">
-Account Number:
+Account Number
 </span>
+
+<br>
 
 ${escapeHtml(
 item.account_number || "-"
@@ -836,8 +1445,10 @@ item.account_number || "-"
 <div class="row">
 
 <span class="label">
-Status:
+Status
 </span>
+
+<br>
 
 <span class="status ${statusClass}">
 ${escapeHtml(status)}
@@ -849,15 +1460,17 @@ ${escapeHtml(status)}
 <div class="row">
 
 <span class="label">
-Requested:
+Requested
 </span>
+
+<br>
 
 ${escapeHtml(date)}
 
 </div>
 
 
-${actionButtons}
+${buttons}
 
 </div>
 
@@ -865,43 +1478,10 @@ ${actionButtons}
 
 }).join("");
 
-
-}catch(error){
-
-console.error(
-"Withdrawal loading error:",
-error
-);
-
-list.innerHTML =
-'<div class="empty">Unable to load withdrawal requests.</div>';
-
-message.textContent =
-"❌ "+error.message;
-
-}finally{
-
-refreshButton.disabled=false;
-
-}
-
 }
 
 
 /* =========================
-   SAFE HTML
-========================= */
-
-function escapeHtml(value){
-
-return String(value)
-.replace(/&/g,"&amp;")
-.replace(/</g,"&lt;")
-.replace(/>/g,"&gt;")
-.replace(/"/g,"&quot;")
-.replace(/'/g,"&#039;");
-
-}/* =========================
    CHANGE STATUS
 ========================= */
 
@@ -914,19 +1494,53 @@ if(!adminUser)
 return;
 
 
-if(!id)
-return;
+const validStatuses=[
+"approved",
+"rejected",
+"paid"
+];
 
 
 if(
-newStatus !== "approved" &&
-newStatus !== "rejected" &&
-newStatus !== "paid"
+!validStatuses.includes(
+newStatus
+)
 ){
 
 return;
 
 }
+
+
+let question="";
+
+
+if(newStatus==="approved"){
+
+question =
+"Approve this withdrawal request?";
+
+}
+
+
+if(newStatus==="rejected"){
+
+question =
+"Reject this withdrawal request?";
+
+}
+
+
+if(newStatus==="paid"){
+
+question =
+"Have you actually sent the money to the user's payment account?";
+
+}
+
+
+if(!confirm(question))
+return;
 
 
 const message =
@@ -935,39 +1549,8 @@ document.getElementById(
 );
 
 
-let confirmText="";
-
-
-if(newStatus==="approved"){
-
-confirmText =
-"Approve this withdrawal request?";
-
-}
-
-
-if(newStatus==="rejected"){
-
-confirmText =
-"Reject this withdrawal request?";
-
-}
-
-
-if(newStatus==="paid"){
-
-confirmText =
-"Have you actually sent the money to the user's payment account?";
-
-}
-
-
-if(!confirm(confirmText))
-return;
-
-
 message.textContent =
-"⏳ Updating withdrawal...";
+"⏳ Updating status...";
 
 
 try{
@@ -1014,13 +1597,14 @@ await loadWithdrawals();
 
 }catch(error){
 
-console.error(
-"Status update error:",
-error
-);
+console.error(error);
 
 message.textContent =
-"❌ "+error.message;
+"❌ "+
+(
+error.message ||
+"Status update failed."
+);
 
 }
 
@@ -1028,7 +1612,35 @@ message.textContent =
 
 
 /* =========================
-   LOGOUT
+   CLEAR SEARCH
+========================= */
+
+function clearSearch(){
+
+document.getElementById(
+"searchInput"
+).value="";
+
+renderWithdrawals();
+
+}
+
+
+/* =========================
+   SAFE HTML
+========================= */
+
+function escapeHtml(value){
+
+return String(value)
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
+
+}/* =========================
+   ADMIN LOGOUT
 ========================= */
 
 async function adminLogout(){
@@ -1039,31 +1651,40 @@ await supabaseClient.auth.signOut();
 
 }catch(error){
 
-console.error(error);
+console.error(
+"Logout error:",
+error
+);
 
 }
 
 adminUser=null;
 
+withdrawals=[];
+
 showLogin();
+
 
 document.getElementById(
 "adminEmail"
 ).value="";
 
+
 document.getElementById(
 "adminPassword"
 ).value="";
+
 
 document.getElementById(
 "loginMessage"
 ).textContent="";
 
+
 }
 
 
 /* =========================
-   CHECK SESSION
+   CHECK ADMIN SESSION
 ========================= */
 
 async function checkAdminSession(){
@@ -1084,12 +1705,19 @@ const user =
 result.data.session.user;
 
 
+/*
+ If ADMIN_EMAIL is configured,
+ make sure the logged-in account
+ matches it.
+*/
+
 if(
 ADMIN_EMAIL !==
 "YOUR_ADMIN_EMAIL_HERE" &&
 (
 !user.email ||
-user.email.toLowerCase() !==
+user.email.toLowerCase()
+!==
 ADMIN_EMAIL.toLowerCase()
 )
 ){
@@ -1107,7 +1735,8 @@ adminUser=user;
 
 showAdmin();
 
-await loadWithdrawals();
+await refreshDashboard();
+
 
 }else{
 
@@ -1131,7 +1760,7 @@ showLogin();
 
 
 /* =========================
-   AUTH STATE
+   AUTH STATE LISTENER
 ========================= */
 
 supabaseClient.auth.onAuthStateChange(
@@ -1141,6 +1770,8 @@ if(event==="SIGNED_OUT"){
 
 adminUser=null;
 
+withdrawals=[];
+
 showLogin();
 
 }
@@ -1149,7 +1780,7 @@ showLogin();
 
 
 /* =========================
-   START
+   START ADMIN PANEL
 ========================= */
 
 checkAdminSession();
