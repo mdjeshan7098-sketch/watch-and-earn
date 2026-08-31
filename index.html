@@ -117,11 +117,66 @@ button:disabled{opacity:.5;cursor:not-allowed}
 </div>
 
 <div id="withdrawPage" class="page">
+
 <div class="card">
-<h2>💸 Withdraw</h2>
-<p>Prototype minimum: 50 coins.</p>
+<h2>💸 Withdraw Coins</h2>
+<p>Minimum withdrawal: 50 coins</p>
+
 <br>
-<button class="withdraw" onclick="withdraw()">WITHDRAW</button>
+
+<p>🪙 Available Balance</p>
+<div class="coin">
+🪙 <span id="withdrawBalance">0</span>
+</div>
+
+<input
+class="input"
+id="withdrawAmount"
+type="number"
+placeholder="Enter amount"
+min="50"
+>
+
+<select
+class="input"
+id="withdrawMethod"
+style="appearance:auto;"
+>
+<option value="">Select payment method</option>
+<option value="bKash">bKash</option>
+<option value="Nagad">Nagad</option>
+<option value="Rocket">Rocket</option>
+</select>
+
+<input
+class="input"
+id="withdrawAccount"
+type="text"
+placeholder="Payment account number"
+>
+
+<button
+class="withdraw"
+onclick="submitWithdrawal()"
+>
+💸 REQUEST WITHDRAWAL
+</button>
+
+<div id="withdrawMessage" class="message"></div>
+
+</div>
+
+
+<div class="card">
+
+<h2>📋 Withdrawal History</h2>
+
+<div id="history" class="history">
+Loading...
+</div>
+
+</div>
+
 </div>
 
 <div class="card">
