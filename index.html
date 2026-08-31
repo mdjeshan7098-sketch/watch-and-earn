@@ -550,18 +550,11 @@ if(rewardCoinsBottomElement)
 rewardCoinsBottomElement.textContent=coins;
 
 
-if(history.length===0){
+if(historyElement){
 
-historyElement.textContent="No withdrawal requests.";
+historyElement.textContent="Loading withdrawal history...";
 
-}else{
-
-historyElement.innerHTML=history.map(function(item){
-
-return "🪙 "+item.coins+
-" coins — "+item.status;
-
-}).join("<br>");
+loadWithdrawalHistory();
 
 }
 
@@ -583,6 +576,54 @@ bonusButton.textContent="CLAIM BONUS";
 }
 
 
+async function loadWithdrawalHistory(){
+
+if(!currentUser) return;
+
+const result=await supabaseClient
+.from("withdrawals")
+.select("amount,method,account_number,status,created_at")
+.eq("user_id",currentUser.id)
+.order("created_at",{ascending:false});
+
+if(result.error){
+
+console.error("Withdrawal history error:",result.error);
+
+historyElement.textContent=
+"Unable to load withdrawal history.";
+
+return;
+
+}
+
+if(!result.data || result.data.length===0){
+
+historyElement.textContent=
+"No withdrawal requests.";
+
+return;
+
+}
+
+historyElement.innerHTML=result.data.map(function(item){
+
+const date=new Date(item.created_at)
+.toLocaleString();
+
+return `
+<div style="padding:12px 0;border-bottom:1px solid #1c2c43;">
+🪙 <strong>${item.amount} coins</strong><br>
+💳 ${item.method}<br>
+📱 ${item.account_number}<br>
+📌 Status: <strong>${item.status}</strong><br>
+<small>${date}</small>
+</div>
+`;
+
+}).join("");
+
+}
 async function addTransaction(){
 
 const result=await supabaseClient
