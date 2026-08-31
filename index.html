@@ -628,49 +628,62 @@ button.style.display="block";
 
 async function finishAd(){
 
-if(!currentUser) return;
+  if(!currentUser) return;
 
-const button=document.getElementById("adButton");
-const screen=document.getElementById("adScreen");
+  const button =
+    document.getElementById("adButton");
 
-button.disabled=true;
-button.textContent="ADDING REWARD...";
+  const screen =
+    document.getElementById("adScreen");
 
-try{
+  button.disabled = true;
+  button.textContent = "ADDING REWARD...";
 
-await addTransaction();
+  try{
 
-await addCoin();
+    // Save transaction
+    await addTransaction();
 
-await loadTodayStats();
+    // Add coin to profile
+    await addCoin();
 
-update();
+    // IMPORTANT:
+    // Immediately update today's statistics
+    ads = Number(ads || 0) + 1;
+    today = Number(today || 0) + 1;
 
-screen.style.display="none";
+    // Update everything on screen
+    update();
 
-watchButton.disabled=false;
-adRunning=false;
+    screen.style.display = "none";
 
-button.disabled=false;
-button.textContent="CLAIM 1 COIN";
+    watchButton.disabled = false;
+    adRunning = false;
 
-showMessage("🎉 1 coin earned successfully!");
+    button.disabled = false;
+    button.textContent = "CLAIM 1 COIN";
 
-}catch(error){
+    showMessage(
+      "🎉 1 coin earned successfully!"
+    );
 
-console.error(error);
+  }catch(error){
 
-screen.style.display="none";
+    console.error(error);
 
-watchButton.disabled=false;
-adRunning=false;
+    screen.style.display = "none";
 
-button.disabled=false;
-button.textContent="CLAIM 1 COIN";
+    watchButton.disabled = false;
+    adRunning = false;
 
-showMessage("❌ "+error.message);
+    button.disabled = false;
+    button.textContent = "CLAIM 1 COIN";
 
-}
+    showMessage(
+      "❌ " + error.message
+    );
+
+  }
 
 }
 
