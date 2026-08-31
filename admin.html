@@ -106,15 +106,6 @@ color:#60a5fa;
 border:1px solid #284363;
 }
 
-.logout{
-width:auto;
-margin:0;
-padding:9px 13px;
-background:#17263b;
-color:#60a5fa;
-border:1px solid #284363;
-}
-
 .approve{
 background:#16a34a;
 color:white;
@@ -123,6 +114,20 @@ color:white;
 .reject{
 background:#dc2626;
 color:white;
+}
+
+.paid{
+background:#2563eb;
+color:white;
+}
+
+.logout{
+width:auto;
+margin:0;
+padding:9px 13px;
+background:#17263b;
+color:#60a5fa;
+border:1px solid #284363;
 }
 
 .message{
@@ -135,26 +140,28 @@ word-break:break-word;
 }
 
 .stats{
-display:flex;
-gap:10px;
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:8px;
 margin-bottom:15px;
 }
 
 .stat{
-flex:1;
 background:#101d30;
 border:1px solid #1c2c43;
 border-radius:15px;
-padding:15px;
+padding:14px 8px;
+text-align:center;
 }
 
 .stat small{
 color:#8796aa;
+font-size:11px;
 }
 
 .stat strong{
 display:block;
-font-size:25px;
+font-size:23px;
 margin-top:5px;
 }
 
@@ -193,6 +200,11 @@ background:#064e3b;
 color:#6ee7b7;
 }
 
+.status.paid{
+background:#1e3a8a;
+color:#93c5fd;
+}
+
 .status.rejected{
 background:#7f1d1d;
 color:#fca5a5;
@@ -207,6 +219,14 @@ padding:30px 5px;
 #loginPage,
 #adminApp{
 display:none;
+}
+
+@media(max-width:450px){
+
+.stats{
+grid-template-columns:repeat(2,1fr);
+}
+
 }
 
 </style>
@@ -234,7 +254,7 @@ LOGOUT
 
 
 <!-- =========================
-     ADMIN LOGIN
+     LOGIN
 ========================= -->
 
 <div id="loginPage">
@@ -293,6 +313,10 @@ class="message">
 <div class="container">
 
 
+<!-- =========================
+     STATISTICS
+========================= -->
+
 <div class="stats">
 
 <div class="stat">
@@ -303,6 +327,11 @@ class="message">
 <div class="stat">
 <small>Approved</small>
 <strong id="approvedCount">0</strong>
+</div>
+
+<div class="stat">
+<small>Paid</small>
+<strong id="paidCount">0</strong>
 </div>
 
 <div class="stat">
@@ -371,10 +400,6 @@ SUPABASE_KEY
 
 /* =========================
    ADMIN EMAIL
-=========================
-
-   CHANGE THIS to YOUR
-   actual admin/login email.
 ========================= */
 
 const ADMIN_EMAIL =
@@ -427,7 +452,7 @@ document.getElementById(
 
 
 /* =========================
-   ADMIN LOGIN
+   LOGIN
 ========================= */
 
 async function adminLogin(){
@@ -463,14 +488,9 @@ return;
 }
 
 
-/*
-Client-side email gate.
-The database RLS policies must also
-protect the withdrawals table.
-*/
-
 if(
-ADMIN_EMAIL !== "YOUR_ADMIN_EMAIL_HERE" &&
+ADMIN_EMAIL !==
+"YOUR_ADMIN_EMAIL_HERE" &&
 email.toLowerCase() !==
 ADMIN_EMAIL.toLowerCase()
 ){
@@ -509,9 +529,13 @@ result.data.user;
 
 
 if(
-ADMIN_EMAIL !== "YOUR_ADMIN_EMAIL_HERE" &&
+ADMIN_EMAIL !==
+"YOUR_ADMIN_EMAIL_HERE" &&
+(
+!adminUser.email ||
 adminUser.email.toLowerCase() !==
 ADMIN_EMAIL.toLowerCase()
+)
 ){
 
 await supabaseClient.auth.signOut();
@@ -533,7 +557,8 @@ await loadWithdrawals();
 console.error(error);
 
 message.textContent =
-"❌ "+(
+"❌ "+
+(
 error.message ||
 "Admin login failed."
 );
@@ -607,23 +632,29 @@ result.data || [];
 
 let pending=0;
 let approved=0;
+let paid=0;
 let rejected=0;
 
 
 rows.forEach(function(item){
 
 const status =
-String(item.status || "")
-.toLowerCase();
+String(
+item.status || ""
+).toLowerCase();
+
 
 if(status === "pending")
 pending++;
 
-if(
-status === "approved" ||
-status === "paid"
-)
+
+if(status === "approved")
 approved++;
+
+
+if(status === "paid")
+paid++;
+
 
 if(status === "rejected")
 rejected++;
@@ -633,18 +664,19 @@ rejected++;
 
 document.getElementById(
 "pendingCount"
-).textContent =
-pending;
+).textContent=pending;
 
 document.getElementById(
 "approvedCount"
-).textContent =
-approved;
+).textContent=approved;
+
+document.getElementById(
+"paidCount"
+).textContent=paid;
 
 document.getElementById(
 "rejectedCount"
-).textContent =
-rejected;
+).textContent=rejected;
 
 
 if(rows.length===0){
@@ -657,17 +689,15 @@ return;
 }
 
 
-/* =========================
-   BUILD REQUEST CARDS
-========================= */
-
 list.innerHTML =
 rows.map(function(item){
 
 const status =
 String(
-item.status || "pending"
+item.status ||
+"pending"
 );
+
 
 const statusClass =
 status.toLowerCase();
@@ -710,50 +740,101 @@ onclick="changeStatus('${item.id}','rejected')">
 }
 
 
+if(
+status.toLowerCase() ===
+"approved"
+){
+
+actionButtons = `
+
+<button
+class="paid"
+onclick="changeStatus('${item.id}','paid')">
+💸 MARK AS PAID
+</button>
+
+<button
+class="reject"
+onclick="changeStatus('${item.id}','rejected')">
+❌ REJECT
+</button>
+
+`;
+
+}
+
+
 return `
 
 <div class="withdrawal">
 
 <div class="row">
+
 <span class="label">
 Request ID:
 </span>
+
 <br>
+
 ${escapeHtml(item.id)}
+
 </div>
 
+
 <div class="row">
+
 <span class="label">
 User ID:
 </span>
+
 <br>
+
 ${escapeHtml(item.user_id)}
+
 </div>
 
+
 <div class="row">
+
 <span class="label">
 Amount:
 </span>
+
 <strong>
 🪙 ${escapeHtml(item.amount)} coins
 </strong>
+
 </div>
 
+
 <div class="row">
+
 <span class="label">
 Payment Method:
 </span>
-${escapeHtml(item.method || "-")}
+
+${escapeHtml(
+item.method || "-"
+)}
+
 </div>
 
+
 <div class="row">
+
 <span class="label">
 Account Number:
 </span>
-${escapeHtml(item.account_number || "-")}
+
+${escapeHtml(
+item.account_number || "-"
+)}
+
 </div>
 
+
 <div class="row">
+
 <span class="label">
 Status:
 </span>
@@ -764,12 +845,17 @@ ${escapeHtml(status)}
 
 </div>
 
+
 <div class="row">
+
 <span class="label">
 Requested:
 </span>
+
 ${escapeHtml(date)}
+
 </div>
+
 
 ${actionButtons}
 
@@ -803,7 +889,7 @@ refreshButton.disabled=false;
 
 
 /* =========================
-   SAFE HTML TEXT
+   SAFE HTML
 ========================= */
 
 function escapeHtml(value){
@@ -816,7 +902,7 @@ return String(value)
 .replace(/'/g,"&#039;");
 
 }/* =========================
-   CHANGE WITHDRAWAL STATUS
+   CHANGE STATUS
 ========================= */
 
 async function changeStatus(
@@ -834,7 +920,8 @@ return;
 
 if(
 newStatus !== "approved" &&
-newStatus !== "rejected"
+newStatus !== "rejected" &&
+newStatus !== "paid"
 ){
 
 return;
@@ -848,12 +935,31 @@ document.getElementById(
 );
 
 
-const confirmText =
-newStatus === "approved"
-?
-"Approve this withdrawal?"
-:
-"Reject this withdrawal?";
+let confirmText="";
+
+
+if(newStatus==="approved"){
+
+confirmText =
+"Approve this withdrawal request?";
+
+}
+
+
+if(newStatus==="rejected"){
+
+confirmText =
+"Reject this withdrawal request?";
+
+}
+
+
+if(newStatus==="paid"){
+
+confirmText =
+"Have you actually sent the money to the user's payment account?";
+
+}
 
 
 if(!confirm(confirmText))
@@ -865,7 +971,6 @@ message.textContent =
 
 
 try{
-
 
 const result =
 await supabaseClient
@@ -880,12 +985,28 @@ if(result.error)
 throw result.error;
 
 
+if(newStatus==="approved"){
+
 message.textContent =
-newStatus === "approved"
-?
-"✅ Withdrawal approved."
-:
+"✅ Withdrawal approved.";
+
+}
+
+
+if(newStatus==="rejected"){
+
+message.textContent =
 "❌ Withdrawal rejected.";
+
+}
+
+
+if(newStatus==="paid"){
+
+message.textContent =
+"💸 Withdrawal marked as paid.";
+
+}
 
 
 await loadWithdrawals();
@@ -942,7 +1063,7 @@ document.getElementById(
 
 
 /* =========================
-   CHECK EXISTING SESSION
+   CHECK SESSION
 ========================= */
 
 async function checkAdminSession(){
@@ -962,11 +1083,6 @@ result.data.session.user
 const user =
 result.data.session.user;
 
-
-/*
-Check admin email again when
-restoring an existing session.
-*/
 
 if(
 ADMIN_EMAIL !==
@@ -1021,7 +1137,7 @@ showLogin();
 supabaseClient.auth.onAuthStateChange(
 function(event,session){
 
-if(event === "SIGNED_OUT"){
+if(event==="SIGNED_OUT"){
 
 adminUser=null;
 
@@ -1033,10 +1149,11 @@ showLogin();
 
 
 /* =========================
-   START ADMIN
+   START
 ========================= */
 
 checkAdminSession();
+
 
 </script>
 
