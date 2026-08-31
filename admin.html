@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>Watchly Admin</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+}
+
+body{
+font-family:Arial,sans-serif;
+background:#07111f;
+color:white;
+min-height:100vh;
+padding-bottom:30px;
+}
+
+.header{
+padding:18px;
+background:#0a1628;
+border-bottom:1px solid #1c2c43;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.logo{
+font-size:24px;
+font-weight:bold;
+}
+
+.logo span{
+color:#3b82f6;
+}
+
+.container{
+max-width:700px;
+margin:auto;
+padding:18px;
+}
+
+.card{
+background:#101d30;
+border:1px solid #1c2c43;
+border-radius:18px;
+padding:20px;
+margin-bottom:15px;
+}
+
+.card h2{
+font-size:20px;
+margin-bottom:8px;
+}
+
+.card p{
+color:#9eacc0;
+font-size:14px;
+line-height:1.5;
+}
+
+.input{
+width:100%;
+padding:14px;
+margin-top:10px;
+border-radius:11px;
+border:1px solid #284363;
+background:#07111f;
+color:white;
+outline:none;
+}
+
+button{
+width:100%;
+padding:14px;
+border:none;
+border-radius:11px;
+font-size:15px;
+font-weight:bold;
+cursor:pointer;
+margin-top:10px;
+}
+
+button:disabled{
+opacity:.5;
+cursor:not-allowed;
+}
+
+.login{
+background:#3b82f6;
+color:white;
+}
+
+.refresh{
+background:#17263b;
+color:#60a5fa;
+border:1px solid #284363;
+}
+
+.logout{
+width:auto;
+margin:0;
+padding:9px 13px;
+background:#17263b;
+color:#60a5fa;
+border:1px solid #284363;
+}
+
+.approve{
+background:#16a34a;
+color:white;
+}
+
+.reject{
+background:#dc2626;
+color:white;
+}
+
+.message{
+text-align:center;
+color:#60a5fa;
+min-height:24px;
+margin:14px 0;
+font-size:14px;
+word-break:break-word;
+}
+
+.stats{
+display:flex;
+gap:10px;
+margin-bottom:15px;
+}
+
+.stat{
+flex:1;
+background:#101d30;
+border:1px solid #1c2c43;
+border-radius:15px;
+padding:15px;
+}
+
+.stat small{
+color:#8796aa;
+}
+
+.stat strong{
+display:block;
+font-size:25px;
+margin-top:5px;
+}
+
+.withdrawal{
+background:#0b1829;
+border:1px solid #263b56;
+border-radius:15px;
+padding:16px;
+margin-top:12px;
+}
+
+.row{
+margin:8px 0;
+font-size:14px;
+line-height:1.5;
+word-break:break-word;
+}
+
+.label{
+color:#8291a5;
+}
+
+.status{
+display:inline-block;
+padding:5px 9px;
+border-radius:8px;
+font-size:12px;
+font-weight:bold;
+text-transform:uppercase;
+background:#6b4f00;
+color:#ffd76a;
+}
+
+.status.approved{
+background:#064e3b;
+color:#6ee7b7;
+}
+
+.status.rejected{
+background:#7f1d1d;
+color:#fca5a5;
+}
+
+.empty{
+text-align:center;
+color:#8291a5;
+padding:30px 5px;
+}
+
+#loginPage,
+#adminApp{
+display:none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<div class="header">
+
+<div class="logo">
+Watch<span>ly</span> Admin
+</div>
+
+<button
+id="logoutButton"
+class="logout"
+onclick="adminLogout()"
+style="display:none;">
+LOGOUT
+</button>
+
+</div>
+
+
+<!-- =========================
+     ADMIN LOGIN
+========================= -->
+
+<div id="loginPage">
+
+<div class="container">
+
+<div class="card">
+
+<h2>🔐 Watchly Admin</h2>
+
+<p>
+Login with your authorized admin account.
+</p>
+
+<br>
+
+<input
+class="input"
+id="adminEmail"
+type="email"
+placeholder="Admin email"
+autocomplete="email">
+
+<input
+class="input"
+id="adminPassword"
+type="password"
+placeholder="Password"
+autocomplete="current-password">
+
+<button
+class="login"
+id="loginButton"
+onclick="adminLogin()">
+LOGIN
+</button>
+
+<div
+id="loginMessage"
+class="message">
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- =========================
+     ADMIN APP
+========================= -->
+
+<div id="adminApp">
+
+<div class="container">
+
+
+<div class="stats">
+
+<div class="stat">
+<small>Pending</small>
+<strong id="pendingCount">0</strong>
+</div>
+
+<div class="stat">
+<small>Approved</small>
+<strong id="approvedCount">0</strong>
+</div>
+
+<div class="stat">
+<small>Rejected</small>
+<strong id="rejectedCount">0</strong>
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>💸 Withdrawal Requests</h2>
+
+<p>
+Manage Watchly user withdrawal requests.
+</p>
+
+<button
+class="refresh"
+id="refreshButton"
+onclick="loadWithdrawals()">
+🔄 REFRESH REQUESTS
+</button>
+
+<div
+id="adminMessage"
+class="message">
+</div>
+
+<div id="withdrawalsList">
+
+<div class="empty">
+Loading withdrawal requests...
+</div>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+<script>
+
+
+/* =========================
+   SUPABASE
+========================= */
+
+const SUPABASE_URL =
+"https://woyvafgecfuriavuxnje.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_lxrfM4MgeRSm8-CiiUGQZg_EdayI2Po";
+
+const supabaseClient =
+window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
+);
+
+
+/* =========================
+   ADMIN EMAIL
+=========================
+
+   CHANGE THIS to YOUR
+   actual admin/login email.
+========================= */
+
+const ADMIN_EMAIL =
+"YOUR_ADMIN_EMAIL_HERE";
+
+
+let adminUser=null;
+
+
+/* =========================
+   SHOW LOGIN
+========================= */
+
+function showLogin(){
+
+document.getElementById(
+"loginPage"
+).style.display="block";
+
+document.getElementById(
+"adminApp"
+).style.display="none";
+
+document.getElementById(
+"logoutButton"
+).style.display="none";
+
+}
+
+
+/* =========================
+   SHOW ADMIN
+========================= */
+
+function showAdmin(){
+
+document.getElementById(
+"loginPage"
+).style.display="none";
+
+document.getElementById(
+"adminApp"
+).style.display="block";
+
+document.getElementById(
+"logoutButton"
+).style.display="block";
+
+}
+
+
+/* =========================
+   ADMIN LOGIN
+========================= */
+
+async function adminLogin(){
+
+const email =
+document.getElementById(
+"adminEmail"
+).value.trim();
+
+const password =
+document.getElementById(
+"adminPassword"
+).value;
+
+const message =
+document.getElementById(
+"loginMessage"
+);
+
+const loginButton =
+document.getElementById(
+"loginButton"
+);
+
+
+if(!email || !password){
+
+message.textContent =
+"❌ Enter email and password.";
+
+return;
+
+}
+
+
+/*
+Client-side email gate.
+The database RLS policies must also
+protect the withdrawals table.
+*/
+
+if(
+ADMIN_EMAIL !== "YOUR_ADMIN_EMAIL_HERE" &&
+email.toLowerCase() !==
+ADMIN_EMAIL.toLowerCase()
+){
+
+message.textContent =
+"❌ This account is not authorized.";
+
+return;
+
+}
+
+
+message.textContent =
+"⏳ Signing in...";
+
+loginButton.disabled=true;
+
+
+try{
+
+const result =
+await supabaseClient.auth.signInWithPassword({
+
+email:email,
+password:password
+
+});
+
+
+if(result.error)
+throw result.error;
+
+
+adminUser =
+result.data.user;
+
+
+if(
+ADMIN_EMAIL !== "YOUR_ADMIN_EMAIL_HERE" &&
+adminUser.email.toLowerCase() !==
+ADMIN_EMAIL.toLowerCase()
+){
+
+await supabaseClient.auth.signOut();
+
+throw new Error(
+"This account is not authorized."
+);
+
+}
+
+
+showAdmin();
+
+await loadWithdrawals();
+
+
+}catch(error){
+
+console.error(error);
+
+message.textContent =
+"❌ "+(
+error.message ||
+"Admin login failed."
+);
+
+}finally{
+
+loginButton.disabled=false;
+
+}
+
+}
+
+
+/* =========================
+   LOAD WITHDRAWALS
+========================= */
+
+async function loadWithdrawals(){
+
+if(!adminUser)
+return;
+
+
+const list =
+document.getElementById(
+"withdrawalsList"
+);
+
+const message =
+document.getElementById(
+"adminMessage"
+);
+
+const refreshButton =
+document.getElementById(
+"refreshButton"
+);
+
+
+list.innerHTML =
+'<div class="empty">Loading...</div>';
+
+message.textContent="";
+
+refreshButton.disabled=true;
+
+
+try{
+
+const result =
+await supabaseClient
+.from("withdrawals")
+.select(
+"id,user_id,amount,method,account_number,status,created_at"
+)
+.order(
+"created_at",
+{
+ascending:false
+}
+);
+
+
+if(result.error)
+throw result.error;
+
+
+const rows =
+result.data || [];
+
+
+let pending=0;
+let approved=0;
+let rejected=0;
+
+
+rows.forEach(function(item){
+
+const status =
+String(item.status || "")
+.toLowerCase();
+
+if(status === "pending")
+pending++;
+
+if(
+status === "approved" ||
+status === "paid"
+)
+approved++;
+
+if(status === "rejected")
+rejected++;
+
+});
+
+
+document.getElementById(
+"pendingCount"
+).textContent =
+pending;
+
+document.getElementById(
+"approvedCount"
+).textContent =
+approved;
+
+document.getElementById(
+"rejectedCount"
+).textContent =
+rejected;
+
+
+if(rows.length===0){
+
+list.innerHTML =
+'<div class="empty">No withdrawal requests.</div>';
+
+return;
+
+}
+
+
+/* =========================
+   BUILD REQUEST CARDS
+========================= */
+
+list.innerHTML =
+rows.map(function(item){
+
+const status =
+String(
+item.status || "pending"
+);
+
+const statusClass =
+status.toLowerCase();
+
+
+const date =
+item.created_at
+?
+new Date(
+item.created_at
+).toLocaleString()
+:
+"Unknown";
+
+
+let actionButtons="";
+
+
+if(
+status.toLowerCase() ===
+"pending"
+){
+
+actionButtons = `
+
+<button
+class="approve"
+onclick="changeStatus('${item.id}','approved')">
+✅ APPROVE
+</button>
+
+<button
+class="reject"
+onclick="changeStatus('${item.id}','rejected')">
+❌ REJECT
+</button>
+
+`;
+
+}
+
+
+return `
+
+<div class="withdrawal">
+
+<div class="row">
+<span class="label">
+Request ID:
+</span>
+<br>
+${escapeHtml(item.id)}
+</div>
+
+<div class="row">
+<span class="label">
+User ID:
+</span>
+<br>
+${escapeHtml(item.user_id)}
+</div>
+
+<div class="row">
+<span class="label">
+Amount:
+</span>
+<strong>
+🪙 ${escapeHtml(item.amount)} coins
+</strong>
+</div>
+
+<div class="row">
+<span class="label">
+Payment Method:
+</span>
+${escapeHtml(item.method || "-")}
+</div>
+
+<div class="row">
+<span class="label">
+Account Number:
+</span>
+${escapeHtml(item.account_number || "-")}
+</div>
+
+<div class="row">
+<span class="label">
+Status:
+</span>
+
+<span class="status ${statusClass}">
+${escapeHtml(status)}
+</span>
+
+</div>
+
+<div class="row">
+<span class="label">
+Requested:
+</span>
+${escapeHtml(date)}
+</div>
+
+${actionButtons}
+
+</div>
+
+`;
+
+}).join("");
+
+
+}catch(error){
+
+console.error(
+"Withdrawal loading error:",
+error
+);
+
+list.innerHTML =
+'<div class="empty">Unable to load withdrawal requests.</div>';
+
+message.textContent =
+"❌ "+error.message;
+
+}finally{
+
+refreshButton.disabled=false;
+
+}
+
+}
+
+
+/* =========================
+   SAFE HTML TEXT
+========================= */
+
+function escapeHtml(value){
+
+return String(value)
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
+
+}/* =========================
+   CHANGE WITHDRAWAL STATUS
+========================= */
+
+async function changeStatus(
+id,
+newStatus
+){
+
+if(!adminUser)
+return;
+
+
+if(!id)
+return;
+
+
+if(
+newStatus !== "approved" &&
+newStatus !== "rejected"
+){
+
+return;
+
+}
+
+
+const message =
+document.getElementById(
+"adminMessage"
+);
+
+
+const confirmText =
+newStatus === "approved"
+?
+"Approve this withdrawal?"
+:
+"Reject this withdrawal?";
+
+
+if(!confirm(confirmText))
+return;
+
+
+message.textContent =
+"⏳ Updating withdrawal...";
+
+
+try{
+
+
+const result =
+await supabaseClient
+.from("withdrawals")
+.update({
+status:newStatus
+})
+.eq("id",id);
+
+
+if(result.error)
+throw result.error;
+
+
+message.textContent =
+newStatus === "approved"
+?
+"✅ Withdrawal approved."
+:
+"❌ Withdrawal rejected.";
+
+
+await loadWithdrawals();
+
+
+}catch(error){
+
+console.error(
+"Status update error:",
+error
+);
+
+message.textContent =
+"❌ "+error.message;
+
+}
+
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+async function adminLogout(){
+
+try{
+
+await supabaseClient.auth.signOut();
+
+}catch(error){
+
+console.error(error);
+
+}
+
+adminUser=null;
+
+showLogin();
+
+document.getElementById(
+"adminEmail"
+).value="";
+
+document.getElementById(
+"adminPassword"
+).value="";
+
+document.getElementById(
+"loginMessage"
+).textContent="";
+
+}
+
+
+/* =========================
+   CHECK EXISTING SESSION
+========================= */
+
+async function checkAdminSession(){
+
+try{
+
+const result =
+await supabaseClient.auth.getSession();
+
+
+if(
+result.data &&
+result.data.session &&
+result.data.session.user
+){
+
+const user =
+result.data.session.user;
+
+
+/*
+Check admin email again when
+restoring an existing session.
+*/
+
+if(
+ADMIN_EMAIL !==
+"YOUR_ADMIN_EMAIL_HERE" &&
+(
+!user.email ||
+user.email.toLowerCase() !==
+ADMIN_EMAIL.toLowerCase()
+)
+){
+
+await supabaseClient.auth.signOut();
+
+showLogin();
+
+return;
+
+}
+
+
+adminUser=user;
+
+showAdmin();
+
+await loadWithdrawals();
+
+}else{
+
+showLogin();
+
+}
+
+
+}catch(error){
+
+console.error(
+"Session error:",
+error
+);
+
+showLogin();
+
+}
+
+}
+
+
+/* =========================
+   AUTH STATE
+========================= */
+
+supabaseClient.auth.onAuthStateChange(
+function(event,session){
+
+if(event === "SIGNED_OUT"){
+
+adminUser=null;
+
+showLogin();
+
+}
+
+});
+
+
+/* =========================
+   START ADMIN
+========================= */
+
+checkAdminSession();
+
+</script>
+
+</body>
+</html>
