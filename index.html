@@ -797,65 +797,76 @@ showMessage("🎁 Daily bonus: +1 coin!");
 }
 
 
-async function withdraw(){
+async function submitWithdrawal(){
 
 if(!currentUser){
 
-showMessage("Please login first.");
+document.getElementById("withdrawMessage").textContent=
+"Please login first.";
 
 return;
 
 }
 
-if(coins<50){
+const amountInput=
+document.getElementById("withdrawAmount");
 
-showMessage("You need at least 50 coins.");
+const methodInput=
+document.getElementById("withdrawMethod");
 
-return;
+const accountInput=
+document.getElementById("withdrawAccount");
 
-}
+const withdrawMessage=
+document.getElementById("withdrawMessage");
 
-const input=prompt(
-"Enter coins to withdraw:",
-"50"
-);
+const amount=Number(amountInput.value);
+const method=methodInput.value;
+const accountNumber=accountInput.value.trim();
 
-if(input===null) return;
+if(!Number.isInteger(amount)||amount<50){
 
-const amount=Number(input);
-
-if(
-!Number.isInteger(amount)||
-amount<50||
-amount>coins
-){
-
-showMessage("Invalid withdrawal amount.");
+withdrawMessage.textContent=
+"❌ Minimum withdrawal is 50 coins.";
 
 return;
 
 }
 
-const method=prompt(
-"Enter payment method:",
-"bKash"
-);
+if(amount>coins){
 
-if(!method) return;
+withdrawMessage.textContent=
+"❌ You don't have enough coins.";
 
-const accountNumber=prompt(
-"Enter your payment account number:"
-);
+return;
+
+}
+
+if(!method){
+
+withdrawMessage.textContent=
+"❌ Select a payment method.";
+
+return;
+
+}
 
 if(!accountNumber){
 
-showMessage("Account number is required.");
+withdrawMessage.textContent=
+"❌ Enter your payment account number.";
 
 return;
 
 }
 
-const withdrawal=await supabaseClient
+withdrawMessage.textContent=
+"⏳ Creating withdrawal request...";
+
+try{
+
+const withdrawal=
+await supabaseClient
 .from("withdrawals")
 .insert({
 user_id:currentUser.id,
@@ -869,23 +880,16 @@ status:"pending"
 
 if(withdrawal.error){
 
-console.error(
-"Withdrawal error:",
-withdrawal.error
-);
-
-showMessage(
-"❌ Withdrawal request failed: "+
+throw new Error(
 withdrawal.error.message
 );
-
-return;
 
 }
 
 const newCoins=coins-amount;
 
-const result=await supabaseClient
+const result=
+await supabaseClient
 .from("profile")
 .update({
 coin:newCoins
@@ -896,31 +900,36 @@ coin:newCoins
 
 if(result.error){
 
-showMessage(
-"❌ Coin deduction failed: "+
+throw new Error(
+"Coin deduction failed: "+
 result.error.message
 );
-
-return;
 
 }
 
 coins=Number(result.data.coin);
 
-history.unshift({
-coins:amount,
-method:method,
-account_number:accountNumber,
-status:"Pending"
-});
-
-saveLocalData();
+amountInput.value="";
+methodInput.value="";
+accountInput.value="";
 
 update();
 
+withdrawMessage.textContent=
+"✅ Withdrawal request submitted!";
+
 showMessage(
-"✅ Withdrawal request created!"
+"💸 Withdrawal pending."
 );
+
+}catch(error){
+
+console.error(error);
+
+withdrawMessage.textContent=
+"❌ "+error.message;
+
+}
 
 }
 
