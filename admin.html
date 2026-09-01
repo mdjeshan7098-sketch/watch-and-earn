@@ -423,100 +423,85 @@ document.getElementById(
 async function adminLogin(){
 
 const email =
-document.getElementById(
-"adminEmail"
-).value.trim();
+document.getElementById("adminEmail").value.trim();
 
 const password =
-document.getElementById(
-"adminPassword"
-).value;
+document.getElementById("adminPassword").value;
 
 const button =
-document.getElementById(
-"loginButton"
-);
+document.getElementById("loginButton");
 
+const message =
+document.getElementById("loginMessage");
 
-if(!email||!password){
+if(!email || !password){
 
-loginMessage(
-"Enter email and password."
-);
+message.textContent =
+"❌ Enter your email and password.";
 
 return;
 
 }
 
-
-button.disabled=true;
-button.textContent="LOGGING IN...";
-
+button.disabled = true;
+button.textContent = "LOGGING IN...";
+message.textContent = "⏳ Connecting to Watchly...";
 
 try{
 
 const result =
-await supabaseClient.auth
-.signInWithPassword({
-
-email:email,
-password:password
-
+await supabaseClient.auth.signInWithPassword({
+email: email,
+password: password
 });
 
+if(result.error){
 
-if(result.error)
-throw result.error;
-
-
-if(
-!result.data||
-!result.data.user
-){
-
-throw new Error(
-"User account not found."
-);
+throw new Error(result.error.message);
 
 }
 
+const user =
+result.data &&
+result.data.user;
 
-if(
-result.data.user.id!==ADMIN_ID
-){
+if(!user){
+
+throw new Error("Login succeeded but user data was not returned.");
+
+}
+
+console.log("Admin login user ID:", user.id);
+
+if(user.id !== ADMIN_ID){
 
 await supabaseClient.auth.signOut();
 
 throw new Error(
-"This account is not authorized as admin."
+"This account is not the Watchly admin account."
 );
 
 }
 
+adminUser = user;
 
-adminUser=result.data.user;
+message.textContent = "✅ Admin login successful!";
 
 showAdmin();
 
-loginMessage("");
-
 await loadDashboard();
-
 
 }catch(error){
 
-console.error(error);
+console.error("ADMIN LOGIN ERROR:", error);
 
-loginMessage(
-"❌ "+
-(error.message||
-"Admin login failed.")
-);
+message.textContent =
+"❌ " + (error.message || "Login failed.");
 
 }finally{
 
-button.disabled=false;
-button.textContent="LOGIN";
+button.disabled = false;
+button.textContent = "LOGIN";
 
 }
 
