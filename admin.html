@@ -2,450 +2,89 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Watchly BD - Admin</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Watchly Admin</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-
+*{box-sizing:border-box}
 body{
-font-family:Arial,sans-serif;
-background:#07111f;
-color:white;
-min-height:100vh;
+  margin:0;
+  padding:20px;
+  font-family:Arial,sans-serif;
+  background:#07111f;
+  color:white;
 }
-
-.header{
-padding:18px;
-background:#0a1628;
-border-bottom:1px solid #1c2c43;
-display:flex;
-justify-content:space-between;
-align-items:center;
-position:sticky;
-top:0;
-z-index:20;
-}
-
-.logo{
-font-size:24px;
-font-weight:bold;
-}
-
-.logo span{
-color:#3b82f6;
-}
-
-.logout{
-width:auto;
-padding:9px 14px;
-background:#17263b;
-color:#60a5fa;
-border:1px solid #284363;
-border-radius:10px;
-}
-
 .container{
-max-width:900px;
-margin:auto;
-padding:18px;
+  max-width:600px;
+  margin:auto;
 }
-
-.login{
-max-width:450px;
-margin:70px auto;
-padding:18px;
-}
-
+h1{margin-bottom:5px}
+.sub{color:#8fa0b5;margin-bottom:20px}
 .card{
-background:#101d30;
-border:1px solid #1c2c43;
-border-radius:18px;
-padding:20px;
-margin-bottom:16px;
+  background:#101d30;
+  border:1px solid #1c2c43;
+  border-radius:16px;
+  padding:18px;
+  margin-bottom:15px;
 }
-
-.card h2{
-font-size:19px;
-margin-bottom:8px;
+.pending{
+  color:#fbbf24;
+  font-weight:bold;
 }
-
-.muted{
-color:#9eacc0;
-font-size:14px;
-}
-
-.input{
-width:100%;
-padding:14px;
-margin:10px 0;
-border-radius:11px;
-border:1px solid #284363;
-background:#07111f;
-color:white;
-outline:none;
-}
-
 button{
-width:100%;
-border:none;
-border-radius:11px;
-padding:13px;
-font-size:15px;
-font-weight:bold;
-cursor:pointer;
+  border:0;
+  border-radius:10px;
+  padding:12px;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+  margin-top:8px;
 }
-
-.primary{
-background:#3b82f6;
-color:white;
+.approve{
+  background:#16a34a;
+  width:48%;
 }
-
-.green{
-background:#16a34a;
-color:white;
+.reject{
+  background:#dc2626;
+  width:48%;
 }
-
-.red{
-background:#dc2626;
-color:white;
+.refresh{
+  width:100%;
+  background:#2563eb;
 }
-
-.gray{
-background:#17263b;
-color:#60a5fa;
-border:1px solid #284363;
+.info{
+  color:#9eacc0;
+  font-size:14px;
+  line-height:1.7;
 }
-
-button:disabled{
-opacity:.5;
-cursor:not-allowed;
-}
-
 .message{
-text-align:center;
-color:#60a5fa;
-min-height:24px;
-margin:12px 0;
-font-size:14px;
-word-break:break-word;
-}
-
-.stats{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:12px;
-margin-bottom:16px;
-}
-
-.stat{
-background:#101d30;
-border:1px solid #1c2c43;
-border-radius:16px;
-padding:17px;
-}
-
-.stat small{
-color:#8796aa;
-}
-
-.stat strong{
-display:block;
-font-size:25px;
-margin-top:7px;
-}
-
-.withdrawal{
-background:#0c192b;
-border:1px solid #233752;
-border-radius:15px;
-padding:16px;
-margin-top:12px;
-}
-
-.withdrawal.pending{
-border-left:4px solid #f59e0b;
-}
-
-.withdrawal.approved{
-border-left:4px solid #16a34a;
-}
-
-.withdrawal.rejected{
-border-left:4px solid #dc2626;
-}
-
-.row{
-display:flex;
-justify-content:space-between;
-gap:10px;
-margin:7px 0;
-font-size:14px;
-}
-
-.label{
-color:#8796aa;
-}
-
-.status{
-display:inline-block;
-padding:5px 9px;
-border-radius:8px;
-font-size:12px;
-font-weight:bold;
-text-transform:uppercase;
-}
-
-.status.pending{
-background:#3a2b08;
-color:#fbbf24;
-}
-
-.status.approved{
-background:#07351b;
-color:#4ade80;
-}
-
-.status.rejected{
-background:#3b0a0a;
-color:#f87171;
-}
-
-.actions{
-display:flex;
-gap:8px;
-margin-top:14px;
-}
-
-.actions button{
-flex:1;
-}
-
-.user{
-padding:13px 0;
-border-bottom:1px solid #1c2c43;
-}
-
-.user:last-child{
-border-bottom:none;
-}
-
-.user-id{
-font-size:11px;
-color:#718096;
-word-break:break-all;
-margin-top:4px;
-}
-
-.empty{
-text-align:center;
-color:#8796aa;
-padding:25px 10px;
-}
-
-@media(max-width:650px){
-
-.stats{
-grid-template-columns:repeat(2,1fr);
-}
-
-.actions{
-flex-direction:column;
-}
-
-.row{
-align-items:flex-start;
-}
-
+  text-align:center;
+  color:#60a5fa;
+  margin:15px 0;
 }
 </style>
 </head>
 
 <body>
 
-<div id="loginScreen">
-
-<div class="header">
-
-<div class="logo">
-Watch<span>ly</span> Admin
-</div>
-
-</div>
-
-<div class="login">
-
-<div class="card">
-
-<h2>🔐 Admin Login</h2>
-
-<p class="muted">
-Authorized Watchly administration only.
-</p>
-
-<input
-class="input"
-id="adminEmail"
-type="email"
-placeholder="Admin email"
-autocomplete="email"
->
-
-<input
-class="input"
-id="adminPassword"
-type="password"
-placeholder="Password"
-autocomplete="current-password"
->
-
-<button
-class="primary"
-id="loginButton"
-onclick="adminLogin()"
->
-LOGIN
-</button>
-
-<div
-id="loginMessage"
-class="message"
-></div>
-
-</div>
-
-</div>
-
-</div>
-
-
-<div id="adminApp" style="display:none">
-
-<div class="header">
-
-<div class="logo">
-Watch<span>ly</span> Admin
-</div>
-
-<button
-class="logout"
-onclick="adminLogout()"
->
-LOGOUT
-</button>
-
-</div>
-
-
 <div class="container">
 
-<div class="card">
+<h1>🛠️ Watchly Admin</h1>
+<div class="sub">Withdrawal Management</div>
 
-<h2>📊 Admin Dashboard</h2>
-
-<p class="muted">
-Manage Watchly users and withdrawal requests.
-</p>
-
-<br>
-
-<button
-class="gray"
-onclick="loadDashboard()"
->
-🔄 REFRESH DASHBOARD
+<button class="refresh" onclick="loadWithdrawals()">
+🔄 REFRESH REQUESTS
 </button>
 
-</div>
+<div id="message" class="message"></div>
 
-
-<div class="stats">
-
-<div class="stat">
-<small>👥 Users</small>
-<strong id="totalUsers">0</strong>
-</div>
-
-<div class="stat">
-<small>🪙 Coins</small>
-<strong id="totalCoins">0</strong>
-</div>
-
-<div class="stat">
-<small>💸 Pending</small>
-<strong id="pendingCount">0</strong>
-</div>
-
-<div class="stat">
-<small>🎬 Ads</small>
-<strong id="totalAds">0</strong>
+<div id="withdrawals">
+Loading...
 </div>
 
 </div>
-
-
-<div class="card">
-
-<h2>💸 Withdrawal Requests</h2>
-
-<p class="muted">
-Review, approve or reject requests.
-</p>
-
-<input
-class="input"
-id="withdrawSearch"
-placeholder="Search withdrawals..."
-oninput="filterWithdrawals()"
->
-
-<div id="withdrawalsList">
-
-<div class="empty">
-Loading withdrawals...
-</div>
-
-</div>
-
-</div>
-
-
-<div class="card">
-
-<h2>👥 Users</h2>
-
-<p class="muted">
-Watchly reward profiles.
-</p>
-
-<input
-class="input"
-id="userSearch"
-placeholder="Search user ID..."
-oninput="filterUsers()"
->
-
-<div id="usersList">
-
-<div class="empty">
-Loading users...
-</div>
-
-</div>
-
-</div>
-
-
-<div
-id="adminMessage"
-class="message"
-></div>
-
-</div>
-
-</div>
-
 
 <script>
 
@@ -458,7 +97,6 @@ const SUPABASE_KEY =
 const ADMIN_ID =
 "f9e5de16-25c8-461f-a1d8-34cc56debf73";
 
-
 const supabaseClient =
 window.supabase.createClient(
 SUPABASE_URL,
@@ -466,336 +104,47 @@ SUPABASE_KEY
 );
 
 
-let adminUser=null;
-let allWithdrawals=[];
-let allUsers=[];
-
-
-function loginMessage(text){
-
-document.getElementById(
-"loginMessage"
-).textContent=text;
-
-}
-
-
-function adminMessage(text){
-
-const element =
-document.getElementById(
-"adminMessage"
-);
-
-element.textContent=text;
-
-setTimeout(function(){
-
-if(element.textContent===text){
-
-element.textContent="";
-
-}
-
-},5000);
-
-}
-
-
-function showAdmin(){
-
-document.getElementById(
-"loginScreen"
-).style.display="none";
-
-document.getElementById(
-"adminApp"
-).style.display="block";
-
-}
-
-
-function showLogin(){
-
-document.getElementById(
-"loginScreen"
-).style.display="block";
-
-document.getElementById(
-"adminApp"
-).style.display="none";
-
-}
-
-
-async function adminLogin(){
-
-const email =
-document.getElementById(
-"adminEmail"
-).value.trim();
-
-const password =
-document.getElementById(
-"adminPassword"
-).value;
-
-const button =
-document.getElementById(
-"loginButton"
-);
-
-if(!email || !password){
-
-loginMessage(
-"❌ Enter your email and password."
-);
-
-return;
-
-}
-
-button.disabled=true;
-button.textContent="LOGGING IN...";
-
-loginMessage(
-"⏳ Connecting to Watchly..."
-);
-
-try{
+async function checkAdmin(){
 
 const result =
-await supabaseClient.auth
-.signInWithPassword({
+await supabaseClient.auth.getSession();
 
-email:email,
-password:password
+const session =
+result.data?.session;
 
-});
+if(!session){
 
-if(result.error){
+document.getElementById("withdrawals").innerHTML =
+"<div class='card'>❌ Please login first.</div>";
 
-throw new Error(
-result.error.message
-);
-
+return false;
 }
 
-const user =
-result.data &&
-result.data.user;
+if(session.user.id !== ADMIN_ID){
 
-if(!user){
+document.getElementById("withdrawals").innerHTML =
+"<div class='card'>❌ Admin access denied.</div>";
 
-throw new Error(
-"Login succeeded but user data was not returned."
-);
-
+return false;
 }
 
-console.log(
-"Admin login user ID:",
-user.id
-);
-
-if(
-user.id !== ADMIN_ID
-){
-
-await supabaseClient.auth.signOut();
-
-throw new Error(
-"This account is not the Watchly admin account."
-);
-
-}
-
-adminUser=user;
-
-loginMessage(
-"✅ Admin login successful!"
-);
-
-showAdmin();
-
-await loadDashboard();
-
-}catch(error){
-
-console.error(
-"ADMIN LOGIN ERROR:",
-error
-);
-
-loginMessage(
-"❌ "+
-(error.message||
-"Admin login failed.")
-);
-
-}finally{
-
-button.disabled=false;
-button.textContent="LOGIN";
-
-}
-
-}
-
-
-async function adminLogout(){
-
-await supabaseClient.auth.signOut();
-
-adminUser=null;
-
-showLogin();
-
-}
-
-
-async function loadDashboard(){
-
-if(!adminUser)
-return;
-
-adminMessage(
-"🔄 Loading dashboard..."
-);
-
-await Promise.all([
-loadUsers(),
-loadWithdrawals(),
-loadStats()
-]);
-
-adminMessage(
-"✅ Dashboard updated."
-);
-
-}
-
-
-async function loadUsers(){
-
-const result =
-await supabaseClient
-.from("profile")
-.select(
-"id,user_id,coin"
-)
-.order(
-"coin",
-{ascending:false}
-);
-
-if(result.error){
-
-console.error(
-"Users error:",
-result.error
-);
-
-document.getElementById(
-"usersList"
-).innerHTML=
-'<div class="empty">Unable to load users.</div>';
-
-return;
-
-}
-
-allUsers =
-result.data || [];
-
-renderUsers(allUsers);
-
-}
-
-
-function renderUsers(users){
-
-const box =
-document.getElementById(
-"usersList"
-);
-
-if(!users.length){
-
-box.innerHTML=
-'<div class="empty">No users found.</div>';
-
-return;
-
-}
-
-box.innerHTML =
-users.map(function(user){
-
-return `
-
-<div class="user">
-
-<div class="row">
-
-<span class="label">
-🪙 Coins
-</span>
-
-<strong>
-${Number(user.coin)||0}
-</strong>
-
-</div>
-
-<div class="user-id">
-User ID:
-${escapeHtml(user.user_id)}
-</div>
-
-</div>
-
-`;
-
-}).join("");
-
-}
-
-
-function filterUsers(){
-
-const search =
-document.getElementById(
-"userSearch"
-).value
-.trim()
-.toLowerCase();
-
-if(!search){
-
-renderUsers(allUsers);
-
-return;
-
-}
-
-const filtered =
-allUsers.filter(function(user){
-
-return String(
-user.user_id||""
-)
-.toLowerCase()
-.includes(search);
-
-});
-
-renderUsers(filtered);
-
+return true;
 }
 
 
 async function loadWithdrawals(){
+
+const allowed =
+await checkAdmin();
+
+if(!allowed)
+return;
+
+const container =
+document.getElementById("withdrawals");
+
+container.innerHTML =
+"Loading requests...";
 
 const result =
 await supabaseClient
@@ -810,184 +159,85 @@ await supabaseClient
 
 if(result.error){
 
-console.error(
-"Withdrawals error:",
-result.error
-);
-
-document.getElementById(
-"withdrawalsList"
-).innerHTML=
-'<div class="empty">Unable to load withdrawals.</div>';
+container.innerHTML =
+"<div class='card'>❌ "+
+result.error.message+
+"</div>";
 
 return;
-
 }
 
-allWithdrawals =
-result.data || [];
+if(!result.data ||
+result.data.length === 0){
 
-renderWithdrawals(
-allWithdrawals
-);
-
-}
-
-
-function renderWithdrawals(items){
-
-const box =
-document.getElementById(
-"withdrawalsList"
-);
-
-if(!items.length){
-
-box.innerHTML=
-'<div class="empty">No withdrawal requests.</div>';
+container.innerHTML =
+"<div class='card'>No withdrawal requests.</div>";
 
 return;
-
 }
 
-box.innerHTML =
-items.map(function(item){
+
+container.innerHTML =
+result.data.map(function(item){
 
 const status =
-String(
-item.status||"pending"
-)
+String(item.status || "pending")
 .toLowerCase();
 
-const date =
-item.created_at
-?
-new Date(
-item.created_at
-).toLocaleString()
-:
-"-";
+let buttons = "";
 
-let actions="";
+if(status === "pending"){
 
-if(status==="pending"){
-
-actions=`
-
-<div class="actions">
-
-<button
-class="green"
-onclick="approveWithdrawal('${escapeJs(item.id)}')"
->
+buttons = `
+<div style="display:flex;justify-content:space-between">
+<button class="approve"
+onclick="processWithdrawal(${item.id},'approve')">
 ✅ APPROVE
 </button>
 
-<button
-class="red"
-onclick="rejectWithdrawal('${escapeJs(item.id)}')"
->
+<button class="reject"
+onclick="processWithdrawal(${item.id},'reject')">
 ❌ REJECT
 </button>
-
 </div>
-
 `;
 
 }
 
 return `
+<div class="card">
 
-<div class="withdrawal ${status}">
-
-<div class="row">
-
-<span class="label">
-🆔 Request ID
+<div>
+Status:
+<span class="pending">
+${item.status}
 </span>
+</div>
 
-<span style="font-size:11px;word-break:break-all">
-${escapeHtml(item.id)}
-</span>
+<div class="info">
+
+🆔 Withdrawal ID:
+${item.id}<br>
+
+👤 User:
+${item.user_id}<br>
+
+🪙 Amount:
+<strong>${item.amount} coins</strong><br>
+
+💳 Method:
+${item.method}<br>
+
+📱 bKash:
+<strong>${item.account_number}</strong><br>
+
+🕒 ${new Date(item.created_at).toLocaleString()}
 
 </div>
 
-<div class="row">
-
-<span class="label">
-🪙 Amount
-</span>
-
-<strong>
-${Number(item.amount)||0} coins
-</strong>
+${buttons}
 
 </div>
-
-<div class="row">
-
-<span class="label">
-💳 Method
-</span>
-
-<strong>
-${escapeHtml(item.method||"-")}
-</strong>
-
-</div>
-
-<div class="row">
-
-<span class="label">
-📱 Account
-</span>
-
-<strong>
-${escapeHtml(item.account_number||"-")}
-</strong>
-
-</div>
-
-<div class="row">
-
-<span class="label">
-📌 Status
-</span>
-
-<span class="status ${status}">
-${escapeHtml(status)}
-</span>
-
-</div>
-
-<div class="row">
-
-<span class="label">
-👤 User
-</span>
-
-<span style="font-size:11px;word-break:break-all">
-${escapeHtml(item.user_id||"-")}
-</span>
-
-</div>
-
-<div class="row">
-
-<span class="label">
-🕐 Date
-</span>
-
-<span>
-${escapeHtml(date)}
-</span>
-
-</div>
-
-${actions}
-
-</div>
-
 `;
 
 }).join("");
@@ -995,445 +245,56 @@ ${actions}
 }
 
 
-function filterWithdrawals(){
+async function processWithdrawal(id,action){
 
-const search =
-document.getElementById(
-"withdrawSearch"
-).value
-.trim()
-.toLowerCase();
+const word =
+action === "approve"
+? "approve"
+: "reject";
 
-if(!search){
-
-renderWithdrawals(
-allWithdrawals
-);
+if(!confirm(
+"Are you sure you want to "+
+word+
+" this withdrawal?"
+)){
 
 return;
-
 }
 
-const filtered =
-allWithdrawals.filter(
-function(item){
-
-return (
-
-String(item.id||"")
-.toLowerCase()
-.includes(search)
-
-||
-
-String(item.user_id||"")
-.toLowerCase()
-.includes(search)
-
-||
-
-String(item.method||"")
-.toLowerCase()
-.includes(search)
-
-||
-
-String(item.account_number||"")
-.toLowerCase()
-.includes(search)
-
-||
-
-String(item.status||"")
-.toLowerCase()
-.includes(search)
-
-);
-
-});
-
-renderWithdrawals(filtered);
-
-}async function loadStats(){
-
-const profiles =
-await supabaseClient
-.from("profile")
-.select("coin");
-
-if(!profiles.error){
-
-const users =
-profiles.data || [];
-
-const totalCoins =
-users.reduce(
-function(sum,user){
-
-return sum+
-(Number(user.coin)||0);
-
-},
-0
-);
-
-document.getElementById(
-"totalUsers"
-).textContent =
-users.length;
-
-document.getElementById(
-"totalCoins"
-).textContent =
-totalCoins;
-
-}
-
-
-const withdrawals =
-await supabaseClient
-.from("withdrawals")
-.select("status");
-
-if(!withdrawals.error){
-
-const rows =
-withdrawals.data || [];
-
-const pending =
-rows.filter(
-function(row){
-
-return String(
-row.status||""
-)
-.toLowerCase()==="pending";
-
-}
-).length;
-
-document.getElementById(
-"pendingCount"
-).textContent =
-pending;
-
-}
-
-
-const transactions =
-await supabaseClient
-.from("transactions")
-.select("type");
-
-if(!transactions.error){
-
-const rows =
-transactions.data || [];
-
-const ads =
-rows.filter(
-function(row){
-
-return String(
-row.type||""
-)
-.toLowerCase()==="watch_ad";
-
-}
-).length;
-
-document.getElementById(
-"totalAds"
-).textContent =
-ads;
-
-}
-
-}
-
-
-function escapeHtml(value){
-
-return String(value||"")
-.replace(/&/g,"&amp;")
-.replace(/</g,"&lt;")
-.replace(/>/g,"&gt;")
-.replace(/"/g,"&quot;")
-.replace(/'/g,"&#039;");
-
-}
-
-
-function escapeJs(value){
-
-return String(value||"")
-.replace(/\\/g,"\\\\")
-.replace(/'/g,"\\'")
-.replace(/\n/g,"\\n")
-.replace(/\r/g,"\\r");
-
-}
-
-
-async function approveWithdrawal(id){
-
-if(!adminUser)
-return;
-
-const item =
-allWithdrawals.find(
-function(row){
-
-return String(row.id) ===
-String(id);
-
-}
-);
-
-if(!item)
-return;
-
-const confirmed =
-confirm(
-"Approve this withdrawal?\n\n"+
-"Amount: "+
-item.amount+
-" coins\n"+
-"Method: "+
-item.method+
-"\nAccount: "+
-item.account_number
-);
-
-if(!confirmed)
-return;
-
-adminMessage(
-"⏳ Approving withdrawal..."
-);
-
-try{
+document.getElementById("message").textContent =
+"⏳ Processing...";
 
 const result =
-await supabaseClient
-.from("withdrawals")
-.update({
-status:"approved"
-})
-.eq("id",id)
-.eq("status","pending");
-
-if(result.error)
-throw result.error;
-
-adminMessage(
-"✅ Withdrawal approved."
-);
-
-await loadDashboard();
-
-}catch(error){
-
-console.error(error);
-
-adminMessage(
-"❌ Approval failed: "+
-error.message
-);
-
-}
-
-}
-
-
-async function rejectWithdrawal(id){
-
-if(!adminUser)
-return;
-
-const item =
-allWithdrawals.find(
-function(row){
-
-return String(row.id) ===
-String(id);
-
+await supabaseClient.rpc(
+"process_withdrawal",
+{
+p_withdrawal_id:id,
+p_action:action
 }
 );
-
-if(!item)
-return;
-
-const confirmed =
-confirm(
-"Reject this withdrawal?\n\n"+
-item.amount+
-" coins will be returned to the user."
-);
-
-if(!confirmed)
-return;
-
-adminMessage(
-"⏳ Rejecting withdrawal..."
-);
-
-try{
-
-const profile =
-await supabaseClient
-.from("profile")
-.select("coin")
-.eq(
-"user_id",
-item.user_id
-)
-.maybeSingle();
-
-if(profile.error)
-throw profile.error;
-
-if(!profile.data){
-
-throw new Error(
-"User profile not found."
-);
-
-}
-
-const currentCoins =
-Number(
-profile.data.coin
-)||0;
-
-const newCoins =
-currentCoins+
-Number(item.amount);
-
-const refund =
-await supabaseClient
-.from("profile")
-.update({
-coin:newCoins
-})
-.eq(
-"user_id",
-item.user_id
-);
-
-if(refund.error)
-throw refund.error;
-
-
-const result =
-await supabaseClient
-.from("withdrawals")
-.update({
-status:"rejected"
-})
-.eq("id",id)
-.eq("status","pending");
-
-if(result.error)
-throw result.error;
-
-adminMessage(
-"✅ Rejected and coins refunded."
-);
-
-await loadDashboard();
-
-}catch(error){
-
-console.error(error);
-
-adminMessage(
-"❌ Rejection failed: "+
-error.message
-);
-
-}
-
-}
-
-
-async function checkAdminSession(){
-
-try{
-
-const result =
-await supabaseClient.auth
-.getSession();
 
 if(result.error){
 
-throw result.error;
+console.error(result.error);
 
+document.getElementById("message").textContent =
+"❌ "+
+result.error.message;
+
+return;
 }
 
-const session =
-result.data &&
-result.data.session;
+document.getElementById("message").textContent =
+action === "approve"
+? "✅ Withdrawal approved!"
+: "↩️ Withdrawal rejected and coins refunded.";
 
-if(
-session &&
-session.user
-){
-
-if(
-session.user.id === ADMIN_ID
-){
-
-adminUser =
-session.user;
-
-showAdmin();
-
-await loadDashboard();
-
-}else{
-
-await supabaseClient.auth.signOut();
-
-showLogin();
-
-}
-
-}else{
-
-showLogin();
-
-}
-
-}catch(error){
-
-console.error(
-"SESSION ERROR:",
-error
-);
-
-showLogin();
-
-}
+await loadWithdrawals();
 
 }
 
 
-supabaseClient.auth.onAuthStateChange(
-function(event,session){
-
-if(event==="SIGNED_OUT"){
-
-adminUser=null;
-
-showLogin();
-
-}
-
-});
-
-
-checkAdminSession();
+loadWithdrawals();
 
 </script>
 
