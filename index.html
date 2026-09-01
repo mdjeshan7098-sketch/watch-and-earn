@@ -1045,30 +1045,14 @@ Number(result.data.coin)||0;
 
 async function loadTodayStats(){
 
-if(!currentUser)
-return;
+if(!currentUser) return;
 
+try{
 
-const start=new Date();
-
-start.setHours(0,0,0,0);
-
-
-const end=new Date(start);
-
-end.setDate(
-end.getDate()+1
+const result =
+await supabaseClient.rpc(
+"get_today_watch_stats"
 );
-
-
-const result=
-await supabaseClient
-.from("transactions")
-.select("amount,type,created_at")
-.eq("user_id",currentUser.id)
-.gte("created_at",start.toISOString())
-.lt("created_at",end.toISOString());
-
 
 if(result.error){
 
@@ -1081,30 +1065,31 @@ ads=0;
 today=0;
 
 return;
-
 }
 
+const data =
+result.data &&
+result.data.length
+? result.data[0]
+: null;
 
-const rows=
-(result.data||[]).filter(function(row){
+ads =
+Number(data?.ads_count || 0);
 
-return String(row.type||"")
-.trim()
-.toLowerCase()==="watch_ad";
+today =
+Number(data?.coin_total || 0);
 
-});
+}catch(error){
 
+console.error(
+"Today's stats error:",
+error
+);
 
-ads=rows.length;
+ads=0;
+today=0;
 
-
-today=
-rows.reduce(function(sum,row){
-
-return sum+
-Number(row.amount||0);
-
-},0);
+}
 
 }
 
