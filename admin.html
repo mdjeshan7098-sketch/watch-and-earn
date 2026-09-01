@@ -3,53 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-
-<title>Watchly Admin</title>
-
+<title>Watchly BD - Admin</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{
-box-sizing:border-box;
-margin:0;
-padding:0
-}
-
+*{box-sizing:border-box;margin:0;padding:0}
 body{
 font-family:Arial,sans-serif;
 background:#07111f;
 color:white;
-min-height:100vh;
-padding-bottom:30px
+min-height:100vh
 }
-
 .header{
-background:#0a1628;
 padding:18px;
+background:#0a1628;
+border-bottom:1px solid #1c2c43;
 display:flex;
 justify-content:space-between;
 align-items:center;
-border-bottom:1px solid #1c2c43;
 position:sticky;
 top:0;
 z-index:20
 }
-
-.logo{
-font-size:24px;
-font-weight:bold
-}
-
-.logo span{
-color:#3b82f6
-}
-
-.admin-label{
-font-size:12px;
-color:#60a5fa;
-margin-top:3px
-}
-
+.logo{font-size:24px;font-weight:bold}
+.logo span{color:#3b82f6}
 .logout{
 width:auto;
 padding:9px 14px;
@@ -58,206 +35,144 @@ color:#60a5fa;
 border:1px solid #284363;
 border-radius:10px
 }
-
 .container{
 max-width:900px;
 margin:auto;
 padding:18px
 }
-
 .login{
 max-width:450px;
 margin:70px auto;
-padding:20px
+padding:18px
 }
-
 .card{
 background:#101d30;
 border:1px solid #1c2c43;
 border-radius:18px;
 padding:20px;
-margin-bottom:15px
+margin-bottom:16px
 }
-
-.card h2{
-font-size:19px;
-margin-bottom:8px
-}
-
-.card p{
-color:#9eacc0;
-font-size:14px;
-margin-bottom:15px
-}
-
+.card h2{font-size:19px;margin-bottom:8px}
+.muted{color:#9eacc0;font-size:14px}
 .input{
 width:100%;
 padding:14px;
-margin-bottom:12px;
+margin:10px 0;
 border-radius:11px;
 border:1px solid #284363;
 background:#07111f;
 color:white;
 outline:none
 }
-
 button{
 width:100%;
-padding:13px;
-border:0;
+border:none;
 border-radius:11px;
+padding:13px;
 font-size:15px;
 font-weight:bold;
 cursor:pointer
 }
-
-.primary{
-background:#3b82f6;
-color:white
-}
-
-.success{
-background:#16a34a;
-color:white
-}
-
-.danger{
-background:#dc2626;
-color:white
-}
-
-.secondary{
+.primary{background:#3b82f6;color:white}
+.green{background:#16a34a;color:white}
+.red{background:#dc2626;color:white}
+.gray{
 background:#17263b;
 color:#60a5fa;
 border:1px solid #284363
 }
-
+button:disabled{opacity:.5;cursor:not-allowed}
 .message{
 text-align:center;
 color:#60a5fa;
 min-height:24px;
 margin:12px 0;
-font-size:14px
+font-size:14px;
+word-break:break-word
 }
-
-#adminApp{
-display:none
-}
-
 .stats{
 display:grid;
-grid-template-columns:repeat(2,1fr);
+grid-template-columns:repeat(4,1fr);
 gap:12px;
-margin-bottom:15px
+margin-bottom:16px
 }
-
 .stat{
 background:#101d30;
 border:1px solid #1c2c43;
 border-radius:16px;
-padding:18px
+padding:17px
 }
-
-.stat small{
-color:#8796aa
-}
-
+.stat small{color:#8796aa}
 .stat strong{
 display:block;
-font-size:28px;
+font-size:25px;
 margin-top:7px
 }
-
-.section-title{
-margin:25px 0 12px;
-font-size:20px
+.withdrawal{
+background:#0c192b;
+border:1px solid #233752;
+border-radius:15px;
+padding:16px;
+margin-top:12px
 }
-
-.withdraw-item,
-.user-item{
-background:#0c192a;
-border:1px solid #1c2c43;
-border-radius:14px;
-padding:15px;
-margin-bottom:10px
-}
-
-.withdraw-item div,
-.user-item div{
-margin:5px 0;
+.withdrawal.pending{border-left:4px solid #f59e0b}
+.withdrawal.approved{border-left:4px solid #16a34a}
+.withdrawal.rejected{border-left:4px solid #dc2626}
+.row{
+display:flex;
+justify-content:space-between;
+gap:10px;
+margin:7px 0;
 font-size:14px
 }
-
-.muted{
-color:#8d9caf
-}
-
+.label{color:#8796aa}
 .status{
 display:inline-block;
 padding:5px 9px;
 border-radius:8px;
 font-size:12px;
 font-weight:bold;
-margin-top:5px
+text-transform:uppercase
 }
-
-.pending{
-background:#3b2f0b;
+.status.pending{
+background:#3a2b08;
 color:#fbbf24
 }
-
-.approved{
-background:#0b3820;
+.status.approved{
+background:#07351b;
 color:#4ade80
 }
-
-.rejected{
-background:#3b1111;
+.status.rejected{
+background:#3b0a0a;
 color:#f87171
 }
-
 .actions{
 display:flex;
 gap:8px;
-margin-top:12px
+margin-top:14px
 }
-
-.actions button{
-flex:1
+.actions button{flex:1}
+.user{
+padding:13px 0;
+border-bottom:1px solid #1c2c43
 }
-
+.user:last-child{border-bottom:none}
+.user-id{
+font-size:11px;
+color:#718096;
+word-break:break-all;
+margin-top:4px
+}
 .empty{
 text-align:center;
 color:#8796aa;
-padding:25px
+padding:25px 10px
 }
-
-.search-row{
-display:flex;
-gap:8px
+@media(max-width:650px){
+.stats{grid-template-columns:repeat(2,1fr)}
+.actions{flex-direction:column}
+.row{align-items:flex-start}
 }
-
-.search-row .input{
-margin:0;
-flex:1
-}
-
-@media(max-width:600px){
-
-.stats{
-grid-template-columns:1fr 1fr
-}
-
-.stat strong{
-font-size:23px
-}
-
-.actions{
-flex-direction:column
-}
-
-}
-
 </style>
 </head>
 
@@ -266,14 +181,7 @@ flex-direction:column
 <div id="loginScreen">
 
 <div class="header">
-<div>
-<div class="logo">
-Watch<span>ly</span>
-</div>
-<div class="admin-label">
-ADMIN PANEL
-</div>
-</div>
+<div class="logo">Watch<span>ly</span> Admin</div>
 </div>
 
 <div class="login">
@@ -282,8 +190,8 @@ ADMIN PANEL
 
 <h2>🔐 Admin Login</h2>
 
-<p>
-Sign in with your admin account.
+<p class="muted">
+Authorized Watchly administration only.
 </p>
 
 <input
@@ -302,37 +210,26 @@ placeholder="Password"
 
 <button
 class="primary"
+id="loginButton"
 onclick="adminLogin()"
 >
 LOGIN
 </button>
 
-<div
-id="loginMessage"
-class="message"
-></div>
+<div id="loginMessage" class="message"></div>
 
 </div>
 
 </div>
-
 </div>
 
 
-<div id="adminApp">
+<div id="adminApp" style="display:none">
 
 <div class="header">
 
-<div>
-
 <div class="logo">
-Watch<span>ly</span>
-</div>
-
-<div class="admin-label">
-ADMIN DASHBOARD
-</div>
-
+Watch<span>ly</span> Admin
 </div>
 
 <button
@@ -347,32 +244,46 @@ LOGOUT
 
 <div class="container">
 
+<div class="card">
 
-<h2 class="section-title">
-📊 Dashboard
-</h2>
+<h2>📊 Admin Dashboard</h2>
+
+<p class="muted">
+Manage Watchly users and withdrawal requests.
+</p>
+
+<br>
+
+<button
+class="gray"
+onclick="loadDashboard()"
+>
+🔄 REFRESH DASHBOARD
+</button>
+
+</div>
 
 
 <div class="stats">
 
 <div class="stat">
-<small>Total Users</small>
+<small>👥 Users</small>
 <strong id="totalUsers">0</strong>
 </div>
 
 <div class="stat">
-<small>Total Coins</small>
+<small>🪙 Coins</small>
 <strong id="totalCoins">0</strong>
 </div>
 
 <div class="stat">
-<small>Total Ads</small>
-<strong id="totalAds">0</strong>
+<small>💸 Pending</small>
+<strong id="pendingCount">0</strong>
 </div>
 
 <div class="stat">
-<small>Pending Withdrawals</small>
-<strong id="pendingWithdrawals">0</strong>
+<small>🎬 Ads</small>
+<strong id="totalAds">0</strong>
 </div>
 
 </div>
@@ -380,85 +291,54 @@ LOGOUT
 
 <div class="card">
 
-<h2>🔄 Admin Controls</h2>
+<h2>💸 Withdrawal Requests</h2>
 
-<p>
-Refresh the dashboard and withdrawal data.
+<p class="muted">
+Review, approve or reject requests.
 </p>
-
-<button
-class="secondary"
-onclick="loadDashboard()"
->
-🔄 REFRESH DATA
-</button>
-
-<div
-id="adminMessage"
-class="message"
-></div>
-
-</div>
-
-
-<h2 class="section-title">
-💸 Withdrawal Requests
-</h2>
-
-
-<div class="card">
-
-<div class="search-row">
 
 <input
 class="input"
 id="withdrawSearch"
-placeholder="Search account / method / user ID"
+placeholder="Search withdrawals..."
 oninput="filterWithdrawals()"
 >
 
-</div>
-
-</div>
-
-
 <div id="withdrawalsList">
-
 <div class="empty">
 Loading withdrawals...
 </div>
-
 </div>
 
-
-<h2 class="section-title">
-👥 Users
-</h2>
+</div>
 
 
 <div class="card">
 
+<h2>👥 Users</h2>
+
+<p class="muted">
+Watchly reward profiles.
+</p>
+
 <input
 class="input"
 id="userSearch"
-placeholder="Search by User ID"
+placeholder="Search user ID..."
 oninput="filterUsers()"
 >
 
-</div>
-
-
 <div id="usersList">
-
 <div class="empty">
 Loading users...
 </div>
+</div>
 
 </div>
 
+<div id="adminMessage" class="message"></div>
 
 </div>
-
 </div>
 
 
@@ -470,6 +350,9 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
 "sb_publishable_lxrfM4MgeRSm8-CiiUGQZg_EdayI2Po";
 
+const ADMIN_ID =
+"f9e5de16-25c8-461f-a1d8-34cc56debf73";
+
 
 const supabaseClient =
 window.supabase.createClient(
@@ -478,151 +361,35 @@ SUPABASE_KEY
 );
 
 
-/*
-IMPORTANT
-
-PUT YOUR ADMIN USER ID HERE.
-
-Your admin UUID is:
-
-f9e5de16-25c8-461f-a1d8-34cc56debf73
-*/
-
-const ADMIN_USER_ID =
-"f9e5de16-25c8-461f-a1d8-34cc56debf73";
-
-
-let currentAdmin = null;
-
-let allWithdrawals = [];
-
-let allUsers = [];
+let adminUser=null;
+let allWithdrawals=[];
+let allUsers=[];
 
 
 function loginMessage(text){
 
 document.getElementById(
 "loginMessage"
-).textContent = text;
+).textContent=text;
 
 }
 
 
 function adminMessage(text){
 
+const element =
 document.getElementById(
 "adminMessage"
-).textContent = text;
+);
+
+element.textContent=text;
 
 setTimeout(function(){
 
-if(
-document.getElementById(
-"adminMessage"
-).textContent === text
-){
+if(element.textContent===text)
+element.textContent="";
 
-document.getElementById(
-"adminMessage"
-).textContent = "";
-
-}
-
-},4000);
-
-}
-
-
-async function adminLogin(){
-
-const email =
-document.getElementById(
-"adminEmail"
-).value.trim();
-
-const password =
-document.getElementById(
-"adminPassword"
-).value;
-
-
-if(!email || !password){
-
-loginMessage(
-"Enter email and password."
-);
-
-return;
-
-}
-
-
-loginMessage(
-"⏳ Logging in..."
-);
-
-
-try{
-
-const result =
-await supabaseClient.auth.signInWithPassword({
-
-email:email,
-
-password:password
-
-});
-
-
-if(result.error){
-
-throw result.error;
-
-}
-
-
-if(!result.data.user){
-
-throw new Error(
-"User not found."
-);
-
-}
-
-
-if(
-result.data.user.id !==
-ADMIN_USER_ID
-){
-
-await supabaseClient.auth.signOut();
-
-throw new Error(
-"This account is not authorized as admin."
-);
-
-}
-
-
-currentAdmin =
-result.data.user;
-
-
-showAdmin();
-
-
-await loadDashboard();
-
-
-}catch(error){
-
-console.error(error);
-
-loginMessage(
-"❌ "+error.message
-);
-
-}
+},5000);
 
 }
 
@@ -640,110 +407,151 @@ document.getElementById(
 }
 
 
-async function adminLogout(){
-
-await supabaseClient.auth.signOut();
-
-currentAdmin=null;
-
-document.getElementById(
-"adminApp"
-).style.display="none";
+function showLogin(){
 
 document.getElementById(
 "loginScreen"
 ).style.display="block";
 
+document.getElementById(
+"adminApp"
+).style.display="none";
+
 }
 
 
-async function checkAdminSession(){
+async function adminLogin(){
+
+const email =
+document.getElementById(
+"adminEmail"
+).value.trim();
+
+const password =
+document.getElementById(
+"adminPassword"
+).value;
+
+const button =
+document.getElementById(
+"loginButton"
+);
+
+
+if(!email||!password){
+
+loginMessage(
+"Enter email and password."
+);
+
+return;
+
+}
+
+
+button.disabled=true;
+button.textContent="LOGGING IN...";
+
 
 try{
 
 const result =
-await supabaseClient.auth.getSession();
+await supabaseClient.auth
+.signInWithPassword({
+
+email:email,
+password:password
+
+});
 
 
-const session =
-result.data &&
-result.data.session;
+if(result.error)
+throw result.error;
 
 
 if(
-session &&
-session.user
+!result.data||
+!result.data.user
 ){
+
+throw new Error(
+"User account not found."
+);
+
+}
+
 
 if(
-session.user.id ===
-ADMIN_USER_ID
+result.data.user.id!==ADMIN_ID
 ){
-
-currentAdmin =
-session.user;
-
-showAdmin();
-
-await loadDashboard();
-
-}else{
 
 await supabaseClient.auth.signOut();
 
-}
+throw new Error(
+"This account is not authorized as admin."
+);
 
 }
+
+
+adminUser=result.data.user;
+
+showAdmin();
+
+loginMessage("");
+
+await loadDashboard();
+
 
 }catch(error){
 
 console.error(error);
 
+loginMessage(
+"❌ "+
+(error.message||
+"Admin login failed.")
+);
+
+}finally{
+
+button.disabled=false;
+button.textContent="LOGIN";
+
 }
+
+}
+
+
+async function adminLogout(){
+
+await supabaseClient.auth.signOut();
+
+adminUser=null;
+
+showLogin();
 
 }
 
 
 async function loadDashboard(){
 
-if(!currentAdmin){
-
+if(!adminUser)
 return;
 
-}
-
 adminMessage(
-"⏳ Loading dashboard..."
+"🔄 Loading dashboard..."
 );
 
-
-try{
-
 await Promise.all([
-
 loadUsers(),
-
 loadWithdrawals(),
-
-loadAdStats()
-
+loadStats()
 ]);
-
 
 adminMessage(
 "✅ Dashboard updated."
 );
-
-
-}catch(error){
-
-console.error(error);
-
-adminMessage(
-"❌ "+error.message
-);
-
-}
 
 }
 
@@ -754,47 +562,118 @@ const result =
 await supabaseClient
 .from("profile")
 .select("id,user_id,coin")
-.order("coin",{ascending:false});
+.order(
+"coin",
+{ascending:false}
+);
 
 
 if(result.error){
 
-throw new Error(
-"Users: "+
-result.error.message
+console.error(
+"Users error:",
+result.error
 );
+
+document.getElementById(
+"usersList"
+).innerHTML=
+'<div class="empty">Unable to load users.</div>';
+
+return;
 
 }
 
 
-allUsers =
-result.data || [];
+allUsers=result.data||[];
+
+renderUsers(allUsers);
+
+}
 
 
+function renderUsers(users){
+
+const box =
 document.getElementById(
-"totalUsers"
-).textContent =
-allUsers.length;
+"usersList"
+);
 
 
-let totalCoins=0;
+if(!users.length){
+
+box.innerHTML=
+'<div class="empty">No users found.</div>';
+
+return;
+
+}
 
 
-allUsers.forEach(function(user){
+box.innerHTML =
+users.map(function(user){
 
-totalCoins +=
-Number(user.coin || 0);
+return `
+
+<div class="user">
+
+<div class="row">
+
+<span class="label">
+🪙 Coins
+</span>
+
+<strong>
+${Number(user.coin)||0}
+</strong>
+
+</div>
+
+<div class="user-id">
+User ID:
+${escapeHtml(user.user_id)}
+</div>
+
+</div>
+
+`;
+
+}).join("");
+
+}
+
+
+function filterUsers(){
+
+const search =
+document.getElementById(
+"userSearch"
+).value
+.trim()
+.toLowerCase();
+
+
+if(!search){
+
+renderUsers(allUsers);
+return;
+
+}
+
+
+const filtered =
+allUsers.filter(function(user){
+
+return String(
+user.user_id||""
+)
+.toLowerCase()
+.includes(search);
 
 });
 
 
-document.getElementById(
-"totalCoins"
-).textContent =
-totalCoins;
-
-
-renderUsers();
+renderUsers(filtered);
 
 }
 
@@ -815,205 +694,155 @@ await supabaseClient
 
 if(result.error){
 
-throw new Error(
-"Withdrawals: "+
-result.error.message
-);
-
-}
-
-
-allWithdrawals =
-result.data || [];
-
-
-const pending =
-allWithdrawals.filter(function(item){
-
-return String(
-item.status || ""
-).toLowerCase()
-===
-"pending";
-
-}).length;
-
-
-document.getElementById(
-"pendingWithdrawals"
-).textContent =
-pending;
-
-
-renderWithdrawals();
-
-}
-
-
-async function loadAdStats(){
-
-const result =
-await supabaseClient
-.from("transactions")
-.select("id,user_id,amount,type");
-
-
-if(result.error){
-
 console.error(
-"Ad stats error:",
+"Withdrawals error:",
 result.error
 );
 
 document.getElementById(
-"totalAds"
-).textContent="0";
+"withdrawalsList"
+).innerHTML=
+'<div class="empty">Unable to load withdrawals.</div>';
 
 return;
 
 }
 
 
-const ads =
-(result.data || []).filter(function(row){
+allWithdrawals=result.data||[];
 
-return String(
-row.type || ""
-).toLowerCase()
-===
-"watch_ad";
+renderWithdrawals(
+allWithdrawals
+);
 
-});
+}
 
 
+function renderWithdrawals(items){
+
+const box =
 document.getElementById(
-"totalAds"
-).textContent =
-ads.length;
-
-}function renderWithdrawals(){
-
-const container =
-document.getElementById("withdrawalsList");
-
-const search =
-(document.getElementById("withdrawSearch")?.value || "")
-.toLowerCase()
-.trim();
-
-const filtered =
-allWithdrawals.filter(function(item){
-
-const text =
-(
-String(item.id || "") +
-String(item.user_id || "") +
-String(item.method || "") +
-String(item.account_number || "") +
-String(item.status || "")
-).toLowerCase();
-
-return text.includes(search);
-
-});
+"withdrawalsList"
+);
 
 
-if(filtered.length === 0){
+if(!items.length){
 
-container.innerHTML =
-'<div class="empty">No withdrawal requests found.</div>';
+box.innerHTML=
+'<div class="empty">No withdrawal requests.</div>';
 
 return;
 
 }
 
 
-container.innerHTML =
-filtered.map(function(item){
+box.innerHTML =
+items.map(function(item){
 
 const status =
-String(item.status || "pending")
+String(
+item.status||"pending"
+)
 .toLowerCase();
-
-let statusClass="pending";
-
-if(status==="approved"){
-statusClass="approved";
-}
-
-if(status==="rejected"){
-statusClass="rejected";
-}
 
 
 const date =
 item.created_at
 ?
-new Date(item.created_at).toLocaleString()
+new Date(
+item.created_at
+).toLocaleString()
 :
-"Unknown date";
+"-";
 
 
-return `
-<div class="withdraw-item">
+let actions="";
 
-<div>
-🪙 <strong>${escapeHTML(item.amount)} coins</strong>
-</div>
 
-<div>
-💳 Method:
-<strong>${escapeHTML(item.method)}</strong>
-</div>
+if(status==="pending"){
 
-<div>
-📱 Account:
-<strong>${escapeHTML(item.account_number)}</strong>
-</div>
+actions=`
 
-<div>
-👤 User ID:
-<span class="muted">${escapeHTML(item.user_id)}</span>
-</div>
-
-<div>
-📌 Status:
-<span class="status ${statusClass}">
-${escapeHTML(item.status || "pending")}
-</span>
-</div>
-
-<div class="muted">
-🕒 ${escapeHTML(date)}
-</div>
-
-${
-status==="pending"
-?
-`
 <div class="actions">
 
 <button
-class="success"
-onclick="approveWithdrawal('${escapeHTML(item.id)}')"
+class="green"
+onclick="approveWithdrawal('${escapeJs(item.id)}')"
 >
 ✅ APPROVE
 </button>
 
 <button
-class="danger"
-onclick="rejectWithdrawal('${escapeHTML(item.id)}')"
+class="red"
+onclick="rejectWithdrawal('${escapeJs(item.id)}')"
 >
 ❌ REJECT
 </button>
 
 </div>
-`
-:
-""
+
+`;
+
 }
 
+
+return `
+
+<div class="withdrawal ${status}">
+
+<div class="row">
+<span class="label">🆔 Request ID</span>
+<span style="font-size:11px;word-break:break-all">
+${escapeHtml(item.id)}
+</span>
 </div>
+
+<div class="row">
+<span class="label">🪙 Amount</span>
+<strong>
+${Number(item.amount)||0} coins
+</strong>
+</div>
+
+<div class="row">
+<span class="label">💳 Method</span>
+<strong>
+${escapeHtml(item.method||"-")}
+</strong>
+</div>
+
+<div class="row">
+<span class="label">📱 Account</span>
+<strong>
+${escapeHtml(item.account_number||"-")}
+</strong>
+</div>
+
+<div class="row">
+<span class="label">📌 Status</span>
+<span class="status ${status}">
+${escapeHtml(status)}
+</span>
+</div>
+
+<div class="row">
+<span class="label">👤 User</span>
+<span style="font-size:11px;word-break:break-all">
+${escapeHtml(item.user_id||"-")}
+</span>
+</div>
+
+<div class="row">
+<span class="label">🕐 Date</span>
+<span>
+${escapeHtml(date)}
+</span>
+</div>
+
+${actions}
+
+</div>
+
 `;
 
 }).join("");
@@ -1023,100 +852,231 @@ onclick="rejectWithdrawal('${escapeHTML(item.id)}')"
 
 function filterWithdrawals(){
 
-renderWithdrawals();
-
-}
-
-
-function renderUsers(){
-
-const container =
-document.getElementById("usersList");
-
 const search =
-(document.getElementById("userSearch")?.value || "")
-.toLowerCase()
-.trim();
+document.getElementById(
+"withdrawSearch"
+).value
+.trim()
+.toLowerCase();
 
 
-const filtered =
-allUsers.filter(function(user){
+if(!search){
 
-return String(
-user.user_id || ""
-)
-.toLowerCase()
-.includes(search);
-
-});
-
-
-if(filtered.length===0){
-
-container.innerHTML =
-'<div class="empty">No users found.</div>';
+renderWithdrawals(
+allWithdrawals
+);
 
 return;
 
 }
 
 
-container.innerHTML =
-filtered.map(function(user){
+const filtered =
+allWithdrawals.filter(
+function(item){
 
-return `
-<div class="user-item">
+return (
 
-<div>
-👤 <strong>User</strong>
-</div>
+String(item.id||"")
+.toLowerCase()
+.includes(search)
 
-<div>
-<span class="muted">
-${escapeHTML(user.user_id)}
-</span>
-</div>
+||
 
-<div>
-🪙 Balance:
-<strong>${escapeHTML(user.coin || 0)} coins</strong>
-</div>
+String(item.user_id||"")
+.toLowerCase()
+.includes(search)
 
-</div>
-`;
+||
 
-}).join("");
+String(item.method||"")
+.toLowerCase()
+.includes(search)
+
+||
+
+String(item.account_number||"")
+.toLowerCase()
+.includes(search)
+
+||
+
+String(item.status||"")
+.toLowerCase()
+.includes(search)
+
+);
+
+});
+
+
+renderWithdrawals(filtered);
 
 }
 
 
-function filterUsers(){
+async function loadStats(){
 
-renderUsers();
+const profiles =
+await supabaseClient
+.from("profile")
+.select("coin");
+
+
+if(!profiles.error){
+
+const users =
+profiles.data||[];
+
+const totalCoins =
+users.reduce(
+function(sum,user){
+
+return sum+
+(Number(user.coin)||0);
+
+},
+0
+);
+
+
+document.getElementById(
+"totalUsers"
+).textContent=
+users.length;
+
+document.getElementById(
+"totalCoins"
+).textContent=
+totalCoins;
+
+}
+
+
+const withdrawals =
+await supabaseClient
+.from("withdrawals")
+.select("status");
+
+
+if(!withdrawals.error){
+
+const rows =
+withdrawals.data||[];
+
+const pending =
+rows.filter(
+function(row){
+
+return String(
+row.status||""
+)
+.toLowerCase()==="pending";
+
+}
+).length;
+
+
+document.getElementById(
+"pendingCount"
+).textContent=
+pending;
+
+}
+
+
+const transactions =
+await supabaseClient
+.from("transactions")
+.select("type");
+
+
+if(!transactions.error){
+
+const rows =
+transactions.data||[];
+
+const ads =
+rows.filter(
+function(row){
+
+return String(
+row.type||""
+)
+.toLowerCase()==="watch_ad";
+
+}
+).length;
+
+
+document.getElementById(
+"totalAds"
+).textContent=
+ads;
+
+}
+
+}
+
+
+function escapeHtml(value){
+
+return String(value||"")
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
+
+}
+
+
+function escapeJs(value){
+
+return String(value||"")
+.replace(/\\/g,"\\\\")
+.replace(/'/g,"\\'")
+.replace(/\n/g,"\\n")
+.replace(/\r/g,"\\r");
 
 }
 
 
 async function approveWithdrawal(id){
 
-if(!currentAdmin){
-
+if(!adminUser)
 return;
 
+
+const item =
+allWithdrawals.find(
+function(row){
+
+return String(row.id)===String(id);
+
 }
+);
+
+
+if(!item)
+return;
 
 
 const confirmed =
 confirm(
-"Approve this withdrawal request?"
+"Approve this withdrawal?\n\n"+
+"Amount: "+
+item.amount+
+" coins\n"+
+"Method: "+
+item.method+
+"\nAccount: "+
+item.account_number
 );
 
 
-if(!confirmed){
-
+if(!confirmed)
 return;
-
-}
 
 
 adminMessage(
@@ -1133,15 +1093,11 @@ await supabaseClient
 status:"approved"
 })
 .eq("id",id)
-.select()
-.single();
+.eq("status","pending");
 
 
-if(result.error){
-
+if(result.error)
 throw result.error;
-
-}
 
 
 adminMessage(
@@ -1163,29 +1119,40 @@ error.message
 
 }
 
+
 }
 
 
 async function rejectWithdrawal(id){
 
-if(!currentAdmin){
-
+if(!adminUser)
 return;
 
+
+const item =
+allWithdrawals.find(
+function(row){
+
+return String(row.id)===String(id);
+
 }
+);
+
+
+if(!item)
+return;
 
 
 const confirmed =
 confirm(
-"Reject this withdrawal request?"
+"Reject this withdrawal?\n\n"+
+item.amount+
+" coins will be returned to the user."
 );
 
 
-if(!confirmed){
-
+if(!confirmed)
 return;
-
-}
 
 
 adminMessage(
@@ -1195,22 +1162,55 @@ adminMessage(
 
 try{
 
-const withdrawal =
-allWithdrawals.find(function(item){
+const profile =
+await supabaseClient
+.from("profile")
+.select("coin")
+.eq(
+"user_id",
+item.user_id
+)
+.maybeSingle();
 
-return String(item.id) ===
-String(id);
 
-});
+if(profile.error)
+throw profile.error;
 
 
-if(!withdrawal){
+if(!profile.data){
 
 throw new Error(
-"Withdrawal not found."
+"User profile not found."
 );
 
 }
+
+
+const currentCoins =
+Number(
+profile.data.coin
+)||0;
+
+
+const newCoins =
+currentCoins+
+Number(item.amount);
+
+
+const refund =
+await supabaseClient
+.from("profile")
+.update({
+coin:newCoins
+})
+.eq(
+"user_id",
+item.user_id
+);
+
+
+if(refund.error)
+throw refund.error;
 
 
 const result =
@@ -1220,67 +1220,15 @@ await supabaseClient
 status:"rejected"
 })
 .eq("id",id)
-.select()
-.single();
+.eq("status","pending");
 
 
-if(result.error){
-
+if(result.error)
 throw result.error;
-
-}
-
-
-/*
-Return the withdrawn coins
-to the user's profile.
-*/
-
-const profile =
-await supabaseClient
-.from("profile")
-.select("coin")
-.eq("user_id",withdrawal.user_id)
-.maybeSingle();
-
-
-if(profile.error){
-
-throw profile.error;
-
-}
-
-
-if(profile.data){
-
-const oldCoins =
-Number(profile.data.coin || 0);
-
-const returnedCoins =
-oldCoins +
-Number(withdrawal.amount || 0);
-
-
-const updateProfile =
-await supabaseClient
-.from("profile")
-.update({
-coin:returnedCoins
-})
-.eq("user_id",withdrawal.user_id);
-
-
-if(updateProfile.error){
-
-throw updateProfile.error;
-
-}
-
-}
 
 
 adminMessage(
-"✅ Withdrawal rejected and coins returned."
+"✅ Rejected and coins refunded."
 );
 
 
@@ -1298,65 +1246,85 @@ error.message
 
 }
 
-}
+}<script>
 
+async function refreshAfterAction(){
 
-function escapeHTML(value){
+await loadWithdrawals();
 
-return String(value ?? "")
-.replace(/&/g,"&amp;")
-.replace(/</g,"&lt;")
-.replace(/>/g,"&gt;")
-.replace(/"/g,"&quot;")
-.replace(/'/g,"&#039;");
+await loadStats();
 
 }
 
-
-/*
-Auto refresh every 30 seconds.
-*/
-
-setInterval(function(){
-
-if(currentAdmin){
-
-loadDashboard();
-
-}
-
-},30000);
-
-
-/*
-Auth state listener.
-*/
 
 supabaseClient.auth.onAuthStateChange(
 function(event,session){
 
 if(event==="SIGNED_OUT"){
 
-currentAdmin=null;
+adminUser=null;
 
-document.getElementById(
-"adminApp"
-).style.display="none";
-
-document.getElementById(
-"loginScreen"
-).style.display="block";
+showLogin();
 
 }
 
 });
 
 
-/*
-Start admin page.
-*/
-
 checkAdminSession();
+
+
+async function checkAdminSession(){
+
+try{
+
+const result =
+await supabaseClient.auth
+.getSession();
+
+const session =
+result.data &&
+result.data.session;
+
+
+if(
+session &&
+session.user
+){
+
+if(
+session.user.id===ADMIN_ID
+){
+
+adminUser=session.user;
+
+showAdmin();
+
+await loadDashboard();
+
+}else{
+
+await supabaseClient.auth.signOut();
+
+showLogin();
+
+}
+
+}else{
+
+showLogin();
+
+}
+
+}catch(error){
+
+console.error(error);
+
+showLogin();
+
+}
+
+}
 
 </script>
 
