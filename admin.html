@@ -8,12 +8,14 @@
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
+
 body{
 font-family:Arial,sans-serif;
 background:#07111f;
 color:white;
-min-height:100vh
+min-height:100vh;
 }
+
 .header{
 padding:18px;
 background:#0a1628;
@@ -23,37 +25,57 @@ justify-content:space-between;
 align-items:center;
 position:sticky;
 top:0;
-z-index:20
+z-index:20;
 }
-.logo{font-size:24px;font-weight:bold}
-.logo span{color:#3b82f6}
+
+.logo{
+font-size:24px;
+font-weight:bold;
+}
+
+.logo span{
+color:#3b82f6;
+}
+
 .logout{
 width:auto;
 padding:9px 14px;
 background:#17263b;
 color:#60a5fa;
 border:1px solid #284363;
-border-radius:10px
+border-radius:10px;
 }
+
 .container{
 max-width:900px;
 margin:auto;
-padding:18px
+padding:18px;
 }
+
 .login{
 max-width:450px;
 margin:70px auto;
-padding:18px
+padding:18px;
 }
+
 .card{
 background:#101d30;
 border:1px solid #1c2c43;
 border-radius:18px;
 padding:20px;
-margin-bottom:16px
+margin-bottom:16px;
 }
-.card h2{font-size:19px;margin-bottom:8px}
-.muted{color:#9eacc0;font-size:14px}
+
+.card h2{
+font-size:19px;
+margin-bottom:8px;
+}
+
+.muted{
+color:#9eacc0;
+font-size:14px;
+}
+
 .input{
 width:100%;
 padding:14px;
@@ -62,8 +84,9 @@ border-radius:11px;
 border:1px solid #284363;
 background:#07111f;
 color:white;
-outline:none
+outline:none;
 }
+
 button{
 width:100%;
 border:none;
@@ -71,107 +94,170 @@ border-radius:11px;
 padding:13px;
 font-size:15px;
 font-weight:bold;
-cursor:pointer
+cursor:pointer;
 }
-.primary{background:#3b82f6;color:white}
-.green{background:#16a34a;color:white}
-.red{background:#dc2626;color:white}
+
+.primary{
+background:#3b82f6;
+color:white;
+}
+
+.green{
+background:#16a34a;
+color:white;
+}
+
+.red{
+background:#dc2626;
+color:white;
+}
+
 .gray{
 background:#17263b;
 color:#60a5fa;
-border:1px solid #284363
+border:1px solid #284363;
 }
-button:disabled{opacity:.5;cursor:not-allowed}
+
+button:disabled{
+opacity:.5;
+cursor:not-allowed;
+}
+
 .message{
 text-align:center;
 color:#60a5fa;
 min-height:24px;
 margin:12px 0;
 font-size:14px;
-word-break:break-word
+word-break:break-word;
 }
+
 .stats{
 display:grid;
 grid-template-columns:repeat(4,1fr);
 gap:12px;
-margin-bottom:16px
+margin-bottom:16px;
 }
+
 .stat{
 background:#101d30;
 border:1px solid #1c2c43;
 border-radius:16px;
-padding:17px
+padding:17px;
 }
-.stat small{color:#8796aa}
+
+.stat small{
+color:#8796aa;
+}
+
 .stat strong{
 display:block;
 font-size:25px;
-margin-top:7px
+margin-top:7px;
 }
+
 .withdrawal{
 background:#0c192b;
 border:1px solid #233752;
 border-radius:15px;
 padding:16px;
-margin-top:12px
+margin-top:12px;
 }
-.withdrawal.pending{border-left:4px solid #f59e0b}
-.withdrawal.approved{border-left:4px solid #16a34a}
-.withdrawal.rejected{border-left:4px solid #dc2626}
+
+.withdrawal.pending{
+border-left:4px solid #f59e0b;
+}
+
+.withdrawal.approved{
+border-left:4px solid #16a34a;
+}
+
+.withdrawal.rejected{
+border-left:4px solid #dc2626;
+}
+
 .row{
 display:flex;
 justify-content:space-between;
 gap:10px;
 margin:7px 0;
-font-size:14px
+font-size:14px;
 }
-.label{color:#8796aa}
+
+.label{
+color:#8796aa;
+}
+
 .status{
 display:inline-block;
 padding:5px 9px;
 border-radius:8px;
 font-size:12px;
 font-weight:bold;
-text-transform:uppercase
+text-transform:uppercase;
 }
+
 .status.pending{
 background:#3a2b08;
-color:#fbbf24
+color:#fbbf24;
 }
+
 .status.approved{
 background:#07351b;
-color:#4ade80
+color:#4ade80;
 }
+
 .status.rejected{
 background:#3b0a0a;
-color:#f87171
+color:#f87171;
 }
+
 .actions{
 display:flex;
 gap:8px;
-margin-top:14px
+margin-top:14px;
 }
-.actions button{flex:1}
+
+.actions button{
+flex:1;
+}
+
 .user{
 padding:13px 0;
-border-bottom:1px solid #1c2c43
+border-bottom:1px solid #1c2c43;
 }
-.user:last-child{border-bottom:none}
+
+.user:last-child{
+border-bottom:none;
+}
+
 .user-id{
 font-size:11px;
 color:#718096;
 word-break:break-all;
-margin-top:4px
+margin-top:4px;
 }
+
 .empty{
 text-align:center;
 color:#8796aa;
-padding:25px 10px
+padding:25px 10px;
 }
+
 @media(max-width:650px){
-.stats{grid-template-columns:repeat(2,1fr)}
-.actions{flex-direction:column}
-.row{align-items:flex-start}
+
+.stats{
+grid-template-columns:repeat(2,1fr);
+}
+
+.actions{
+flex-direction:column;
+}
+
+.row{
+align-items:flex-start;
+}
+
 }
 </style>
 </head>
@@ -181,7 +267,11 @@ padding:25px 10px
 <div id="loginScreen">
 
 <div class="header">
-<div class="logo">Watch<span>ly</span> Admin</div>
+
+<div class="logo">
+Watch<span>ly</span> Admin
+</div>
+
 </div>
 
 <div class="login">
@@ -199,6 +289,7 @@ class="input"
 id="adminEmail"
 type="email"
 placeholder="Admin email"
+autocomplete="email"
 >
 
 <input
@@ -206,6 +297,7 @@ class="input"
 id="adminPassword"
 type="password"
 placeholder="Password"
+autocomplete="current-password"
 >
 
 <button
@@ -216,11 +308,15 @@ onclick="adminLogin()"
 LOGIN
 </button>
 
-<div id="loginMessage" class="message"></div>
+<div
+id="loginMessage"
+class="message"
+></div>
 
 </div>
 
 </div>
+
 </div>
 
 
@@ -305,9 +401,11 @@ oninput="filterWithdrawals()"
 >
 
 <div id="withdrawalsList">
+
 <div class="empty">
 Loading withdrawals...
 </div>
+
 </div>
 
 </div>
@@ -329,16 +427,23 @@ oninput="filterUsers()"
 >
 
 <div id="usersList">
+
 <div class="empty">
 Loading users...
 </div>
-</div>
 
 </div>
 
-<div id="adminMessage" class="message"></div>
+</div>
+
+
+<div
+id="adminMessage"
+class="message"
+></div>
 
 </div>
+
 </div>
 
 
@@ -386,8 +491,11 @@ element.textContent=text;
 
 setTimeout(function(){
 
-if(element.textContent===text)
+if(element.textContent===text){
+
 element.textContent="";
+
+}
 
 },5000);
 
@@ -423,41 +531,53 @@ document.getElementById(
 async function adminLogin(){
 
 const email =
-document.getElementById("adminEmail").value.trim();
+document.getElementById(
+"adminEmail"
+).value.trim();
 
 const password =
-document.getElementById("adminPassword").value;
+document.getElementById(
+"adminPassword"
+).value;
 
 const button =
-document.getElementById("loginButton");
-
-const message =
-document.getElementById("loginMessage");
+document.getElementById(
+"loginButton"
+);
 
 if(!email || !password){
 
-message.textContent =
-"❌ Enter your email and password.";
+loginMessage(
+"❌ Enter your email and password."
+);
 
 return;
 
 }
 
-button.disabled = true;
-button.textContent = "LOGGING IN...";
-message.textContent = "⏳ Connecting to Watchly...";
+button.disabled=true;
+button.textContent="LOGGING IN...";
+
+loginMessage(
+"⏳ Connecting to Watchly..."
+);
 
 try{
 
 const result =
-await supabaseClient.auth.signInWithPassword({
-email: email,
-password: password
+await supabaseClient.auth
+.signInWithPassword({
+
+email:email,
+password:password
+
 });
 
 if(result.error){
 
-throw new Error(result.error.message);
+throw new Error(
+result.error.message
+);
 
 }
 
@@ -467,13 +587,20 @@ result.data.user;
 
 if(!user){
 
-throw new Error("Login succeeded but user data was not returned.");
+throw new Error(
+"Login succeeded but user data was not returned."
+);
 
 }
 
-console.log("Admin login user ID:", user.id);
+console.log(
+"Admin login user ID:",
+user.id
+);
 
-if(user.id !== ADMIN_ID){
+if(
+user.id !== ADMIN_ID
+){
 
 await supabaseClient.auth.signOut();
 
@@ -483,9 +610,11 @@ throw new Error(
 
 }
 
-adminUser = user;
+adminUser=user;
 
-message.textContent = "✅ Admin login successful!";
+loginMessage(
+"✅ Admin login successful!"
+);
 
 showAdmin();
 
@@ -493,15 +622,21 @@ await loadDashboard();
 
 }catch(error){
 
-console.error("ADMIN LOGIN ERROR:", error);
+console.error(
+"ADMIN LOGIN ERROR:",
+error
+);
 
-message.textContent =
-"❌ " + (error.message || "Login failed.");
+loginMessage(
+"❌ "+
+(error.message||
+"Admin login failed.")
+);
 
 }finally{
 
-button.disabled = false;
-button.textContent = "LOGIN";
+button.disabled=false;
+button.textContent="LOGIN";
 
 }
 
@@ -546,12 +681,13 @@ async function loadUsers(){
 const result =
 await supabaseClient
 .from("profile")
-.select("id,user_id,coin")
+.select(
+"id,user_id,coin"
+)
 .order(
 "coin",
 {ascending:false}
 );
-
 
 if(result.error){
 
@@ -569,8 +705,8 @@ return;
 
 }
 
-
-allUsers=result.data||[];
+allUsers =
+result.data || [];
 
 renderUsers(allUsers);
 
@@ -584,7 +720,6 @@ document.getElementById(
 "usersList"
 );
 
-
 if(!users.length){
 
 box.innerHTML=
@@ -593,7 +728,6 @@ box.innerHTML=
 return;
 
 }
-
 
 box.innerHTML =
 users.map(function(user){
@@ -637,14 +771,13 @@ document.getElementById(
 .trim()
 .toLowerCase();
 
-
 if(!search){
 
 renderUsers(allUsers);
+
 return;
 
 }
-
 
 const filtered =
 allUsers.filter(function(user){
@@ -656,7 +789,6 @@ user.user_id||""
 .includes(search);
 
 });
-
 
 renderUsers(filtered);
 
@@ -676,7 +808,6 @@ await supabaseClient
 {ascending:false}
 );
 
-
 if(result.error){
 
 console.error(
@@ -693,8 +824,8 @@ return;
 
 }
 
-
-allWithdrawals=result.data||[];
+allWithdrawals =
+result.data || [];
 
 renderWithdrawals(
 allWithdrawals
@@ -710,7 +841,6 @@ document.getElementById(
 "withdrawalsList"
 );
 
-
 if(!items.length){
 
 box.innerHTML=
@@ -719,7 +849,6 @@ box.innerHTML=
 return;
 
 }
-
 
 box.innerHTML =
 items.map(function(item){
@@ -730,7 +859,6 @@ item.status||"pending"
 )
 .toLowerCase();
 
-
 const date =
 item.created_at
 ?
@@ -740,9 +868,7 @@ item.created_at
 :
 "-";
 
-
 let actions="";
-
 
 if(status==="pending"){
 
@@ -770,58 +896,92 @@ onclick="rejectWithdrawal('${escapeJs(item.id)}')"
 
 }
 
-
 return `
 
 <div class="withdrawal ${status}">
 
 <div class="row">
-<span class="label">🆔 Request ID</span>
+
+<span class="label">
+🆔 Request ID
+</span>
+
 <span style="font-size:11px;word-break:break-all">
 ${escapeHtml(item.id)}
 </span>
+
 </div>
 
 <div class="row">
-<span class="label">🪙 Amount</span>
+
+<span class="label">
+🪙 Amount
+</span>
+
 <strong>
 ${Number(item.amount)||0} coins
 </strong>
+
 </div>
 
 <div class="row">
-<span class="label">💳 Method</span>
+
+<span class="label">
+💳 Method
+</span>
+
 <strong>
 ${escapeHtml(item.method||"-")}
 </strong>
+
 </div>
 
 <div class="row">
-<span class="label">📱 Account</span>
+
+<span class="label">
+📱 Account
+</span>
+
 <strong>
 ${escapeHtml(item.account_number||"-")}
 </strong>
+
 </div>
 
 <div class="row">
-<span class="label">📌 Status</span>
+
+<span class="label">
+📌 Status
+</span>
+
 <span class="status ${status}">
 ${escapeHtml(status)}
 </span>
+
 </div>
 
 <div class="row">
-<span class="label">👤 User</span>
+
+<span class="label">
+👤 User
+</span>
+
 <span style="font-size:11px;word-break:break-all">
 ${escapeHtml(item.user_id||"-")}
 </span>
+
 </div>
 
 <div class="row">
-<span class="label">🕐 Date</span>
+
+<span class="label">
+🕐 Date
+</span>
+
 <span>
 ${escapeHtml(date)}
 </span>
+
 </div>
 
 ${actions}
@@ -844,7 +1004,6 @@ document.getElementById(
 .trim()
 .toLowerCase();
 
-
 if(!search){
 
 renderWithdrawals(
@@ -854,7 +1013,6 @@ allWithdrawals
 return;
 
 }
-
 
 const filtered =
 allWithdrawals.filter(
@@ -894,24 +1052,19 @@ String(item.status||"")
 
 });
 
-
 renderWithdrawals(filtered);
 
-}
-
-
-async function loadStats(){
+}async function loadStats(){
 
 const profiles =
 await supabaseClient
 .from("profile")
 .select("coin");
 
-
 if(!profiles.error){
 
 const users =
-profiles.data||[];
+profiles.data || [];
 
 const totalCoins =
 users.reduce(
@@ -924,15 +1077,14 @@ return sum+
 0
 );
 
-
 document.getElementById(
 "totalUsers"
-).textContent=
+).textContent =
 users.length;
 
 document.getElementById(
 "totalCoins"
-).textContent=
+).textContent =
 totalCoins;
 
 }
@@ -943,11 +1095,10 @@ await supabaseClient
 .from("withdrawals")
 .select("status");
 
-
 if(!withdrawals.error){
 
 const rows =
-withdrawals.data||[];
+withdrawals.data || [];
 
 const pending =
 rows.filter(
@@ -961,10 +1112,9 @@ row.status||""
 }
 ).length;
 
-
 document.getElementById(
 "pendingCount"
-).textContent=
+).textContent =
 pending;
 
 }
@@ -975,11 +1125,10 @@ await supabaseClient
 .from("transactions")
 .select("type");
 
-
 if(!transactions.error){
 
 const rows =
-transactions.data||[];
+transactions.data || [];
 
 const ads =
 rows.filter(
@@ -993,10 +1142,9 @@ row.type||""
 }
 ).length;
 
-
 document.getElementById(
 "totalAds"
-).textContent=
+).textContent =
 ads;
 
 }
@@ -1032,20 +1180,18 @@ async function approveWithdrawal(id){
 if(!adminUser)
 return;
 
-
 const item =
 allWithdrawals.find(
 function(row){
 
-return String(row.id)===String(id);
+return String(row.id) ===
+String(id);
 
 }
 );
 
-
 if(!item)
 return;
-
 
 const confirmed =
 confirm(
@@ -1059,15 +1205,12 @@ item.method+
 item.account_number
 );
 
-
 if(!confirmed)
 return;
-
 
 adminMessage(
 "⏳ Approving withdrawal..."
 );
-
 
 try{
 
@@ -1080,18 +1223,14 @@ status:"approved"
 .eq("id",id)
 .eq("status","pending");
 
-
 if(result.error)
 throw result.error;
-
 
 adminMessage(
 "✅ Withdrawal approved."
 );
 
-
 await loadDashboard();
-
 
 }catch(error){
 
@@ -1104,7 +1243,6 @@ error.message
 
 }
 
-
 }
 
 
@@ -1113,20 +1251,18 @@ async function rejectWithdrawal(id){
 if(!adminUser)
 return;
 
-
 const item =
 allWithdrawals.find(
 function(row){
 
-return String(row.id)===String(id);
+return String(row.id) ===
+String(id);
 
 }
 );
 
-
 if(!item)
 return;
-
 
 const confirmed =
 confirm(
@@ -1135,15 +1271,12 @@ item.amount+
 " coins will be returned to the user."
 );
 
-
 if(!confirmed)
 return;
-
 
 adminMessage(
 "⏳ Rejecting withdrawal..."
 );
-
 
 try{
 
@@ -1157,10 +1290,8 @@ item.user_id
 )
 .maybeSingle();
 
-
 if(profile.error)
 throw profile.error;
-
 
 if(!profile.data){
 
@@ -1170,17 +1301,14 @@ throw new Error(
 
 }
 
-
 const currentCoins =
 Number(
 profile.data.coin
 )||0;
 
-
 const newCoins =
 currentCoins+
 Number(item.amount);
-
 
 const refund =
 await supabaseClient
@@ -1192,7 +1320,6 @@ coin:newCoins
 "user_id",
 item.user_id
 );
-
 
 if(refund.error)
 throw refund.error;
@@ -1207,18 +1334,14 @@ status:"rejected"
 .eq("id",id)
 .eq("status","pending");
 
-
 if(result.error)
 throw result.error;
-
 
 adminMessage(
 "✅ Rejected and coins refunded."
 );
 
-
 await loadDashboard();
-
 
 }catch(error){
 
@@ -1231,32 +1354,7 @@ error.message
 
 }
 
-}<script>
-
-async function refreshAfterAction(){
-
-await loadWithdrawals();
-
-await loadStats();
-
 }
-
-
-supabaseClient.auth.onAuthStateChange(
-function(event,session){
-
-if(event==="SIGNED_OUT"){
-
-adminUser=null;
-
-showLogin();
-
-}
-
-});
-
-
-checkAdminSession();
 
 
 async function checkAdminSession(){
@@ -1267,10 +1365,15 @@ const result =
 await supabaseClient.auth
 .getSession();
 
+if(result.error){
+
+throw result.error;
+
+}
+
 const session =
 result.data &&
 result.data.session;
-
 
 if(
 session &&
@@ -1278,10 +1381,11 @@ session.user
 ){
 
 if(
-session.user.id===ADMIN_ID
+session.user.id === ADMIN_ID
 ){
 
-adminUser=session.user;
+adminUser =
+session.user;
 
 showAdmin();
 
@@ -1303,13 +1407,33 @@ showLogin();
 
 }catch(error){
 
-console.error(error);
+console.error(
+"SESSION ERROR:",
+error
+);
 
 showLogin();
 
 }
 
 }
+
+
+supabaseClient.auth.onAuthStateChange(
+function(event,session){
+
+if(event==="SIGNED_OUT"){
+
+adminUser=null;
+
+showLogin();
+
+}
+
+});
+
+
+checkAdminSession();
 
 </script>
 
