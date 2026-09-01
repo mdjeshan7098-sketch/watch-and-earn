@@ -12,10 +12,7 @@ data-cfasync="false"></script>
 
 <title>Watchly - Rewards</title>
 
-<!-- Telegram Mini App SDK -->
 <script src="https://telegram.org/js/telegram-web-app.js?63"></script>
-
-<!-- Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
@@ -358,18 +355,11 @@ Watch<span>ly</span>
 
 <div class="auth-card">
 
-<div
-id="telegramBadge"
-class="telegram-badge"
->
+<div id="telegramBadge" class="telegram-badge">
 📱 Telegram Mini App
 </div>
 
-<div
-id="telegramUser"
-class="telegram-user"
->
-</div>
+<div id="telegramUser" class="telegram-user"></div>
 
 <h1 id="authTitle">
 Welcome Back
@@ -411,10 +401,7 @@ onclick="toggleAuthMode()"
 Don't have an account? Sign up
 </button>
 
-<div
-id="authMessage"
-class="message"
-></div>
+<div id="authMessage" class="message"></div>
 
 </div>
 
@@ -433,25 +420,18 @@ class="message"
 Watch<span>ly</span>
 </div>
 
-<button
-class="logout"
-onclick="logout()"
->
+<button class="logout" onclick="logout()">
 LOGOUT
 </button>
 
 </div>
-
 
 <div class="container">
 
 
 <!-- HOME -->
 
-<div
-id="homePage"
-class="page active"
->
+<div id="homePage" class="page active">
 
 <div class="balance">
 
@@ -519,20 +499,14 @@ onclick="watchAd()"
 
 </div>
 
-<div
-id="message"
-class="message"
-></div>
+<div id="message" class="message"></div>
 
 </div>
 
 
 <!-- REWARDS -->
 
-<div
-id="rewardsPage"
-class="page"
->
+<div id="rewardsPage" class="page">
 
 <div class="card">
 
@@ -596,10 +570,7 @@ coins
 
 <!-- WITHDRAW -->
 
-<div
-id="withdrawPage"
-class="page"
->
+<div id="withdrawPage" class="page">
 
 <div class="card">
 
@@ -671,10 +642,7 @@ onclick="submitWithdrawal()"
 💸 REQUEST WITHDRAWAL
 </button>
 
-<div
-id="withdrawMessage"
-class="message"
-></div>
+<div id="withdrawMessage" class="message"></div>
 
 </div>
 
@@ -685,10 +653,7 @@ class="message"
 📋 Withdrawal History
 </h2>
 
-<div
-id="history"
-class="history"
->
+<div id="history" class="history">
 Loading...
 </div>
 
@@ -699,10 +664,7 @@ Loading...
 
 <!-- PROFILE -->
 
-<div
-id="profilePage"
-class="page"
->
+<div id="profilePage" class="page">
 
 <div class="card">
 
@@ -750,9 +712,7 @@ margin-top:15px;
 <span id="telegramProfileName">-</span>
 </p>
 
-<p style="
-margin-top:5px;
-">
+<p style="margin-top:5px;">
 <strong>Telegram ID:</strong>
 <span id="telegramProfileId">-</span>
 </p>
@@ -827,10 +787,7 @@ Profile
 
 <!-- AD SCREEN -->
 
-<div
-class="ad-screen"
-id="adScreen"
->
+<div class="ad-screen" id="adScreen">
 
 <h2>
 Advertisement
@@ -840,10 +797,7 @@ Advertisement
 Advertisement
 </p>
 
-<div
-class="timer"
-id="timer"
->
+<div class="timer" id="timer">
 10
 </div>
 
@@ -855,7 +809,10 @@ onclick="finishAd()"
 CLAIM 1 COIN
 </button>
 
-</div><script>
+</div>
+
+
+<script>
 
 /* =========================
 SUPABASE
@@ -875,8 +832,12 @@ SUPABASE_KEY
 
 
 /* =========================
-TELEGRAM MINI APP
+TELEGRAM
 ========================= */
+
+const TELEGRAM_API =
+SUPABASE_URL +
+"/functions/v1/telegram-api";
 
 const tg =
 window.Telegram &&
@@ -889,267 +850,6 @@ null;
 let isTelegramMiniApp=false;
 let telegramUser=null;
 let telegramAuthenticated=false;
-
-
-/* =========================
-TELEGRAM INITIALIZATION
-========================= */
-
-async function initTelegram(){
-
-if(!tg){
-
-return;
-
-}
-
-try{
-
-tg.ready();
-tg.expand();
-
-isTelegramMiniApp=true;
-
-telegramUser =
-tg.initDataUnsafe &&
-tg.initDataUnsafe.user
-?
-tg.initDataUnsafe.user
-:
-null;
-
-
-const badge =
-document.getElementById(
-"telegramBadge"
-);
-
-if(badge){
-
-badge.style.display="block";
-
-}
-
-
-/* Display Telegram user */
-
-if(telegramUser){
-
-const telegramUserBox =
-document.getElementById(
-"telegramUser"
-);
-
-if(telegramUserBox){
-
-telegramUserBox.style.display="block";
-
-telegramUserBox.textContent =
-"👋 "+
-(
-telegramUser.first_name||
-"Telegram User"
-)+
-(
-telegramUser.username
-?
-" @"+telegramUser.username
-:
-""
-);
-
-}
-
-}
-
-
-/* Secure authentication */
-
-await authenticateTelegram();
-
-
-}catch(error){
-
-console.error(
-"Telegram initialization error:",
-error
-);
-
-}
-
-}
-
-
-/* =========================
-SECURE TELEGRAM AUTH
-========================= */
-
-async function authenticateTelegram(){
-
-if(!tg){
-
-return null;
-
-}
-
-
-if(!tg.initData){
-
-console.log(
-"Telegram initData not available."
-);
-
-return null;
-
-}
-
-
-try{
-
-const response =
-await fetch(
-"https://woyvafgecfuriavuxnje.supabase.co/functions/v1/telegram-auth",
-{
-
-method:"POST",
-
-headers:{
-"Content-Type":"application/json"
-},
-
-body:JSON.stringify({
-
-initData:tg.initData
-
-})
-
-}
-);
-
-
-const result =
-await response.json();
-
-
-if(!response.ok || !result.ok){
-
-console.error(
-"Telegram authentication failed:",
-result.error
-);
-
-return null;
-
-}
-
-
-telegramAuthenticated=true;
-
-telegramUser=result.user;
-
-
-/* Update UI */
-
-const authTitle =
-document.getElementById(
-"authTitle"
-);
-
-const authDescription =
-document.getElementById(
-"authDescription"
-);
-
-
-if(authTitle){
-
-authTitle.textContent =
-"Welcome, "+
-(
-telegramUser.first_name||
-"Telegram User"
-);
-
-}
-
-
-if(authDescription){
-
-authDescription.textContent =
-"Telegram account verified successfully.";
-
-}
-
-
-const telegramProfile =
-document.getElementById(
-"telegramProfile"
-);
-
-if(telegramProfile){
-
-telegramProfile.style.display="block";
-
-}
-
-
-const telegramProfileName =
-document.getElementById(
-"telegramProfileName"
-);
-
-if(telegramProfileName){
-
-telegramProfileName.textContent =
-(
-telegramUser.first_name||
-"Telegram User"
-)+
-(
-telegramUser.username
-?
-" @"+telegramUser.username
-:
-""
-);
-
-}
-
-
-const telegramProfileId =
-document.getElementById(
-"telegramProfileId"
-);
-
-if(telegramProfileId){
-
-telegramProfileId.textContent =
-telegramUser.id||"-";
-
-}
-
-
-console.log(
-"Telegram authenticated:",
-telegramUser
-);
-
-
-return telegramUser;
-
-
-}catch(error){
-
-console.error(
-"Telegram authentication error:",
-error
-);
-
-return null;
-
-}
-
-}
 
 
 /* =========================
@@ -1186,6 +886,254 @@ document.getElementById("watchButton");
 
 const historyElement =
 document.getElementById("history");
+
+
+/* =========================
+TELEGRAM API REQUEST
+========================= */
+
+async function telegramRequest(action,extra={}){
+
+if(!tg || !tg.initData){
+
+throw new Error(
+"Telegram session unavailable."
+);
+
+}
+
+const response =
+await fetch(
+TELEGRAM_API,
+{
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+action:action,
+
+initData:tg.initData,
+
+...extra
+
+})
+}
+);
+
+let result;
+
+try{
+
+result=await response.json();
+
+}catch(error){
+
+throw new Error(
+"Invalid server response."
+);
+
+}
+
+if(!response.ok || !result.ok){
+
+throw new Error(
+result.error||
+"Telegram request failed."
+);
+
+}
+
+return result;
+
+}
+
+
+/* =========================
+TELEGRAM INITIALIZATION
+========================= */
+
+async function initTelegram(){
+
+if(!tg){
+
+return false;
+
+}
+
+try{
+
+tg.ready();
+tg.expand();
+
+isTelegramMiniApp=true;
+
+const badge =
+document.getElementById(
+"telegramBadge"
+);
+
+if(badge){
+
+badge.style.display="block";
+
+}
+
+
+/* First display unsafe data only for UI */
+
+telegramUser =
+tg.initDataUnsafe &&
+tg.initDataUnsafe.user
+?
+tg.initDataUnsafe.user
+:
+null;
+
+if(telegramUser){
+
+const telegramUserBox =
+document.getElementById(
+"telegramUser"
+);
+
+if(telegramUserBox){
+
+telegramUserBox.style.display="block";
+
+telegramUserBox.textContent =
+"👋 "+
+(
+telegramUser.first_name||
+"Telegram User"
+)+
+(
+telegramUser.username
+?
+" @"+telegramUser.username
+:
+""
+);
+
+}
+
+}
+
+
+/* Secure server verification */
+
+const result =
+await telegramRequest("login");
+
+telegramUser=result.user;
+
+telegramAuthenticated=true;
+
+currentUser={
+id:result.profile.user_id,
+email:null,
+telegram_id:String(telegramUser.id)
+};
+
+
+/* Telegram profile UI */
+
+const telegramProfile =
+document.getElementById(
+"telegramProfile"
+);
+
+if(telegramProfile){
+
+telegramProfile.style.display="block";
+
+}
+
+const telegramProfileName =
+document.getElementById(
+"telegramProfileName"
+);
+
+if(telegramProfileName){
+
+telegramProfileName.textContent =
+(
+telegramUser.first_name||
+"Telegram User"
+)+
+(
+telegramUser.username
+?
+" @"+telegramUser.username
+:
+""
+);
+
+}
+
+const telegramProfileId =
+document.getElementById(
+"telegramProfileId"
+);
+
+if(telegramProfileId){
+
+telegramProfileId.textContent =
+telegramUser.id||"-";
+
+}
+
+
+/* Use server profile balance */
+
+coins=
+Number(
+result.profile.coin
+)||0;
+
+await loadTodayStats();
+
+showApp();
+
+update();
+
+await loadWithdrawalHistory();
+
+updateProfileUI();
+
+console.log(
+"Telegram account connected successfully."
+);
+
+return true;
+
+}catch(error){
+
+console.error(
+"Telegram initialization error:",
+error
+);
+
+const authMessage =
+document.getElementById(
+"authMessage"
+);
+
+if(authMessage){
+
+authMessage.textContent=
+"❌ "+error.message;
+
+}
+
+return false;
+
+}
+
+}
 
 
 /* =========================
@@ -1301,20 +1249,7 @@ loadWithdrawalHistory();
 
 if(page==="profile" && currentUser){
 
-document.getElementById(
-"profileEmail"
-).textContent=
-currentUser.email||"-";
-
-document.getElementById(
-"profileId"
-).textContent=
-currentUser.id||"-";
-
-document.getElementById(
-"profileCoins"
-).textContent=
-coins;
+updateProfileUI();
 
 }
 
@@ -1386,6 +1321,12 @@ EMAIL AUTH
 
 async function handleAuth(){
 
+if(isTelegramMiniApp){
+
+return;
+
+}
+
 const email =
 document.getElementById(
 "email"
@@ -1434,7 +1375,6 @@ const result =
 await supabaseClient.auth.signUp({
 
 email:email,
-
 password:password
 
 });
@@ -1469,7 +1409,6 @@ const result =
 await supabaseClient.auth.signInWithPassword({
 
 email:email,
-
 password:password
 
 });
@@ -1531,6 +1470,31 @@ throw new Error(
 }
 
 
+/* Telegram */
+
+if(isTelegramMiniApp){
+
+const result =
+await telegramRequest("login");
+
+if(!result.profile){
+
+throw new Error(
+"Telegram profile not found."
+);
+
+}
+
+coins=
+Number(result.profile.coin)||0;
+
+return;
+
+}
+
+
+/* Normal website */
+
 const result =
 await supabaseClient
 .from("profile")
@@ -1582,7 +1546,6 @@ created.error.message
 
 }
 
-
 coins=0;
 
 }else{
@@ -1609,6 +1572,26 @@ return;
 
 
 try{
+
+/* Telegram */
+
+if(isTelegramMiniApp){
+
+const result =
+await telegramRequest("stats");
+
+ads=
+Number(result.ads)||0;
+
+today=
+Number(result.coins)||0;
+
+return;
+
+}
+
+
+/* Normal website */
 
 const result =
 await supabaseClient.rpc(
@@ -1692,71 +1675,7 @@ update();
 
 await loadWithdrawalHistory();
 
-
-document.getElementById(
-"profileEmail"
-).textContent=
-currentUser.email||"-";
-
-document.getElementById(
-"profileId"
-).textContent=
-currentUser.id||"-";
-
-document.getElementById(
-"profileCoins"
-).textContent=
-coins;
-
-
-if(telegramUser){
-
-const telegramProfile =
-document.getElementById(
-"telegramProfile"
-);
-
-if(telegramProfile){
-
-telegramProfile.style.display="block";
-
-}
-
-const telegramProfileName =
-document.getElementById(
-"telegramProfileName"
-);
-
-if(telegramProfileName){
-
-telegramProfileName.textContent =
-(
-telegramUser.first_name||
-"Telegram User"
-)+
-(
-telegramUser.username
-?
-" @"+telegramUser.username
-:
-""
-);
-
-}
-
-const telegramProfileId =
-document.getElementById(
-"telegramProfileId"
-);
-
-if(telegramProfileId){
-
-telegramProfileId.textContent =
-telegramUser.id||"-";
-
-}
-
-}
+updateProfileUI();
 
 
 }catch(error){
@@ -1771,6 +1690,93 @@ document.getElementById(
 "❌ "+error.message;
 
 }
+
+}
+
+
+/* =========================
+PROFILE UI
+========================= */
+
+function updateProfileUI(){
+
+if(!currentUser){
+
+return;
+
+}
+
+const profileEmail =
+document.getElementById(
+"profileEmail"
+);
+
+const profileId =
+document.getElementById(
+"profileId"
+);
+
+const profileCoins =
+document.getElementById(
+"profileCoins"
+);
+
+
+if(isTelegramMiniApp){
+
+profileEmail.textContent=
+"Telegram account";
+
+profileId.textContent=
+currentUser.id||"-";
+
+const telegramProfile =
+document.getElementById(
+"telegramProfile"
+);
+
+if(telegramProfile){
+
+telegramProfile.style.display="block";
+
+}
+
+if(telegramUser){
+
+document.getElementById(
+"telegramProfileName"
+).textContent=
+(
+telegramUser.first_name||
+"Telegram User"
+)+
+(
+telegramUser.username
+?
+" @"+telegramUser.username
+:
+""
+);
+
+document.getElementById(
+"telegramProfileId"
+).textContent=
+telegramUser.id||"-";
+
+}
+
+}else{
+
+profileEmail.textContent=
+currentUser.email||"-";
+
+profileId.textContent=
+currentUser.id||"-";
+
+}
+
+profileCoins.textContent=
+coins;
 
 }
 
@@ -1815,371 +1821,14 @@ document.getElementById(
 ).textContent=
 coins;
 
+updateProfileUI();
+
 }
 
 
 /* =========================
 WITHDRAWAL HISTORY
-========================= */
-
-async function loadWithdrawalHistory(){
-
-if(!currentUser){
-
-return;
-
-}
-
-
-historyElement.textContent=
-"Loading withdrawal history...";
-
-
-const result =
-await supabaseClient
-.from("withdrawals")
-.select(
-"amount,method,account_number,status,created_at"
-)
-.eq(
-"user_id",
-currentUser.id
-)
-.order(
-"created_at",
-{
-ascending:false
-}
-);
-
-
-if(result.error){
-
-console.error(
-"Withdrawal history error:",
-result.error
-);
-
-historyElement.textContent=
-"Unable to load withdrawal history.";
-
-return;
-
-}
-
-
-if(
-!result.data||
-result.data.length===0
-){
-
-historyElement.textContent=
-"No withdrawal requests.";
-
-return;
-
-}
-
-
-historyElement.innerHTML =
-result.data.map(
-function(item){
-
-const date =
-new Date(
-item.created_at
-).toLocaleString();
-
-const status =
-String(
-item.status||"pending"
-).toLowerCase();
-
-let statusClass=
-"status-pending";
-
-
-if(status==="approved"){
-
-statusClass=
-"status-approved";
-
-}
-
-
-if(status==="rejected"){
-
-statusClass=
-"status-rejected";
-
-}
-
-
-return `
-
-<div class="history-item">
-
-🪙 <strong>
-${Number(item.amount)} coins
-</strong><br>
-
-💳 ${item.method||"bKash"}<br>
-
-📱 ${item.account_number}<br>
-
-📌 Status:
-<strong class="${statusClass}">
-${item.status||"pending"}
-</strong><br>
-
-<small>
-${date}
-</small>
-
-</div>
-
-`;
-
-}).join("");
-
-}
-
-
-/* =========================
-SECURE REWARD
-========================= */
-
-async function claimSecureReward(){
-
-if(!currentUser){
-
-throw new Error(
-"Please login first."
-);
-
-}
-
-
-const result =
-await supabaseClient.rpc(
-"claim_watch_reward"
-);
-
-
-if(result.error){
-
-throw new Error(
-"Reward failed: "+
-result.error.message
-);
-
-}
-
-
-await loadProfile();
-
-await loadTodayStats();
-
-update();
-
-}
-
-
-/* =========================
-WATCH AD
-========================= */
-
-function watchAd(){
-
-if(!currentUser){
-
-showMessage(
-"Please login first."
-);
-
-return;
-
-}
-
-
-if(adRunning){
-
-return;
-
-}
-
-
-adRunning=true;
-
-watchButton.disabled=true;
-
-
-const screen =
-document.getElementById(
-"adScreen"
-);
-
-const timer =
-document.getElementById(
-"timer"
-);
-
-const button =
-document.getElementById(
-"adButton"
-);
-
-
-screen.style.display=
-"block";
-
-button.style.display=
-"none";
-
-button.disabled=false;
-
-button.textContent=
-"CLAIM 1 COIN";
-
-timer.textContent=
-"10";
-
-
-let seconds=10;
-
-
-if(countdownTimer){
-
-clearInterval(
-countdownTimer
-);
-
-}
-
-
-countdownTimer =
-setInterval(
-function(){
-
-seconds--;
-
-timer.textContent=
-seconds;
-
-
-if(seconds<=0){
-
-clearInterval(
-countdownTimer
-);
-
-countdownTimer=null;
-
-timer.textContent=
-"✓";
-
-button.style.display=
-"block";
-
-}
-
-},
-1000
-);
-
-}
-
-
-/* =========================
-FINISH AD
-========================= */
-
-async function finishAd(){
-
-if(!currentUser){
-
-return;
-
-}
-
-if(!adRunning){
-
-return;
-
-}
-
-
-const button =
-document.getElementById(
-"adButton"
-);
-
-const screen =
-document.getElementById(
-"adScreen"
-);
-
-
-button.disabled=true;
-
-button.textContent=
-"VERIFYING REWARD...";
-
-
-try{
-
-await claimSecureReward();
-
-
-screen.style.display=
-"none";
-
-watchButton.disabled=false;
-
-adRunning=false;
-
-button.disabled=false;
-
-button.textContent=
-"CLAIM 1 COIN";
-
-
-showMessage(
-"🎉 1 coin earned successfully!"
-);
-
-
-}catch(error){
-
-console.error(error);
-
-screen.style.display=
-"none";
-
-watchButton.disabled=false;
-
-adRunning=false;
-
-button.disabled=false;
-
-button.textContent=
-"CLAIM 1 COIN";
-
-
-showMessage(
-"❌ "+
-(
-error.message||
-"Reward failed."
-)
-);
-
-}
-
-}
-
-
-/* =========================
+========/* =========================
 WITHDRAWAL
 ========================= */
 
@@ -2272,7 +1921,35 @@ withdrawMessage.textContent=
 
 try{
 
-const result =
+let result;
+
+
+/* =========================
+TELEGRAM WITHDRAWAL
+========================= */
+
+if(isTelegramMiniApp){
+
+result =
+await telegramRequest(
+"withdraw",
+{
+amount:amount,
+method:"bKash",
+account_number:accountNumber
+}
+);
+
+coins=
+Number(result.coin);
+
+}else{
+
+/* =========================
+NORMAL WEBSITE WITHDRAWAL
+========================= */
+
+const rpcResult =
 await supabaseClient.rpc(
 "request_withdrawal",
 {
@@ -2283,14 +1960,20 @@ p_account_number:accountNumber
 );
 
 
-if(result.error){
+if(rpcResult.error){
 
 throw new Error(
-result.error.message
+rpcResult.error.message
 );
 
 }
 
+}
+
+
+/* =========================
+REFRESH
+========================= */
 
 await loadProfile();
 
@@ -2338,6 +2021,40 @@ LOGOUT
 
 async function logout(){
 
+/* Telegram */
+
+if(isTelegramMiniApp){
+
+currentUser=null;
+
+telegramUser=null;
+
+telegramAuthenticated=false;
+
+coins=0;
+ads=0;
+today=0;
+adRunning=false;
+
+if(countdownTimer){
+
+clearInterval(
+countdownTimer
+);
+
+countdownTimer=null;
+
+}
+
+showAuth();
+
+return;
+
+}
+
+
+/* Normal website */
+
 try{
 
 await supabaseClient.auth.signOut();
@@ -2378,6 +2095,18 @@ SESSION
 ========================= */
 
 async function checkSession(){
+
+/*
+Telegram uses telegram-api.
+Normal website uses Supabase Auth.
+*/
+
+if(isTelegramMiniApp){
+
+return;
+
+}
+
 
 try{
 
@@ -2444,16 +2173,7 @@ await loadTodayStats();
 
 update();
 
-
-document.getElementById(
-"profileEmail"
-).textContent=
-currentUser.email||"-";
-
-document.getElementById(
-"profileId"
-).textContent=
-currentUser.id||"-";
+await loadWithdrawalHistory();
 
 
 showMessage(
@@ -2482,6 +2202,16 @@ AUTH STATE
 supabaseClient.auth.onAuthStateChange(
 function(event,session){
 
+/*
+Never interfere with Telegram mode.
+*/
+
+if(isTelegramMiniApp){
+
+return;
+
+}
+
 if(event==="SIGNED_OUT"){
 
 currentUser=null;
@@ -2498,19 +2228,31 @@ showAuth();
 
 
 /* =========================
-START
+START WATCHLY
 ========================= */
 
 async function startWatchly(){
 
 /*
-Normal website:
-use existing Supabase session.
+Telegram Mini App
 */
 
-if(!tg){
+if(tg && tg.initData){
 
-await checkSession();
+const success =
+await initTelegram();
+
+if(!success){
+
+/*
+Keep auth screen visible
+if Telegram authentication
+fails.
+*/
+
+showAuth();
+
+}
 
 return;
 
@@ -2518,39 +2260,17 @@ return;
 
 
 /*
-Telegram Mini App:
-initialize and authenticate Telegram.
+Normal website
 */
 
-await initTelegram();
-
-
-/*
-We do NOT create a fake Supabase
-session here.
-
-Normal email authentication remains
-available and unchanged.
-*/
-
-if(telegramAuthenticated){
-
-console.log(
-"Watchly Telegram Mini App ready."
-);
-
-}else{
-
-console.log(
-"Telegram authentication unavailable."
-);
-
-}
+await checkSession();
 
 }
 
 
-/* Start */
+/* =========================
+START
+========================= */
 
 startWatchly();
 
