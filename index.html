@@ -6,12 +6,22 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Watchly - Rewards</title>
 
+<!-- Telegram Mini App SDK -->
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<!-- Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
+
+*{
+box-sizing:border-box;
+margin:0;
+padding:0
+}
 
 body{
 font-family:Arial,sans-serif;
@@ -295,8 +305,20 @@ display:block
 #auth,#app{
 display:none
 }
-</style>
 
+.telegram-badge{
+display:none;
+background:#17263b;
+border:1px solid #284363;
+border-radius:12px;
+padding:10px;
+margin-bottom:15px;
+text-align:center;
+color:#60a5fa;
+font-size:13px
+}
+
+</style>
 </head>
 
 <body>
@@ -312,6 +334,10 @@ Watch<span>ly</span>
 <div class="auth-screen">
 
 <div class="auth-card">
+
+<div id="telegramBadge" class="telegram-badge">
+📱 Telegram Mini App
+</div>
 
 <h1 id="authTitle">
 Welcome Back
@@ -560,7 +586,6 @@ Minimum withdrawal: 50 coins
 🪙 <span id="withdrawBalance">0</span>
 </div>
 
-
 <input
 class="input"
 id="withdrawAmount"
@@ -568,7 +593,6 @@ type="number"
 placeholder="Enter amount"
 min="50"
 >
-
 
 <div style="
 background:#17263b;
@@ -595,7 +619,6 @@ bKash
 
 </div>
 
-
 <input
 class="input"
 id="withdrawAccount"
@@ -604,7 +627,6 @@ inputmode="numeric"
 maxlength="11"
 placeholder="Enter bKash account number"
 >
-
 
 <button
 class="withdraw"
@@ -776,31 +798,96 @@ onclick="finishAd()"
 CLAIM 1 COIN
 </button>
 
-</div>
+</div><script>
 
+/* =========================
+SUPABASE
+========================= */
 
-<script>const SUPABASE_URL =
+const SUPABASE_URL =
 "https://woyvafgecfuriavuxnje.supabase.co";
 
 const SUPABASE_KEY =
 "sb_publishable_lxrfM4MgeRSm8-CiiUGQZg_EdayI2Po";
 
-
 const supabaseClient =
 window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
+SUPABASE_URL,
+SUPABASE_KEY
 );
 
 
-let currentUser = null;
-let coins = 0;
-let ads = 0;
-let today = 0;
-let authMode = "login";
-let adRunning = false;
-let countdownTimer = null;
+/* =========================
+TELEGRAM MINI APP
+========================= */
 
+const tg =
+window.Telegram &&
+window.Telegram.WebApp
+?
+window.Telegram.WebApp
+:
+null;
+
+let isTelegramMiniApp=false;
+let telegramUser=null;
+
+if(tg){
+
+try{
+
+tg.ready();
+tg.expand();
+
+isTelegramMiniApp=true;
+
+telegramUser =
+tg.initDataUnsafe &&
+tg.initDataUnsafe.user
+?
+tg.initDataUnsafe.user
+:
+null;
+
+const badge =
+document.getElementById(
+"telegramBadge"
+);
+
+if(badge){
+
+badge.style.display="block";
+
+}
+
+}catch(error){
+
+console.error(
+"Telegram initialization error:",
+error
+);
+
+}
+
+}
+
+
+/* =========================
+GLOBAL STATE
+========================= */
+
+let currentUser=null;
+let coins=0;
+let ads=0;
+let today=0;
+let authMode="login";
+let adRunning=false;
+let countdownTimer=null;
+
+
+/* =========================
+ELEMENTS
+========================= */
 
 const coinsElement =
 document.getElementById("coins");
@@ -821,12 +908,16 @@ const historyElement =
 document.getElementById("history");
 
 
+/* =========================
+AUTH / APP
+========================= */
+
 function showAuth(){
 
-document.getElementById("auth").style.display =
+document.getElementById("auth").style.display=
 "block";
 
-document.getElementById("app").style.display =
+document.getElementById("app").style.display=
 "none";
 
 }
@@ -834,24 +925,28 @@ document.getElementById("app").style.display =
 
 function showApp(){
 
-document.getElementById("auth").style.display =
+document.getElementById("auth").style.display=
 "none";
 
-document.getElementById("app").style.display =
+document.getElementById("app").style.display=
 "block";
 
 }
 
 
+/* =========================
+MESSAGE
+========================= */
+
 function showMessage(text){
 
-messageElement.textContent = text;
+messageElement.textContent=text;
 
 setTimeout(function(){
 
-if(messageElement.textContent === text){
+if(messageElement.textContent===text){
 
-messageElement.textContent = "";
+messageElement.textContent="";
 
 }
 
@@ -859,6 +954,10 @@ messageElement.textContent = "";
 
 }
 
+
+/* =========================
+PAGE NAVIGATION
+========================= */
 
 function showPage(page,clickedNav){
 
@@ -884,7 +983,7 @@ section.classList.remove("active");
 
 const target =
 document.getElementById(
-page + "Page"
+page+"Page"
 );
 
 if(target){
@@ -894,24 +993,24 @@ target.classList.add("active");
 }
 
 
-if(page === "rewards"){
+if(page==="rewards"){
 
 document.getElementById(
 "rewardCoins"
-).textContent = coins;
+).textContent=coins;
 
 document.getElementById(
 "rewardAds"
-).textContent = ads;
+).textContent=ads;
 
 document.getElementById(
 "rewardCoinsBottom"
-).textContent = coins;
+).textContent=coins;
 
 }
 
 
-if(page === "withdraw"){
+if(page==="withdraw"){
 
 update();
 
@@ -920,21 +1019,21 @@ loadWithdrawalHistory();
 }
 
 
-if(page === "profile" && currentUser){
+if(page==="profile" && currentUser){
 
 document.getElementById(
 "profileEmail"
-).textContent =
-currentUser.email || "-";
+).textContent=
+currentUser.email||"-";
 
 document.getElementById(
 "profileId"
-).textContent =
-currentUser.id || "-";
+).textContent=
+currentUser.id||"-";
 
 document.getElementById(
 "profileCoins"
-).textContent =
+).textContent=
 coins;
 
 }
@@ -942,60 +1041,68 @@ coins;
 }
 
 
+/* =========================
+AUTH MODE
+========================= */
+
 function toggleAuthMode(){
 
-if(authMode === "login"){
+if(authMode==="login"){
 
-authMode = "signup";
+authMode="signup";
 
 document.getElementById(
 "authTitle"
-).textContent =
+).textContent=
 "Create Account";
 
 document.getElementById(
 "authDescription"
-).textContent =
+).textContent=
 "Create your Watchly account.";
 
 document.getElementById(
 "authButton"
-).textContent =
+).textContent=
 "SIGN UP";
 
 document.getElementById(
 "switchButton"
-).textContent =
+).textContent=
 "Already have an account? Login";
 
 }else{
 
-authMode = "login";
+authMode="login";
 
 document.getElementById(
 "authTitle"
-).textContent =
+).textContent=
 "Welcome Back";
 
 document.getElementById(
 "authDescription"
-).textContent =
+).textContent=
 "Login to continue earning rewards.";
 
 document.getElementById(
 "authButton"
-).textContent =
+).textContent=
 "LOGIN";
 
 document.getElementById(
 "switchButton"
-).textContent =
+).textContent=
 "Don't have an account? Sign up";
 
 }
 
 }
 
+
+/* =========================
+EMAIL AUTH
+========================= */
 
 async function handleAuth(){
 
@@ -1015,9 +1122,9 @@ document.getElementById(
 );
 
 
-if(!email || !password){
+if(!email||!password){
 
-authMessage.textContent =
+authMessage.textContent=
 "Enter email and password.";
 
 return;
@@ -1025,9 +1132,9 @@ return;
 }
 
 
-if(password.length < 6){
+if(password.length<6){
 
-authMessage.textContent =
+authMessage.textContent=
 "Password must be at least 6 characters.";
 
 return;
@@ -1035,20 +1142,20 @@ return;
 }
 
 
-authMessage.textContent =
+authMessage.textContent=
 "Please wait...";
 
 
 try{
 
-if(authMode === "signup"){
+if(authMode==="signup"){
 
 const result =
 await supabaseClient.auth.signUp({
 
-email: email,
+email:email,
 
-password: password
+password:password
 
 });
 
@@ -1071,7 +1178,7 @@ result.data.user
 
 }else{
 
-authMessage.textContent =
+authMessage.textContent=
 "Account created. Check your email to confirm.";
 
 }
@@ -1081,9 +1188,9 @@ authMessage.textContent =
 const result =
 await supabaseClient.auth.signInWithPassword({
 
-email: email,
+email:email,
 
-password: password
+password:password
 
 });
 
@@ -1117,10 +1224,10 @@ result.data.user
 
 console.error(error);
 
-authMessage.textContent =
-"❌ " +
+authMessage.textContent=
+"❌ "+
 (
-error.message ||
+error.message||
 "Authentication failed."
 );
 
@@ -1128,6 +1235,10 @@ error.message ||
 
 }
 
+
+/* =========================
+PROFILE
+========================= */
 
 async function loadProfile(){
 
@@ -1144,7 +1255,7 @@ const result =
 await supabaseClient
 .from("profile")
 .select(
-"id,user_id,coin"
+"id,user_id,coin,telegram_id"
 )
 .eq(
 "user_id",
@@ -1156,7 +1267,7 @@ currentUser.id
 if(result.error){
 
 throw new Error(
-"Profile error: " +
+"Profile error: "+
 result.error.message
 );
 
@@ -1173,11 +1284,11 @@ await supabaseClient
 user_id:
 currentUser.id,
 
-coin: 0
+coin:0
 
 })
 .select(
-"id,user_id,coin"
+"id,user_id,coin,telegram_id"
 )
 .single();
 
@@ -1185,24 +1296,28 @@ coin: 0
 if(created.error){
 
 throw new Error(
-"Profile creation failed: " +
+"Profile creation failed: "+
 created.error.message
 );
 
 }
 
 
-coins = 0;
+coins=0;
 
 }else{
 
-coins =
-Number(result.data.coin) || 0;
+coins=
+Number(result.data.coin)||0;
 
 }
 
 }
 
+
+/* =========================
+TODAY STATS
+========================= */
 
 async function loadTodayStats(){
 
@@ -1228,8 +1343,8 @@ console.error(
 result.error
 );
 
-ads = 0;
-today = 0;
+ads=0;
+today=0;
 
 return;
 
@@ -1245,15 +1360,14 @@ result.data[0]
 null;
 
 
-ads =
+ads=
 Number(
-data?.ads_count || 0
+data?.ads_count||0
 );
 
-
-today =
+today=
 Number(
-data?.coin_total || 0
+data?.coin_total||0
 );
 
 
@@ -1264,13 +1378,17 @@ console.error(
 error
 );
 
-ads = 0;
-today = 0;
+ads=0;
+today=0;
 
 }
 
 }
 
+
+/* =========================
+SETUP USER
+========================= */
 
 async function setupUser(user){
 
@@ -1280,9 +1398,7 @@ return;
 
 }
 
-
-currentUser = user;
-
+currentUser=user;
 
 try{
 
@@ -1299,21 +1415,18 @@ await loadWithdrawalHistory();
 
 document.getElementById(
 "profileEmail"
-).textContent =
-currentUser.email || "-";
-
+).textContent=
+currentUser.email||"-";
 
 document.getElementById(
 "profileId"
-).textContent =
-currentUser.id || "-";
-
+).textContent=
+currentUser.id||"-";
 
 document.getElementById(
 "profileCoins"
-).textContent =
+).textContent=
 coins;
-
 
 }catch(error){
 
@@ -1323,53 +1436,60 @@ showAuth();
 
 document.getElementById(
 "authMessage"
-).textContent =
-"❌ " + error.message;
+).textContent=
+"❌ "+error.message;
 
 }
 
 }
 
+
+/* =========================
+UPDATE UI
+========================= */
 
 function update(){
 
-coinsElement.textContent =
+coinsElement.textContent=
 coins;
 
-adsElement.textContent =
+adsElement.textContent=
 ads;
 
-todayElement.textContent =
+todayElement.textContent=
 today;
-
 
 document.getElementById(
 "rewardCoins"
-).textContent =
+).textContent=
 coins;
 
 document.getElementById(
 "rewardAds"
-).textContent =
+).textContent=
 ads;
 
 document.getElementById(
 "rewardCoinsBottom"
-).textContent =
+).textContent=
 coins;
 
 document.getElementById(
 "profileCoins"
-).textContent =
+).textContent=
 coins;
 
 document.getElementById(
 "withdrawBalance"
-).textContent =
+).textContent=
 coins;
 
 }
 
+
+/* =========================
+WITHDRAWAL HISTORY
+========================= */
 
 async function loadWithdrawalHistory(){
 
@@ -1380,7 +1500,7 @@ return;
 }
 
 
-historyElement.textContent =
+historyElement.textContent=
 "Loading withdrawal history...";
 
 
@@ -1409,7 +1529,7 @@ console.error(
 result.error
 );
 
-historyElement.textContent =
+historyElement.textContent=
 "Unable to load withdrawal history.";
 
 return;
@@ -1418,11 +1538,11 @@ return;
 
 
 if(
-!result.data ||
-result.data.length === 0
+!result.data||
+result.data.length===0
 ){
 
-historyElement.textContent =
+historyElement.textContent=
 "No withdrawal requests.";
 
 return;
@@ -1439,28 +1559,26 @@ new Date(
 item.created_at
 ).toLocaleString();
 
-
 const status =
 String(
-item.status || "pending"
+item.status||"pending"
 ).toLowerCase();
 
-
-let statusClass =
+let statusClass=
 "status-pending";
 
 
-if(status === "approved"){
+if(status==="approved"){
 
-statusClass =
+statusClass=
 "status-approved";
 
 }
 
 
-if(status === "rejected"){
+if(status==="rejected"){
 
-statusClass =
+statusClass=
 "status-rejected";
 
 }
@@ -1471,16 +1589,16 @@ return `
 <div class="history-item">
 
 🪙 <strong>
-${item.amount} coins
+${Number(item.amount)} coins
 </strong><br>
 
-💳 ${item.method || "bKash"}<br>
+💳 ${item.method||"bKash"}<br>
 
 📱 ${item.account_number}<br>
 
 📌 Status:
 <strong class="${statusClass}">
-${item.status || "pending"}
+${item.status||"pending"}
 </strong><br>
 
 <small>
@@ -1520,17 +1638,12 @@ await supabaseClient.rpc(
 if(result.error){
 
 throw new Error(
-"Reward failed: " +
+"Reward failed: "+
 result.error.message
 );
 
 }
 
-
-/*
-The database function is the authority.
-Reload the balance from profile.
-*/
 
 await loadProfile();
 
@@ -1565,9 +1678,9 @@ return;
 }
 
 
-adRunning = true;
+adRunning=true;
 
-watchButton.disabled = true;
+watchButton.disabled=true;
 
 
 const screen =
@@ -1586,22 +1699,22 @@ document.getElementById(
 );
 
 
-screen.style.display =
+screen.style.display=
 "block";
 
-button.style.display =
+button.style.display=
 "none";
 
-button.disabled = false;
+button.disabled=false;
 
-button.textContent =
+button.textContent=
 "CLAIM 1 COIN";
 
-timer.textContent =
+timer.textContent=
 "10";
 
 
-let seconds = 10;
+let seconds=10;
 
 
 if(countdownTimer){
@@ -1619,22 +1732,22 @@ function(){
 
 seconds--;
 
-timer.textContent =
+timer.textContent=
 seconds;
 
 
-if(seconds <= 0){
+if(seconds<=0){
 
 clearInterval(
 countdownTimer
 );
 
-countdownTimer = null;
+countdownTimer=null;
 
-timer.textContent =
+timer.textContent=
 "✓";
 
-button.style.display =
+button.style.display=
 "block";
 
 }
@@ -1658,7 +1771,6 @@ return;
 
 }
 
-
 if(!adRunning){
 
 return;
@@ -1677,9 +1789,9 @@ document.getElementById(
 );
 
 
-button.disabled = true;
+button.disabled=true;
 
-button.textContent =
+button.textContent=
 "VERIFYING REWARD...";
 
 
@@ -1688,17 +1800,16 @@ try{
 await claimSecureReward();
 
 
-screen.style.display =
+screen.style.display=
 "none";
 
-watchButton.disabled =
-false;
+watchButton.disabled=false;
 
-adRunning = false;
+adRunning=false;
 
-button.disabled = false;
+button.disabled=false;
 
-button.textContent =
+button.textContent=
 "CLAIM 1 COIN";
 
 
@@ -1711,25 +1822,23 @@ showMessage(
 
 console.error(error);
 
-
-screen.style.display =
+screen.style.display=
 "none";
 
-watchButton.disabled =
-false;
+watchButton.disabled=false;
 
-adRunning = false;
+adRunning=false;
 
-button.disabled = false;
+button.disabled=false;
 
-button.textContent =
+button.textContent=
 "CLAIM 1 COIN";
 
 
 showMessage(
-"❌ " +
+"❌ "+
 (
-error.message ||
+error.message||
 "Reward failed."
 )
 );
@@ -1749,7 +1858,7 @@ if(!currentUser){
 
 document.getElementById(
 "withdrawMessage"
-).textContent =
+).textContent=
 "Please login first.";
 
 return;
@@ -1783,19 +1892,16 @@ Number(
 amountInput.value
 );
 
-
 const accountNumber =
 accountInput.value.trim();
 
 
-/* VALIDATE AMOUNT */
-
 if(
-!Number.isInteger(amount) ||
-amount < 50
+!Number.isInteger(amount)||
+amount<50
 ){
 
-withdrawMessage.textContent =
+withdrawMessage.textContent=
 "❌ Minimum withdrawal is 50 coins.";
 
 return;
@@ -1803,11 +1909,9 @@ return;
 }
 
 
-/* VALIDATE BALANCE */
+if(amount>coins){
 
-if(amount > coins){
-
-withdrawMessage.textContent =
+withdrawMessage.textContent=
 "❌ You don't have enough coins.";
 
 return;
@@ -1815,15 +1919,13 @@ return;
 }
 
 
-/* VALIDATE BKASH */
-
 if(
 !/^01[3-9][0-9]{8}$/.test(
 accountNumber
 )
 ){
 
-withdrawMessage.textContent =
+withdrawMessage.textContent=
 "❌ Enter a valid 11-digit bKash number.";
 
 return;
@@ -1831,136 +1933,48 @@ return;
 }
 
 
-withdrawButton.disabled =
-true;
+withdrawButton.disabled=true;
 
-withdrawMessage.textContent =
+withdrawMessage.textContent=
 "⏳ Creating withdrawal request...";
 
 
 try{
 
-/*
-Step 1:
-Create the withdrawal request.
-*/
-
-const withdrawal =
-await supabaseClient
-.from("withdrawals")
-.insert({
-
-user_id:
-currentUser.id,
-
-amount:
-amount,
-
-method:
-"bKash",
-
-account_number:
-accountNumber,
-
-status:
-"pending",
-
-created_at:
-new Date().toISOString()
-
-})
-.select(
-"id,amount,status,created_at"
-)
-.single();
+const result =
+await supabaseClient.rpc(
+"request_withdrawal",
+{
+p_amount:amount,
+p_method:"bKash",
+p_account_number:accountNumber
+}
+);
 
 
-if(withdrawal.error){
+if(result.error){
 
 throw new Error(
-"Withdrawal request failed: " +
-withdrawal.error.message
+result.error.message
 );
 
 }
 
 
-/*
-Step 2:
-Deduct the balance from profile.
-*/
-
-const newCoins =
-Number(coins) - amount;
-
-
-const balanceUpdate =
-await supabaseClient
-.from("profile")
-.update({
-
-coin:
-newCoins
-
-})
-.eq(
-"user_id",
-currentUser.id
-)
-.select(
-"coin"
-)
-.single();
-
-
-if(balanceUpdate.error){
-
-/*
-The withdrawal exists but the balance
-could not be updated.
-
-Do NOT create another withdrawal.
-*/
-
-console.error(
-"Balance deduction failed:",
-balanceUpdate.error
-);
-
-withdrawMessage.textContent =
-"⚠️ Request created, but balance update failed. Contact admin.";
-
-return;
-
-}
-
-
-/*
-Step 3:
-Use the database value as the new balance.
-*/
-
-coins =
-Number(
-balanceUpdate.data.coin
-) || 0;
-
-
-amountInput.value = "";
-
-accountInput.value = "";
-
+await loadProfile();
 
 await loadTodayStats();
+
+amountInput.value="";
+accountInput.value="";
 
 update();
 
 await loadWithdrawalHistory();
 
 
-withdrawMessage.textContent =
+withdrawMessage.textContent=
 "✅ Withdrawal request submitted!";
-
 
 showMessage(
 "💸 bKash withdrawal is pending approval."
@@ -1971,17 +1985,16 @@ showMessage(
 
 console.error(error);
 
-withdrawMessage.textContent =
-"❌ " +
+withdrawMessage.textContent=
+"❌ Withdrawal failed: "+
 (
-error.message ||
-"Withdrawal failed."
+error.message||
+"Unknown error."
 );
 
 }finally{
 
-withdrawButton.disabled =
-false;
+withdrawButton.disabled=false;
 
 }
 
@@ -2005,15 +2018,12 @@ console.error(error);
 }
 
 
-currentUser = null;
+currentUser=null;
 
-coins = 0;
-
-ads = 0;
-
-today = 0;
-
-adRunning = false;
+coins=0;
+ads=0;
+today=0;
+adRunning=false;
 
 
 if(countdownTimer){
@@ -2022,7 +2032,7 @@ clearInterval(
 countdownTimer
 );
 
-countdownTimer = null;
+countdownTimer=null;
 
 }
 
@@ -2097,7 +2107,6 @@ showMessage(
 "🔄 Loading profile..."
 );
 
-
 await loadProfile();
 
 await loadTodayStats();
@@ -2107,14 +2116,13 @@ update();
 
 document.getElementById(
 "profileEmail"
-).textContent =
-currentUser.email || "-";
-
+).textContent=
+currentUser.email||"-";
 
 document.getElementById(
 "profileId"
-).textContent =
-currentUser.id || "-";
+).textContent=
+currentUser.id||"-";
 
 
 showMessage(
@@ -2127,7 +2135,7 @@ showMessage(
 console.error(error);
 
 showMessage(
-"❌ Profile refresh failed: " +
+"❌ Profile refresh failed: "+
 error.message
 );
 
@@ -2143,15 +2151,13 @@ AUTH STATE
 supabaseClient.auth.onAuthStateChange(
 function(event,session){
 
-if(event === "SIGNED_OUT"){
+if(event==="SIGNED_OUT"){
 
-currentUser = null;
+currentUser=null;
 
-coins = 0;
-
-ads = 0;
-
-today = 0;
+coins=0;
+ads=0;
+today=0;
 
 showAuth();
 
