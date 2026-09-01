@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
 
-<script src="https://quge5.com/88/tag.min.js" data-zone="275272" async data-cfasync="false"></script>
+<script src="https://quge5.com/88/tag.min.js"
+data-zone="275272"
+async
+data-cfasync="false"></script>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +13,7 @@
 <title>Watchly - Rewards</title>
 
 <!-- Telegram Mini App SDK -->
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://telegram.org/js/telegram-web-app.js?63"></script>
 
 <!-- Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -69,7 +72,9 @@ margin:40px auto;
 padding:18px
 }
 
-.auth-card,.card,.stat{
+.auth-card,
+.card,
+.stat{
 background:#101d30;
 border:1px solid #1c2c43;
 border-radius:18px
@@ -83,7 +88,8 @@ padding:25px
 margin-bottom:8px
 }
 
-.auth-card p,.card p{
+.auth-card p,
+.card p{
 color:#9eacc0;
 font-size:14px
 }
@@ -113,7 +119,8 @@ font-weight:bold;
 cursor:pointer
 }
 
-.auth-button,.watch{
+.auth-button,
+.watch{
 background:#3b82f6;
 color:white
 }
@@ -302,7 +309,8 @@ display:none
 display:block
 }
 
-#auth,#app{
+#auth,
+#app{
 display:none
 }
 
@@ -318,25 +326,49 @@ color:#60a5fa;
 font-size:13px
 }
 
+.telegram-user{
+display:none;
+background:#0d2138;
+border:1px solid #284363;
+border-radius:12px;
+padding:12px;
+margin-bottom:15px;
+font-size:14px;
+color:#9eacc0
+}
+
 </style>
 </head>
 
 <body>
 
+<!-- AUTH -->
+
 <div id="auth">
 
 <div class="header">
+
 <div class="logo">
 Watch<span>ly</span>
 </div>
+
 </div>
 
 <div class="auth-screen">
 
 <div class="auth-card">
 
-<div id="telegramBadge" class="telegram-badge">
+<div
+id="telegramBadge"
+class="telegram-badge"
+>
 📱 Telegram Mini App
+</div>
+
+<div
+id="telegramUser"
+class="telegram-user"
+>
 </div>
 
 <h1 id="authTitle">
@@ -385,9 +417,13 @@ class="message"
 ></div>
 
 </div>
-</div>
+
 </div>
 
+</div>
+
+
+<!-- APP -->
 
 <div id="app">
 
@@ -447,7 +483,6 @@ Ads Watched
 </strong>
 
 </div>
-
 
 <div class="stat">
 
@@ -702,6 +737,28 @@ word-break:break-all;
 -
 </p>
 
+<div
+id="telegramProfile"
+style="
+display:none;
+margin-top:15px;
+"
+>
+
+<p>
+<strong>Telegram:</strong>
+<span id="telegramProfileName">-</span>
+</p>
+
+<p style="
+margin-top:5px;
+">
+<strong>Telegram ID:</strong>
+<span id="telegramProfileId">-</span>
+</p>
+
+</div>
+
 <button
 onclick="refreshProfile()"
 style="
@@ -831,8 +888,20 @@ null;
 
 let isTelegramMiniApp=false;
 let telegramUser=null;
+let telegramAuthenticated=false;
 
-if(tg){
+
+/* =========================
+TELEGRAM INITIALIZATION
+========================= */
+
+async function initTelegram(){
+
+if(!tg){
+
+return;
+
+}
 
 try{
 
@@ -849,6 +918,7 @@ tg.initDataUnsafe.user
 :
 null;
 
+
 const badge =
 document.getElementById(
 "telegramBadge"
@@ -860,12 +930,222 @@ badge.style.display="block";
 
 }
 
+
+/* Display Telegram user */
+
+if(telegramUser){
+
+const telegramUserBox =
+document.getElementById(
+"telegramUser"
+);
+
+if(telegramUserBox){
+
+telegramUserBox.style.display="block";
+
+telegramUserBox.textContent =
+"👋 "+
+(
+telegramUser.first_name||
+"Telegram User"
+)+
+(
+telegramUser.username
+?
+" @"+telegramUser.username
+:
+""
+);
+
+}
+
+}
+
+
+/* Secure authentication */
+
+await authenticateTelegram();
+
+
 }catch(error){
 
 console.error(
 "Telegram initialization error:",
 error
 );
+
+}
+
+}
+
+
+/* =========================
+SECURE TELEGRAM AUTH
+========================= */
+
+async function authenticateTelegram(){
+
+if(!tg){
+
+return null;
+
+}
+
+
+if(!tg.initData){
+
+console.log(
+"Telegram initData not available."
+);
+
+return null;
+
+}
+
+
+try{
+
+const response =
+await fetch(
+"https://woyvafgecfuriavuxnje.supabase.co/functions/v1/telegram-auth",
+{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+initData:tg.initData
+
+})
+
+}
+);
+
+
+const result =
+await response.json();
+
+
+if(!response.ok || !result.ok){
+
+console.error(
+"Telegram authentication failed:",
+result.error
+);
+
+return null;
+
+}
+
+
+telegramAuthenticated=true;
+
+telegramUser=result.user;
+
+
+/* Update UI */
+
+const authTitle =
+document.getElementById(
+"authTitle"
+);
+
+const authDescription =
+document.getElementById(
+"authDescription"
+);
+
+
+if(authTitle){
+
+authTitle.textContent =
+"Welcome, "+
+(
+telegramUser.first_name||
+"Telegram User"
+);
+
+}
+
+
+if(authDescription){
+
+authDescription.textContent =
+"Telegram account verified successfully.";
+
+}
+
+
+const telegramProfile =
+document.getElementById(
+"telegramProfile"
+);
+
+if(telegramProfile){
+
+telegramProfile.style.display="block";
+
+}
+
+
+const telegramProfileName =
+document.getElementById(
+"telegramProfileName"
+);
+
+if(telegramProfileName){
+
+telegramProfileName.textContent =
+(
+telegramUser.first_name||
+"Telegram User"
+)+
+(
+telegramUser.username
+?
+" @"+telegramUser.username
+:
+""
+);
+
+}
+
+
+const telegramProfileId =
+document.getElementById(
+"telegramProfileId"
+);
+
+if(telegramProfileId){
+
+telegramProfileId.textContent =
+telegramUser.id||"-";
+
+}
+
+
+console.log(
+"Telegram authenticated:",
+telegramUser
+);
+
+
+return telegramUser;
+
+
+}catch(error){
+
+console.error(
+"Telegram authentication error:",
+error
+);
+
+return null;
 
 }
 
@@ -1427,6 +1707,57 @@ document.getElementById(
 "profileCoins"
 ).textContent=
 coins;
+
+
+if(telegramUser){
+
+const telegramProfile =
+document.getElementById(
+"telegramProfile"
+);
+
+if(telegramProfile){
+
+telegramProfile.style.display="block";
+
+}
+
+const telegramProfileName =
+document.getElementById(
+"telegramProfileName"
+);
+
+if(telegramProfileName){
+
+telegramProfileName.textContent =
+(
+telegramUser.first_name||
+"Telegram User"
+)+
+(
+telegramUser.username
+?
+" @"+telegramUser.username
+:
+""
+);
+
+}
+
+const telegramProfileId =
+document.getElementById(
+"telegramProfileId"
+);
+
+if(telegramProfileId){
+
+telegramProfileId.textContent =
+telegramUser.id||"-";
+
+}
+
+}
+
 
 }catch(error){
 
@@ -2170,7 +2501,58 @@ showAuth();
 START
 ========================= */
 
-checkSession();
+async function startWatchly(){
+
+/*
+Normal website:
+use existing Supabase session.
+*/
+
+if(!tg){
+
+await checkSession();
+
+return;
+
+}
+
+
+/*
+Telegram Mini App:
+initialize and authenticate Telegram.
+*/
+
+await initTelegram();
+
+
+/*
+We do NOT create a fake Supabase
+session here.
+
+Normal email authentication remains
+available and unchanged.
+*/
+
+if(telegramAuthenticated){
+
+console.log(
+"Watchly Telegram Mini App ready."
+);
+
+}else{
+
+console.log(
+"Telegram authentication unavailable."
+);
+
+}
+
+}
+
+
+/* Start */
+
+startWatchly();
 
 </script>
 
