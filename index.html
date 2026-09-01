@@ -12,109 +12,390 @@
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,sans-serif;background:#07111f;color:white;min-height:100vh;padding-bottom:85px}
-.header{padding:20px;background:#0a1628;display:flex;justify-content:space-between;align-items:center}
-.logo{font-size:25px;font-weight:bold}
-.logo span{color:#3b82f6}
-.logout{width:auto;padding:9px 14px;background:#17263b;color:#60a5fa;border:1px solid #284363;border-radius:10px}
-.container{max-width:500px;margin:auto;padding:18px}
-.auth-screen{max-width:500px;margin:40px auto;padding:18px}
-.auth-card,.card,.stat{background:#101d30;border:1px solid #1c2c43;border-radius:18px}
-.auth-card{padding:25px}
-.auth-card h1{margin-bottom:8px}
-.auth-card p,.card p{color:#9eacc0;font-size:14px}
-.auth-card p{margin-bottom:20px}
-.input{width:100%;padding:15px;margin-bottom:12px;border-radius:12px;border:1px solid #284363;background:#07111f;color:white;outline:none}
-button{width:100%;border:none;border-radius:13px;padding:15px;font-size:16px;font-weight:bold;cursor:pointer}
-.auth-button,.watch{background:#3b82f6;color:white}
-.switch-button{background:transparent;color:#60a5fa;margin-top:10px;font-size:14px}
-.balance{background:linear-gradient(135deg,#1261d6,#153b88);border-radius:22px;padding:25px;margin-bottom:18px}
-.balance-title{opacity:.8;font-size:14px}
-.coin{font-size:42px;font-weight:bold;margin:8px 0}
-.balance-sub{opacity:.75;font-size:13px}
-.stats{display:flex;gap:12px;margin-bottom:15px}
-.stat{flex:1;padding:15px}
-.stat small{color:#8796aa}
-.stat strong{display:block;font-size:22px;margin-top:5px}
-.card{padding:20px;margin-bottom:15px}
-.card h2{font-size:19px;margin-bottom:8px}
-.card p{margin-bottom:15px}
-.withdraw{background:#16a34a;color:white}
-button:disabled{opacity:.5;cursor:not-allowed}
-.message{text-align:center;color:#60a5fa;min-height:24px;margin:15px 0;font-size:14px;word-break:break-word}
-.ad-screen{display:none;position:fixed;inset:0;background:#050b14;z-index:100;text-align:center;padding:25vh 20px}
-.ad-screen h2{font-size:26px}
-.ad-screen p{color:#8291a5;margin-top:8px}
-.timer{font-size:55px;font-weight:bold;margin:20px}
-.ad-button{display:none;width:80%;margin:auto;background:#16a34a;color:white}
-.bottom{position:fixed;bottom:0;left:0;right:0;height:70px;background:#0a1628;border-top:1px solid #1b2b42;display:flex;justify-content:space-around;align-items:center;z-index:50}
-.nav{text-align:center;color:#75859b;font-size:12px;cursor:pointer;user-select:none;padding:8px 15px}
-.nav.active{color:#60a5fa}
-.nav div{font-size:22px;margin-bottom:3px}
-.history{color:#9eacc0;font-size:14px;line-height:1.8}
-.history-item{padding:12px 0;border-bottom:1px solid #1c2c43}
-.history-item:last-child{border-bottom:none}
-.status-pending{color:#fbbf24}
-.status-approved{color:#4ade80}
-.status-rejected{color:#f87171}
-.page{display:none}
-.page.active{display:block}
-#auth,#app{display:none}
+
+body{
+font-family:Arial,sans-serif;
+background:#07111f;
+color:white;
+min-height:100vh;
+padding-bottom:85px
+}
+
+.header{
+padding:20px;
+background:#0a1628;
+display:flex;
+justify-content:space-between;
+align-items:center
+}
+
+.logo{
+font-size:25px;
+font-weight:bold
+}
+
+.logo span{
+color:#3b82f6
+}
+
+.logout{
+width:auto;
+padding:9px 14px;
+background:#17263b;
+color:#60a5fa;
+border:1px solid #284363;
+border-radius:10px
+}
+
+.container{
+max-width:500px;
+margin:auto;
+padding:18px
+}
+
+.auth-screen{
+max-width:500px;
+margin:40px auto;
+padding:18px
+}
+
+.auth-card,.card,.stat{
+background:#101d30;
+border:1px solid #1c2c43;
+border-radius:18px
+}
+
+.auth-card{
+padding:25px
+}
+
+.auth-card h1{
+margin-bottom:8px
+}
+
+.auth-card p,.card p{
+color:#9eacc0;
+font-size:14px
+}
+
+.auth-card p{
+margin-bottom:20px
+}
+
+.input{
+width:100%;
+padding:15px;
+margin-bottom:12px;
+border-radius:12px;
+border:1px solid #284363;
+background:#07111f;
+color:white;
+outline:none
+}
+
+button{
+width:100%;
+border:none;
+border-radius:13px;
+padding:15px;
+font-size:16px;
+font-weight:bold;
+cursor:pointer
+}
+
+.auth-button,.watch{
+background:#3b82f6;
+color:white
+}
+
+.switch-button{
+background:transparent;
+color:#60a5fa;
+margin-top:10px;
+font-size:14px
+}
+
+.balance{
+background:linear-gradient(135deg,#1261d6,#153b88);
+border-radius:22px;
+padding:25px;
+margin-bottom:18px
+}
+
+.balance-title{
+opacity:.8;
+font-size:14px
+}
+
+.coin{
+font-size:42px;
+font-weight:bold;
+margin:8px 0
+}
+
+.balance-sub{
+opacity:.75;
+font-size:13px
+}
+
+.stats{
+display:flex;
+gap:12px;
+margin-bottom:15px
+}
+
+.stat{
+flex:1;
+padding:15px
+}
+
+.stat small{
+color:#8796aa
+}
+
+.stat strong{
+display:block;
+font-size:22px;
+margin-top:5px
+}
+
+.card{
+padding:20px;
+margin-bottom:15px
+}
+
+.card h2{
+font-size:19px;
+margin-bottom:8px
+}
+
+.card p{
+margin-bottom:15px
+}
+
+.withdraw{
+background:#16a34a;
+color:white
+}
+
+button:disabled{
+opacity:.5;
+cursor:not-allowed
+}
+
+.message{
+text-align:center;
+color:#60a5fa;
+min-height:24px;
+margin:15px 0;
+font-size:14px;
+word-break:break-word
+}
+
+.ad-screen{
+display:none;
+position:fixed;
+inset:0;
+background:#050b14;
+z-index:100;
+text-align:center;
+padding:25vh 20px
+}
+
+.ad-screen h2{
+font-size:26px
+}
+
+.ad-screen p{
+color:#8291a5;
+margin-top:8px
+}
+
+.timer{
+font-size:55px;
+font-weight:bold;
+margin:20px
+}
+
+.ad-button{
+display:none;
+width:80%;
+margin:auto;
+background:#16a34a;
+color:white
+}
+
+.bottom{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+height:70px;
+background:#0a1628;
+border-top:1px solid #1b2b42;
+display:flex;
+justify-content:space-around;
+align-items:center;
+z-index:50
+}
+
+.nav{
+text-align:center;
+color:#75859b;
+font-size:12px;
+cursor:pointer;
+user-select:none;
+padding:8px 15px
+}
+
+.nav.active{
+color:#60a5fa
+}
+
+.nav div{
+font-size:22px;
+margin-bottom:3px
+}
+
+.history{
+color:#9eacc0;
+font-size:14px;
+line-height:1.8
+}
+
+.history-item{
+padding:12px 0;
+border-bottom:1px solid #1c2c43
+}
+
+.history-item:last-child{
+border-bottom:none
+}
+
+.status-pending{
+color:#fbbf24
+}
+
+.status-approved{
+color:#4ade80
+}
+
+.status-rejected{
+color:#f87171
+}
+
+.page{
+display:none
+}
+
+.page.active{
+display:block
+}
+
+#auth,#app{
+display:none
+}
 </style>
+
 </head>
 
 <body>
 
 <div id="auth">
+
 <div class="header">
-<div class="logo">Watch<span>ly</span></div>
+<div class="logo">
+Watch<span>ly</span>
+</div>
 </div>
 
 <div class="auth-screen">
+
 <div class="auth-card">
 
-<h1 id="authTitle">Welcome Back</h1>
+<h1 id="authTitle">
+Welcome Back
+</h1>
 
 <p id="authDescription">
 Login to continue earning rewards.
 </p>
 
-<input class="input" id="email" type="email"
-placeholder="Email address" autocomplete="email">
+<input
+class="input"
+id="email"
+type="email"
+placeholder="Email address"
+autocomplete="email"
+>
 
-<input class="input" id="password" type="password"
-placeholder="Password" autocomplete="current-password">
+<input
+class="input"
+id="password"
+type="password"
+placeholder="Password"
+autocomplete="current-password"
+>
 
-<button class="auth-button" id="authButton"
-onclick="handleAuth()">LOGIN</button>
+<button
+class="auth-button"
+id="authButton"
+onclick="handleAuth()"
+>
+LOGIN
+</button>
 
-<button class="switch-button" id="switchButton"
-onclick="toggleAuthMode()">
+<button
+class="switch-button"
+id="switchButton"
+onclick="toggleAuthMode()"
+>
 Don't have an account? Sign up
 </button>
 
-<div id="authMessage" class="message"></div>
+<div
+id="authMessage"
+class="message"
+></div>
 
 </div>
 </div>
 </div>
+
 
 <div id="app">
 
 <div class="header">
-<div class="logo">Watch<span>ly</span></div>
 
-<button class="logout" onclick="logout()">
+<div class="logo">
+Watch<span>ly</span>
+</div>
+
+<button
+class="logout"
+onclick="logout()"
+>
 LOGOUT
 </button>
+
 </div>
+
 
 <div class="container">
 
-<div id="homePage" class="page active">
+
+<!-- HOME -->
+
+<div
+id="homePage"
+class="page active"
+>
 
 <div class="balance">
-<div class="balance-title">YOUR BALANCE</div>
+
+<div class="balance-title">
+YOUR BALANCE
+</div>
 
 <div class="coin">
 🪙 <span id="coins">0</span>
@@ -123,48 +404,80 @@ LOGOUT
 <div class="balance-sub">
 Keep earning rewards
 </div>
+
 </div>
+
 
 <div class="stats">
 
 <div class="stat">
-<small>Ads Watched</small>
-<strong id="ads">0</strong>
+
+<small>
+Ads Watched
+</small>
+
+<strong id="ads">
+0
+</strong>
+
 </div>
+
 
 <div class="stat">
-<small>Today's Coins</small>
-<strong id="today">0</strong>
+
+<small>
+Today's Coins
+</small>
+
+<strong id="today">
+0
+</strong>
+
 </div>
 
 </div>
+
 
 <div class="card">
 
-<h2>🎬 Watch & Earn</h2>
+<h2>
+🎬 Watch & Earn
+</h2>
 
 <p>
 Watch a 10-second advertisement and receive 1 coin.
 </p>
 
-<button class="watch"
+<button
+class="watch"
 id="watchButton"
-onclick="watchAd()">
+onclick="watchAd()"
+>
 ▶ WATCH AD
 </button>
 
 </div>
 
-<div id="message" class="message"></div>
+<div
+id="message"
+class="message"
+></div>
 
 </div>
 
 
-<div id="rewardsPage" class="page">
+<!-- REWARDS -->
+
+<div
+id="rewardsPage"
+class="page"
+>
 
 <div class="card">
 
-<h2>🎁 Rewards Center</h2>
+<h2>
+🎁 Rewards Center
+</h2>
 
 <p>
 Watch ads and collect coins. Your progress is saved to your account.
@@ -172,7 +485,9 @@ Watch ads and collect coins. Your progress is saved to your account.
 
 <br>
 
-<p>🪙 Current Balance</p>
+<p>
+🪙 Current Balance
+</p>
 
 <div class="coin">
 🪙 <span id="rewardCoins">0</span>
@@ -185,16 +500,21 @@ Watch ads and collect coins. Your progress is saved to your account.
 
 <br>
 
-<button class="watch"
-onclick="showPage('home',document.querySelector('.nav'))">
+<button
+class="watch"
+onclick="showPage('home',document.querySelector('.nav'))"
+>
 ▶ WATCH MORE ADS
 </button>
 
 </div>
 
+
 <div class="card">
 
-<h2>🎁 Rewards</h2>
+<h2>
+🎁 Rewards
+</h2>
 
 <p>
 Keep watching advertisements to collect more coins.
@@ -213,27 +533,42 @@ coins
 </div>
 
 
-<div id="withdrawPage" class="page">
+<!-- WITHDRAW -->
+
+<div
+id="withdrawPage"
+class="page"
+>
 
 <div class="card">
 
-<h2>💸 Withdraw Coins</h2>
+<h2>
+💸 Withdraw Coins
+</h2>
 
-<p>Minimum withdrawal: 50 coins</p>
+<p>
+Minimum withdrawal: 50 coins
+</p>
 
 <br>
 
-<p>🪙 Available Balance</p>
+<p>
+🪙 Available Balance
+</p>
 
 <div class="coin">
 🪙 <span id="withdrawBalance">0</span>
 </div>
 
-<input class="input"
+
+<input
+class="input"
 id="withdrawAmount"
 type="number"
 placeholder="Enter amount"
-min="50">
+min="50"
+>
+
 
 <div style="
 background:#17263b;
@@ -243,7 +578,10 @@ border-radius:12px;
 margin-bottom:12px;
 ">
 
-<p style="margin:0;color:#60a5fa;">
+<p style="
+margin:0;
+color:#60a5fa;
+">
 💳 Payment Method
 </p>
 
@@ -257,27 +595,43 @@ bKash
 
 </div>
 
-<input class="input"
+
+<input
+class="input"
 id="withdrawAccount"
 type="text"
 inputmode="numeric"
-placeholder="Enter bKash account number">
+maxlength="11"
+placeholder="Enter bKash account number"
+>
 
-<button class="withdraw"
+
+<button
+class="withdraw"
 id="withdrawButton"
-onclick="submitWithdrawal()">
+onclick="submitWithdrawal()"
+>
 💸 REQUEST WITHDRAWAL
 </button>
 
-<div id="withdrawMessage" class="message"></div>
+<div
+id="withdrawMessage"
+class="message"
+></div>
 
 </div>
 
+
 <div class="card">
 
-<h2>📋 Withdrawal History</h2>
+<h2>
+📋 Withdrawal History
+</h2>
 
-<div id="history" class="history">
+<div
+id="history"
+class="history"
+>
 Loading...
 </div>
 
@@ -286,13 +640,22 @@ Loading...
 </div>
 
 
-<div id="profilePage" class="page">
+<!-- PROFILE -->
+
+<div
+id="profilePage"
+class="page"
+>
 
 <div class="card">
 
-<h2>👤 Profile</h2>
+<h2>
+👤 Profile
+</h2>
 
-<p>Account information</p>
+<p>
+Account information
+</p>
 
 <br>
 
@@ -303,19 +666,28 @@ Loading...
 
 <br>
 
-<p><strong>User ID:</strong></p>
+<p>
+<strong>User ID:</strong>
+</p>
 
-<p id="profileId"
-style="font-size:12px;word-break:break-all;">
+<p
+id="profileId"
+style="
+font-size:12px;
+word-break:break-all;
+"
+>
 -
 </p>
 
-<button onclick="refreshProfile()"
+<button
+onclick="refreshProfile()"
 style="
 background:#17263b;
 color:#60a5fa;
 margin-top:15px;
-">
+"
+>
 🔄 REFRESH PROFILE
 </button>
 
@@ -333,28 +705,38 @@ margin-top:15px;
 </div>
 
 
+<!-- BOTTOM NAV -->
+
 <div class="bottom">
 
-<div class="nav active"
-onclick="showPage('home',this)">
+<div
+class="nav active"
+onclick="showPage('home',this)"
+>
 <div>🏠</div>
 Home
 </div>
 
-<div class="nav"
-onclick="showPage('rewards',this)">
+<div
+class="nav"
+onclick="showPage('rewards',this)"
+>
 <div>🎁</div>
 Rewards
 </div>
 
-<div class="nav"
-onclick="showPage('withdraw',this)">
+<div
+class="nav"
+onclick="showPage('withdraw',this)"
+>
 <div>💸</div>
 Withdraw
 </div>
 
-<div class="nav"
-onclick="showPage('profile',this)">
+<div
+class="nav"
+onclick="showPage('profile',this)"
+>
 <div>👤</div>
 Profile
 </div>
@@ -364,301 +746,574 @@ Profile
 </div>
 
 
-<div class="ad-screen" id="adScreen">
+<!-- AD SCREEN -->
 
-<h2>Advertisement</h2>
+<div
+class="ad-screen"
+id="adScreen"
+>
 
-<p>Advertisement</p>
+<h2>
+Advertisement
+</h2>
 
-<div class="timer" id="timer">10</div>
+<p>
+Advertisement
+</p>
 
-<button class="ad-button"
+<div
+class="timer"
+id="timer"
+>
+10
+</div>
+
+<button
+class="ad-button"
 id="adButton"
-onclick="finishAd()">
+onclick="finishAd()"
+>
 CLAIM 1 COIN
 </button>
 
 </div>
 
-<script>
 
-const SUPABASE_URL =
+<script>const SUPABASE_URL =
 "https://woyvafgecfuriavuxnje.supabase.co";
 
 const SUPABASE_KEY =
 "sb_publishable_lxrfM4MgeRSm8-CiiUGQZg_EdayI2Po";
 
+
 const supabaseClient =
 window.supabase.createClient(
-SUPABASE_URL,
-SUPABASE_KEY
+  SUPABASE_URL,
+  SUPABASE_KEY
 );
 
-let currentUser=null;
-let coins=0;
-let ads=0;
-let today=0;
-let authMode="login";
-let adRunning=false;
 
-const coinsElement=document.getElementById("coins");
-const adsElement=document.getElementById("ads");
-const todayElement=document.getElementById("today");
-const messageElement=document.getElementById("message");
-const watchButton=document.getElementById("watchButton");
-const historyElement=document.getElementById("history");
+let currentUser = null;
+let coins = 0;
+let ads = 0;
+let today = 0;
+let authMode = "login";
+let adRunning = false;
+let countdownTimer = null;
+
+
+const coinsElement =
+document.getElementById("coins");
+
+const adsElement =
+document.getElementById("ads");
+
+const todayElement =
+document.getElementById("today");
+
+const messageElement =
+document.getElementById("message");
+
+const watchButton =
+document.getElementById("watchButton");
+
+const historyElement =
+document.getElementById("history");
 
 
 function showAuth(){
-document.getElementById("auth").style.display="block";
-document.getElementById("app").style.display="none";
+
+document.getElementById("auth").style.display =
+"block";
+
+document.getElementById("app").style.display =
+"none";
+
 }
+
 
 function showApp(){
-document.getElementById("auth").style.display="none";
-document.getElementById("app").style.display="block";
+
+document.getElementById("auth").style.display =
+"none";
+
+document.getElementById("app").style.display =
+"block";
+
 }
 
+
 function showMessage(text){
-messageElement.textContent=text;
+
+messageElement.textContent = text;
 
 setTimeout(function(){
-if(messageElement.textContent===text)
-messageElement.textContent="";
+
+if(messageElement.textContent === text){
+
+messageElement.textContent = "";
+
+}
+
 },5000);
+
 }
 
 
 function showPage(page,clickedNav){
 
-document.querySelectorAll(".nav").forEach(function(nav){
+document.querySelectorAll(".nav").forEach(
+function(nav){
+
 nav.classList.remove("active");
+
 });
 
-if(clickedNav)
+if(clickedNav){
+
 clickedNav.classList.add("active");
 
-document.querySelectorAll(".page").forEach(function(section){
+}
+
+document.querySelectorAll(".page").forEach(
+function(section){
+
 section.classList.remove("active");
+
 });
 
-const target=document.getElementById(page+"Page");
+const target =
+document.getElementById(
+page + "Page"
+);
 
-if(target)
+if(target){
+
 target.classList.add("active");
 
-if(page==="rewards"){
-document.getElementById("rewardCoins").textContent=coins;
-document.getElementById("rewardAds").textContent=ads;
-document.getElementById("rewardCoinsBottom").textContent=coins;
 }
 
-if(page==="withdraw"){
+
+if(page === "rewards"){
+
+document.getElementById(
+"rewardCoins"
+).textContent = coins;
+
+document.getElementById(
+"rewardAds"
+).textContent = ads;
+
+document.getElementById(
+"rewardCoinsBottom"
+).textContent = coins;
+
+}
+
+
+if(page === "withdraw"){
+
 update();
+
 loadWithdrawalHistory();
+
 }
 
-if(page==="profile" && currentUser){
-document.getElementById("profileEmail").textContent=currentUser.email||"-";
-document.getElementById("profileId").textContent=currentUser.id||"-";
-document.getElementById("profileCoins").textContent=coins;
+
+if(page === "profile" && currentUser){
+
+document.getElementById(
+"profileEmail"
+).textContent =
+currentUser.email || "-";
+
+document.getElementById(
+"profileId"
+).textContent =
+currentUser.id || "-";
+
+document.getElementById(
+"profileCoins"
+).textContent =
+coins;
+
 }
+
 }
 
 
 function toggleAuthMode(){
 
-if(authMode==="login"){
+if(authMode === "login"){
 
-authMode="signup";
+authMode = "signup";
 
-document.getElementById("authTitle").textContent="Create Account";
+document.getElementById(
+"authTitle"
+).textContent =
+"Create Account";
 
-document.getElementById("authDescription").textContent=
+document.getElementById(
+"authDescription"
+).textContent =
 "Create your Watchly account.";
 
-document.getElementById("authButton").textContent="SIGN UP";
+document.getElementById(
+"authButton"
+).textContent =
+"SIGN UP";
 
-document.getElementById("switchButton").textContent=
+document.getElementById(
+"switchButton"
+).textContent =
 "Already have an account? Login";
 
 }else{
 
-authMode="login";
+authMode = "login";
 
-document.getElementById("authTitle").textContent="Welcome Back";
+document.getElementById(
+"authTitle"
+).textContent =
+"Welcome Back";
 
-document.getElementById("authDescription").textContent=
+document.getElementById(
+"authDescription"
+).textContent =
 "Login to continue earning rewards.";
 
-document.getElementById("authButton").textContent="LOGIN";
+document.getElementById(
+"authButton"
+).textContent =
+"LOGIN";
 
-document.getElementById("switchButton").textContent=
+document.getElementById(
+"switchButton"
+).textContent =
 "Don't have an account? Sign up";
+
 }
+
 }
 
 
 async function handleAuth(){
 
-const email=document.getElementById("email").value.trim();
-const password=document.getElementById("password").value;
-const authMessage=document.getElementById("authMessage");
+const email =
+document.getElementById(
+"email"
+).value.trim();
 
-if(!email||!password){
-authMessage.textContent="Enter email and password.";
+const password =
+document.getElementById(
+"password"
+).value;
+
+const authMessage =
+document.getElementById(
+"authMessage"
+);
+
+
+if(!email || !password){
+
+authMessage.textContent =
+"Enter email and password.";
+
 return;
+
 }
 
-if(password.length<6){
-authMessage.textContent="Password must be at least 6 characters.";
+
+if(password.length < 6){
+
+authMessage.textContent =
+"Password must be at least 6 characters.";
+
 return;
+
 }
 
-authMessage.textContent="Please wait...";
+
+authMessage.textContent =
+"Please wait...";
+
 
 try{
 
-if(authMode==="signup"){
+if(authMode === "signup"){
 
-const result=await supabaseClient.auth.signUp({
-email:email,
-password:password
+const result =
+await supabaseClient.auth.signUp({
+
+email: email,
+
+password: password
+
 });
 
-if(result.error)
+
+if(result.error){
+
 throw result.error;
 
-if(result.data.user && result.data.session){
-await setupUser(result.data.user);
+}
+
+
+if(
+result.data.user &&
+result.data.session
+){
+
+await setupUser(
+result.data.user
+);
+
 }else{
-authMessage.textContent=
+
+authMessage.textContent =
 "Account created. Check your email to confirm.";
+
 }
 
 }else{
 
-const result=
+const result =
 await supabaseClient.auth.signInWithPassword({
-email:email,
-password:password
+
+email: email,
+
+password: password
+
 });
 
-if(result.error)
+
+if(result.error){
+
 throw result.error;
 
-await setupUser(result.data.user);
+}
+
+
+if(
+!result.data ||
+!result.data.user
+){
+
+throw new Error(
+"Login failed. User not found."
+);
+
+}
+
+
+await setupUser(
+result.data.user
+);
+
 }
 
 }catch(error){
 
 console.error(error);
 
-authMessage.textContent=
-"❌ "+(error.message||"Authentication failed.");
+authMessage.textContent =
+"❌ " +
+(
+error.message ||
+"Authentication failed."
+);
+
 }
+
 }
 
 
 async function loadProfile(){
 
-const result=await supabaseClient
+if(!currentUser){
+
+throw new Error(
+"User not logged in."
+);
+
+}
+
+
+const result =
+await supabaseClient
 .from("profile")
-.select("id,user_id,coin")
-.eq("user_id",currentUser.id)
+.select(
+"id,user_id,coin"
+)
+.eq(
+"user_id",
+currentUser.id
+)
 .maybeSingle();
 
-if(result.error)
-throw new Error("Profile error: "+result.error.message);
+
+if(result.error){
+
+throw new Error(
+"Profile error: " +
+result.error.message
+);
+
+}
+
 
 if(!result.data){
 
-const created=await supabaseClient
+const created =
+await supabaseClient
 .from("profile")
 .insert({
-user_id:currentUser.id,
-coin:0
+
+user_id:
+currentUser.id,
+
+coin: 0
+
 })
-.select("id,user_id,coin")
+.select(
+"id,user_id,coin"
+)
 .single();
 
-if(created.error)
+
+if(created.error){
+
 throw new Error(
-"Profile creation failed: "+created.error.message
+"Profile creation failed: " +
+created.error.message
 );
 
-coins=0;
+}
+
+
+coins = 0;
 
 }else{
 
-coins=Number(result.data.coin)||0;
+coins =
+Number(result.data.coin) || 0;
+
 }
+
 }
 
 
 async function loadTodayStats(){
 
-if(!currentUser)
+if(!currentUser){
+
 return;
+
+}
+
 
 try{
 
-const result=await supabaseClient.rpc(
+const result =
+await supabaseClient.rpc(
 "get_today_watch_stats"
 );
 
+
 if(result.error){
 
-console.error("Today's stats error:",result.error);
+console.error(
+"Today's stats error:",
+result.error
+);
 
-ads=0;
-today=0;
+ads = 0;
+today = 0;
+
 return;
+
 }
 
-const data=
-result.data&&result.data.length
-?result.data[0]
-:null;
 
-ads=Number(data?.ads_count||0);
-today=Number(data?.coin_total||0);
+const data =
+result.data &&
+result.data.length
+?
+result.data[0]
+:
+null;
+
+
+ads =
+Number(
+data?.ads_count || 0
+);
+
+
+today =
+Number(
+data?.coin_total || 0
+);
+
 
 }catch(error){
 
-console.error("Today's stats error:",error);
+console.error(
+"Today's stats error:",
+error
+);
 
-ads=0;
-today=0;
+ads = 0;
+today = 0;
+
 }
+
 }
 
 
 async function setupUser(user){
 
-if(!user)
+if(!user){
+
 return;
 
-currentUser=user;
+}
+
+
+currentUser = user;
+
 
 try{
 
 await loadProfile();
+
 await loadTodayStats();
 
 showApp();
+
 update();
 
 await loadWithdrawalHistory();
 
-document.getElementById("profileEmail").textContent=
-currentUser.email||"-";
 
-document.getElementById("profileId").textContent=
-currentUser.id||"-";
+document.getElementById(
+"profileEmail"
+).textContent =
+currentUser.email || "-";
 
-document.getElementById("profileCoins").textContent=
+
+document.getElementById(
+"profileId"
+).textContent =
+currentUser.id || "-";
+
+
+document.getElementById(
+"profileCoins"
+).textContent =
 coins;
+
 
 }catch(error){
 
@@ -666,37 +1321,86 @@ console.error(error);
 
 showAuth();
 
-document.getElementById("authMessage").textContent=
-"❌ "+error.message;
+document.getElementById(
+"authMessage"
+).textContent =
+"❌ " + error.message;
+
 }
+
 }
 
 
 function update(){
 
-coinsElement.textContent=coins;
-adsElement.textContent=ads;
-todayElement.textContent=today;
+coinsElement.textContent =
+coins;
 
-document.getElementById("rewardCoins").textContent=coins;
-document.getElementById("rewardAds").textContent=ads;
-document.getElementById("rewardCoinsBottom").textContent=coins;
-document.getElementById("profileCoins").textContent=coins;
-document.getElementById("withdrawBalance").textContent=coins;
-}async function loadWithdrawalHistory(){
+adsElement.textContent =
+ads;
 
-if(!currentUser)
+todayElement.textContent =
+today;
+
+
+document.getElementById(
+"rewardCoins"
+).textContent =
+coins;
+
+document.getElementById(
+"rewardAds"
+).textContent =
+ads;
+
+document.getElementById(
+"rewardCoinsBottom"
+).textContent =
+coins;
+
+document.getElementById(
+"profileCoins"
+).textContent =
+coins;
+
+document.getElementById(
+"withdrawBalance"
+).textContent =
+coins;
+
+}
+
+
+async function loadWithdrawalHistory(){
+
+if(!currentUser){
+
 return;
 
-historyElement.textContent="Loading withdrawal history...";
+}
 
-const result=await supabaseClient
+
+historyElement.textContent =
+"Loading withdrawal history...";
+
+
+const result =
+await supabaseClient
 .from("withdrawals")
 .select(
 "amount,method,account_number,status,created_at"
 )
-.eq("user_id",currentUser.id)
-.order("created_at",{ascending:false});
+.eq(
+"user_id",
+currentUser.id
+)
+.order(
+"created_at",
+{
+ascending:false
+}
+);
+
 
 if(result.error){
 
@@ -705,77 +1409,96 @@ console.error(
 result.error
 );
 
-historyElement.textContent=
+historyElement.textContent =
 "Unable to load withdrawal history.";
 
 return;
+
 }
 
-if(!result.data||result.data.length===0){
 
-historyElement.textContent=
+if(
+!result.data ||
+result.data.length === 0
+){
+
+historyElement.textContent =
 "No withdrawal requests.";
 
 return;
+
 }
 
-historyElement.innerHTML=
-result.data.map(function(item){
 
-const date=
-new Date(item.created_at).toLocaleString();
+historyElement.innerHTML =
+result.data.map(
+function(item){
 
-const status=
-String(item.status||"pending").toLowerCase();
+const date =
+new Date(
+item.created_at
+).toLocaleString();
 
-let statusClass="status-pending";
 
-if(status==="approved")
-statusClass="status-approved";
+const status =
+String(
+item.status || "pending"
+).toLowerCase();
 
-if(status==="rejected")
-statusClass="status-rejected";
+
+let statusClass =
+"status-pending";
+
+
+if(status === "approved"){
+
+statusClass =
+"status-approved";
+
+}
+
+
+if(status === "rejected"){
+
+statusClass =
+"status-rejected";
+
+}
+
 
 return `
+
 <div class="history-item">
 
 🪙 <strong>
 ${item.amount} coins
 </strong><br>
 
-💳 bKash<br>
+💳 ${item.method || "bKash"}<br>
 
 📱 ${item.account_number}<br>
 
 📌 Status:
 <strong class="${statusClass}">
-${item.status}
+${item.status || "pending"}
 </strong><br>
 
-<small>${date}</small>
+<small>
+${date}
+</small>
 
 </div>
+
 `;
 
 }).join("");
+
 }
 
 
-/*
-SECURE REWARD SYSTEM
-
-The browser no longer directly changes the user's
-coin balance.
-
-The Supabase RPC/function is responsible for:
-1. Checking the authenticated user
-2. Recording the transaction
-3. Updating the profile balance
-4. Returning the new balance
-
-This prevents a user from simply changing
-"coin: newCoins" in the browser.
-*/
+/* =========================
+SECURE REWARD
+========================= */
 
 async function claimSecureReward(){
 
@@ -787,55 +1510,26 @@ throw new Error(
 
 }
 
-/*
-IMPORTANT:
-This RPC name must match the secure SQL function
-you created in Supabase.
-*/
 
-const result=
+const result =
 await supabaseClient.rpc(
 "claim_watch_reward"
 );
 
+
 if(result.error){
 
 throw new Error(
-"Reward failed: "+
+"Reward failed: " +
 result.error.message
 );
-}
-
-/*
-Accept common return formats from the SQL function.
-*/
-
-let newBalance=null;
-
-if(typeof result.data==="number"){
-
-newBalance=
-Number(result.data);
-
-}else if(
-result.data &&
-typeof result.data==="object"
-){
-
-newBalance=
-Number(
-result.data.new_balance ??
-result.data.balance ??
-result.data.coin ??
-result.data.coins
-);
 
 }
 
+
 /*
-Reload the real balance from Supabase.
-This means the displayed balance does not depend
-on a locally calculated value.
+The database function is the authority.
+Reload the balance from profile.
 */
 
 await loadProfile();
@@ -844,9 +1538,12 @@ await loadTodayStats();
 
 update();
 
-return newBalance;
 }
 
+
+/* =========================
+WATCH AD
+========================= */
 
 function watchAd(){
 
@@ -857,121 +1554,194 @@ showMessage(
 );
 
 return;
+
 }
 
-if(adRunning)
+
+if(adRunning){
+
 return;
 
-adRunning=true;
+}
 
-watchButton.disabled=true;
 
-const screen=
-document.getElementById("adScreen");
+adRunning = true;
 
-const timer=
-document.getElementById("timer");
+watchButton.disabled = true;
 
-const button=
-document.getElementById("adButton");
 
-screen.style.display="block";
+const screen =
+document.getElementById(
+"adScreen"
+);
 
-button.style.display="none";
+const timer =
+document.getElementById(
+"timer"
+);
 
-button.disabled=false;
+const button =
+document.getElementById(
+"adButton"
+);
 
-button.textContent="CLAIM 1 COIN";
 
-timer.textContent="10";
+screen.style.display =
+"block";
 
-let seconds=10;
+button.style.display =
+"none";
 
-const countdown=
-setInterval(function(){
+button.disabled = false;
+
+button.textContent =
+"CLAIM 1 COIN";
+
+timer.textContent =
+"10";
+
+
+let seconds = 10;
+
+
+if(countdownTimer){
+
+clearInterval(
+countdownTimer
+);
+
+}
+
+
+countdownTimer =
+setInterval(
+function(){
 
 seconds--;
 
-timer.textContent=seconds;
+timer.textContent =
+seconds;
 
-if(seconds<=0){
 
-clearInterval(countdown);
+if(seconds <= 0){
 
-timer.textContent="✓";
+clearInterval(
+countdownTimer
+);
 
-button.style.display="block";
+countdownTimer = null;
+
+timer.textContent =
+"✓";
+
+button.style.display =
+"block";
 
 }
 
-},1000);
+},
+1000
+);
+
 }
 
+
+/* =========================
+FINISH AD
+========================= */
 
 async function finishAd(){
 
-if(!currentUser)
+if(!currentUser){
+
 return;
 
-if(!adRunning)
+}
+
+
+if(!adRunning){
+
 return;
 
-const button=
-document.getElementById("adButton");
+}
 
-const screen=
-document.getElementById("adScreen");
 
-button.disabled=true;
+const button =
+document.getElementById(
+"adButton"
+);
 
-button.textContent=
+const screen =
+document.getElementById(
+"adScreen"
+);
+
+
+button.disabled = true;
+
+button.textContent =
 "VERIFYING REWARD...";
+
 
 try{
 
-/*
-Secure server-side reward claim.
-*/
-
 await claimSecureReward();
 
-screen.style.display="none";
 
-watchButton.disabled=false;
+screen.style.display =
+"none";
 
-adRunning=false;
+watchButton.disabled =
+false;
 
-button.disabled=false;
+adRunning = false;
 
-button.textContent=
+button.disabled = false;
+
+button.textContent =
 "CLAIM 1 COIN";
+
 
 showMessage(
 "🎉 1 coin earned successfully!"
 );
 
+
 }catch(error){
 
 console.error(error);
 
-screen.style.display="none";
 
-watchButton.disabled=false;
+screen.style.display =
+"none";
 
-adRunning=false;
+watchButton.disabled =
+false;
 
-button.disabled=false;
+adRunning = false;
 
-button.textContent=
+button.disabled = false;
+
+button.textContent =
 "CLAIM 1 COIN";
 
+
 showMessage(
-"❌ "+error.message
+"❌ " +
+(
+error.message ||
+"Reward failed."
+)
 );
 
 }
+
 }
 
+
+/* =========================
+WITHDRAWAL
+========================= */
 
 async function submitWithdrawal(){
 
@@ -979,148 +1749,300 @@ if(!currentUser){
 
 document.getElementById(
 "withdrawMessage"
-).textContent=
+).textContent =
 "Please login first.";
 
 return;
+
 }
 
-const amountInput=
-document.getElementById("withdrawAmount");
 
-const accountInput=
-document.getElementById("withdrawAccount");
+const amountInput =
+document.getElementById(
+"withdrawAmount"
+);
 
-const withdrawMessage=
-document.getElementById("withdrawMessage");
+const accountInput =
+document.getElementById(
+"withdrawAccount"
+);
 
-const withdrawButton=
-document.getElementById("withdrawButton");
+const withdrawMessage =
+document.getElementById(
+"withdrawMessage"
+);
 
-const amount=
-Number(amountInput.value);
+const withdrawButton =
+document.getElementById(
+"withdrawButton"
+);
 
-const accountNumber=
+
+const amount =
+Number(
+amountInput.value
+);
+
+
+const accountNumber =
 accountInput.value.trim();
 
 
-if(!Number.isInteger(amount)||amount<50){
+/* VALIDATE AMOUNT */
 
-withdrawMessage.textContent=
+if(
+!Number.isInteger(amount) ||
+amount < 50
+){
+
+withdrawMessage.textContent =
 "❌ Minimum withdrawal is 50 coins.";
 
 return;
+
 }
 
-if(amount>coins){
 
-withdrawMessage.textContent=
+/* VALIDATE BALANCE */
+
+if(amount > coins){
+
+withdrawMessage.textContent =
 "❌ You don't have enough coins.";
 
 return;
+
 }
 
-if(!/^[0-9]{11}$/.test(accountNumber)){
 
-withdrawMessage.textContent=
+/* VALIDATE BKASH */
+
+if(
+!/^01[3-9][0-9]{8}$/.test(
+accountNumber
+)
+){
+
+withdrawMessage.textContent =
 "❌ Enter a valid 11-digit bKash number.";
 
 return;
+
 }
 
-withdrawMessage.textContent=
+
+withdrawButton.disabled =
+true;
+
+withdrawMessage.textContent =
 "⏳ Creating withdrawal request...";
 
-withdrawButton.disabled=true;
 
 try{
 
-const withdrawal=
+/*
+Step 1:
+Create the withdrawal request.
+*/
+
+const withdrawal =
 await supabaseClient
 .from("withdrawals")
 .insert({
 
-user_id:currentUser.id,
+user_id:
+currentUser.id,
 
-amount:amount,
+amount:
+amount,
 
-method:"bKash",
+method:
+"bKash",
 
-account_number:accountNumber,
+account_number:
+accountNumber,
 
-status:"pending",
+status:
+"pending",
 
-created_at:new Date().toISOString()
+created_at:
+new Date().toISOString()
 
 })
-.select()
+.select(
+"id,amount,status,created_at"
+)
 .single();
+
 
 if(withdrawal.error){
 
 throw new Error(
+"Withdrawal request failed: " +
 withdrawal.error.message
 );
+
 }
 
+
 /*
-Reload balance from the database rather than
-trusting a locally calculated balance.
+Step 2:
+Deduct the balance from profile.
 */
 
-await loadProfile();
+const newCoins =
+Number(coins) - amount;
 
-amountInput.value="";
-accountInput.value="";
+
+const balanceUpdate =
+await supabaseClient
+.from("profile")
+.update({
+
+coin:
+newCoins
+
+})
+.eq(
+"user_id",
+currentUser.id
+)
+.select(
+"coin"
+)
+.single();
+
+
+if(balanceUpdate.error){
+
+/*
+The withdrawal exists but the balance
+could not be updated.
+
+Do NOT create another withdrawal.
+*/
+
+console.error(
+"Balance deduction failed:",
+balanceUpdate.error
+);
+
+withdrawMessage.textContent =
+"⚠️ Request created, but balance update failed. Contact admin.";
+
+return;
+
+}
+
+
+/*
+Step 3:
+Use the database value as the new balance.
+*/
+
+coins =
+Number(
+balanceUpdate.data.coin
+) || 0;
+
+
+amountInput.value = "";
+
+accountInput.value = "";
+
+
+await loadTodayStats();
 
 update();
 
 await loadWithdrawalHistory();
 
-withdrawMessage.textContent=
+
+withdrawMessage.textContent =
 "✅ Withdrawal request submitted!";
 
+
 showMessage(
-"💸 bKash withdrawal pending."
+"💸 bKash withdrawal is pending approval."
 );
+
 
 }catch(error){
 
 console.error(error);
 
-withdrawMessage.textContent=
-"❌ "+error.message;
+withdrawMessage.textContent =
+"❌ " +
+(
+error.message ||
+"Withdrawal failed."
+);
 
 }finally{
 
-withdrawButton.disabled=false;
+withdrawButton.disabled =
+false;
 
 }
+
 }
 
+
+/* =========================
+LOGOUT
+========================= */
 
 async function logout(){
 
+try{
+
 await supabaseClient.auth.signOut();
 
-currentUser=null;
+}catch(error){
 
-coins=0;
+console.error(error);
 
-ads=0;
-
-today=0;
-
-showAuth();
 }
 
+
+currentUser = null;
+
+coins = 0;
+
+ads = 0;
+
+today = 0;
+
+adRunning = false;
+
+
+if(countdownTimer){
+
+clearInterval(
+countdownTimer
+);
+
+countdownTimer = null;
+
+}
+
+
+showAuth();
+
+}
+
+
+/* =========================
+SESSION
+========================= */
 
 async function checkSession(){
 
 try{
 
-const result=
+const result =
 await supabaseClient.auth.getSession();
+
 
 if(
 result.data &&
@@ -1140,13 +2062,21 @@ showAuth();
 
 }catch(error){
 
-console.error(error);
+console.error(
+"Session error:",
+error
+);
 
 showAuth();
 
 }
+
 }
 
+
+/* =========================
+REFRESH PROFILE
+========================= */
 
 async function refreshProfile(){
 
@@ -1157,7 +2087,9 @@ showMessage(
 );
 
 return;
+
 }
+
 
 try{
 
@@ -1165,50 +2097,61 @@ showMessage(
 "🔄 Loading profile..."
 );
 
+
 await loadProfile();
 
 await loadTodayStats();
 
 update();
 
+
 document.getElementById(
 "profileEmail"
-).textContent=
-currentUser.email||"-";
+).textContent =
+currentUser.email || "-";
+
 
 document.getElementById(
 "profileId"
-).textContent=
-currentUser.id||"-";
+).textContent =
+currentUser.id || "-";
+
 
 showMessage(
 "✅ Profile refreshed!"
 );
+
 
 }catch(error){
 
 console.error(error);
 
 showMessage(
-"❌ Profile refresh failed: "+
+"❌ Profile refresh failed: " +
 error.message
 );
-}
+
 }
 
+}
+
+
+/* =========================
+AUTH STATE
+========================= */
 
 supabaseClient.auth.onAuthStateChange(
 function(event,session){
 
-if(event==="SIGNED_OUT"){
+if(event === "SIGNED_OUT"){
 
-currentUser=null;
+currentUser = null;
 
-coins=0;
+coins = 0;
 
-ads=0;
+ads = 0;
 
-today=0;
+today = 0;
 
 showAuth();
 
@@ -1216,6 +2159,10 @@ showAuth();
 
 });
 
+
+/* =========================
+START
+========================= */
 
 checkSession();
 
