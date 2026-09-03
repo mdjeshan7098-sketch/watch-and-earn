@@ -488,7 +488,7 @@ Today's Coins
 </h2>
 
 <p>
-Watch a 10-second advertisement and receive 1 coin.
+Watch an advertisement and receive 1 coin after successful completion.
 </p>
 
 <button
@@ -787,7 +787,8 @@ Profile
 </div>
 
 
-<!-- AD SCREEN -->
+<!-- OLD AD SCREEN IS KEPT HIDDEN.
+     MONETAG NOW PROVIDES THE REAL AD. -->
 
 <div class="ad-screen" id="adScreen">
 
@@ -796,7 +797,7 @@ Advertisement
 </h2>
 
 <p>
-Advertisement
+Monetag Advertisement
 </p>
 
 <div class="timer" id="timer">
@@ -824,7 +825,7 @@ const SUPABASE_URL =
 "https://woyvafgecfuriavuxnje.supabase.co";
 
 const SUPABASE_KEY =
-"sb_publishable_lxrfM4MgeRSm8-CiiUGQZg_EdayI2Po";
+"sb_publishable_lxrfM4MgeRSm8-CiiUGQzG_EdayI2Po";
 
 const supabaseClient =
 window.supabase.createClient(
@@ -984,8 +985,6 @@ badge.style.display="block";
 
 }
 
-
-/* First display unsafe data only for UI */
 
 telegramUser =
 tg.initDataUnsafe &&
@@ -1241,8 +1240,6 @@ document.getElementById(
 
 
 if(page==="withdraw"){
-
-update();
 
 loadWithdrawalHistory();
 
@@ -1819,18 +1816,7 @@ document.getElementById(
 coins;
 
 document.getElementById(
-"withdrawBalance"
-).textContent=
-coins;
-
-updateProfileUI();
-
-}
-
-
-/* =========================
-WITHDRAWAL HISTORY
-========/* =========================
+"/* =========================
 WITHDRAWAL
 ========================= */
 
